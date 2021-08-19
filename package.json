@@ -7,6 +7,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
+    "axios-oauth-client": "^1.4.3",
     "qs": "^6.10.1",
     "react": "^17.0.2",
     "react-datepicker": "^4.2.0",
@@ -43,5 +44,6 @@
   "devDependencies": {
     "@types/react": "^17.0.18",
     "dotenv": "^10.0.0"
-  }
+  },
+  "proxy": "https://fjlijtivf4-vpce-072b7e61b5b294dd4.execute-api.us-east-1.amazonaws.com"
 }

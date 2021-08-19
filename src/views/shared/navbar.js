@@ -6,11 +6,11 @@ export class NavBar extends Component {
         menu: [
             {
                 name: "Home",
-                url: "/"
+                url: "/home"
             },
             {
                 name: "Sap",
-                url: "/generate-sap-file"
+                url: "/"
             }
         ]
     }
@@ -19,7 +19,7 @@ export class NavBar extends Component {
             <nav className="navbar navbar-expand-lg navbar-blue bg-soft">
                 <div className="container-fluid row">
                     <div className="col-lg-2">
-                        <img src='./logo.png' width='110' />
+                        <img src='./logo.png' width='110' alt="Btg Pactual" />
                     </div>
                     <div className="col-lg-10">
                         <div className="collapse navbar-collapse" id="navbarNav">

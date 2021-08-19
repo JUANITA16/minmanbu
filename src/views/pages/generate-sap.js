@@ -25,7 +25,8 @@ export class GenerateSap extends Component {
     this.setState({ endDate: endDate, complete: true });
   }
 
-  generateData = async () => {
+  submit = async (event) => {
+    event.preventDefault();
     await service.getToken();
   }
 
@@ -40,18 +41,20 @@ export class GenerateSap extends Component {
   render() {
     return (
       <React.Fragment>
-        <Information title={this.state.title} description={this.state.description} />
-        <div className="row">
-          <div className="col-lg-6 text-left">
-            <InputDate labelName="Fecha inicial" maxValue={this.state.endDate} getShowDate={this.handleStartDate} />
+        <form onSubmit={this.submit}>
+          <Information title={this.state.title} description={this.state.description} />
+          <div className="row">
+            <div className="col-lg-6 text-left">
+              <InputDate labelName="Fecha inicial" maxValue={this.state.endDate} getShowDate={this.handleStartDate} />
+            </div>
+            <div className="col-lg-6 text-left">
+              <InputDate labelName="Fecha final" disabled={this.state.disabled} minValue={this.state.startDate} getShowDate={this.handleEndDate} />
+            </div>
           </div>
-          <div className="col-lg-6 text-left">
-            <InputDate labelName="Fecha final" disabled={this.state.disabled} minValue={this.state.startDate} getShowDate={this.handleEndDate} />
+          <div className="pt-4 pb-4 text-left">
+            <button className="btn btn-primary rounded-0" disabled={!this.state.complete} onClick={this.generateData}>Generar</button>
           </div>
-        </div>
-        <div className="pt-4 pb-4 text-left">
-          <button className="btn btn-primary rounded-0" disabled={!this.state.complete} onClick={this.generateData}>Generar</button>
-        </div>
+        </form>
       </React.Fragment>
     );
   }

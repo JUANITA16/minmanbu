@@ -9,8 +9,8 @@ export const App = () => {
         <section className='container-fluid'>
           <div className='container bg-white mt-3 p-5'>
             <Switch>
-              <Route path='/' exact component={Home} />
-              <Route path='/generate-sap-file' exact component={GenerateSap} />
+              <Route path='/home' exact component={Home} />
+              <Route path='/' exact component={GenerateSap} />
             </Switch>
           </div>
         </section>
