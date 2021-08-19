@@ -18,13 +18,13 @@ export class NavBar extends Component {
         return (
             <nav className="navbar navbar-expand-lg navbar-blue bg-soft">
                 <div className="container-fluid row">
-                    <div className="col-lg-2">                    
-                        <img src='./logo.png' width='110'/>
+                    <div className="col-lg-2">
+                        <img src='./logo.png' width='110' />
                     </div>
-                    <div className="col-lg-10">  
+                    <div className="col-lg-10">
                         <div className="collapse navbar-collapse" id="navbarNav">
                             <ul className="nav navbar-nav">
-                                {this.state.menu.map((menu, i) => { 
+                                {this.state.menu.map((menu, i) => {
                                     return (
                                         <li className="nav-item" key={i}>
                                             <Link key={i} className="nav-link txt-gray" to={menu.url}>{menu.name}</Link>
@@ -39,5 +39,5 @@ export class NavBar extends Component {
         );
     }
 }
-  
+
 export default NavBar;

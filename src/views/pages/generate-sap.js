@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import { InputDate, Information}  from '../components/index'
+import { InputDate, Information } from '../components/index'
 import { MambuService } from "../../services/mambu-service";
 
 export const service = new MambuService();
 
-export class GenerateSap extends Component { 
+export class GenerateSap extends Component {
 
   service = new MambuService();
 
-  state = { 
+  state = {
     title: "Generación del archivo plano SAP",
     description: "En esta sección podrá generar el archivo plano por parte de SAP",
     startDate: "",
@@ -16,13 +16,13 @@ export class GenerateSap extends Component {
     disabled: true,
     complete: false
   };
- 
+
   handleStartDate = (startDate) => {
-    this.setState({startDate: startDate, disabled: false});
+    this.setState({ startDate: startDate, disabled: false });
   }
-  
+
   handleEndDate = (endDate) => {
-    this.setState({endDate: endDate, complete: true});
+    this.setState({ endDate: endDate, complete: true });
   }
 
   generateData = async () => {
@@ -40,13 +40,13 @@ export class GenerateSap extends Component {
   render() {
     return (
       <React.Fragment>
-        <Information title={this.state.title} description={this.state.description}/>
+        <Information title={this.state.title} description={this.state.description} />
         <div className="row">
           <div className="col-lg-6 text-left">
-            <InputDate labelName="Fecha inicial" maxValue={this.state.endDate} getShowDate={this.handleStartDate}/>
+            <InputDate labelName="Fecha inicial" maxValue={this.state.endDate} getShowDate={this.handleStartDate} />
           </div>
           <div className="col-lg-6 text-left">
-            <InputDate labelName="Fecha final" disabled={this.state.disabled} minValue={this.state.startDate} getShowDate={this.handleEndDate}/>
+            <InputDate labelName="Fecha final" disabled={this.state.disabled} minValue={this.state.startDate} getShowDate={this.handleEndDate} />
           </div>
         </div>
         <div className="pt-4 pb-4 text-left">
@@ -56,5 +56,5 @@ export class GenerateSap extends Component {
     );
   }
 }
-  
+
 export default GenerateSap;
