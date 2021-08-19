@@ -1,0 +1,12 @@
+Ambiente=$(stage)
+AreaResponsable=$(areaResponsable)
+CentroDeCostos=$(centroDeCostos)
+Criticidad=ALTA
+Disponibilidad=7x24
+Nube=AWS
+Owner=$(owner)
+Plataforma=Cloudformation
+Proyecto=$(project)
+Rol=Compute
+Tecnologia=ECS
+UnidadNegocio=$(unidadNegocio)
