@@ -1,0 +1,105 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  serviceName: pasivosFechaMambu
+  environment: DEV
+  infra_variable_group: ECS_MINMAMBU_${{ variables.environment }}
+  service_variable_group: ${{ upper( variables.serviceName ) }}_${{ variables.environment }}
+  aws_credentials: CLOUD_SANDBOX_${{ variables.environment }}
+  version: $(Build.BuildNumber)
+
+stages:
+- stage: ${{ variables.environment }}
+  jobs:
+    - job: create_repo
+      displayName: Create Image Repository
+      variables:
+      - group: ${{ variables.infra_variable_group }}
+      - group: ${{ variables.service_variable_group }}
+      steps:
+        - task: replace-variables-in-file@1
+          displayName: Set parameters values
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
+            endWithNewLine: true
+            verbose: true
+        - task: file-to-variable@1
+          displayName: Load tags to variable
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/iac/image-repository-tags'
+            variableName: 'tags'
+            replaceVariables: true
+            verbose: true
+        - task: CloudFormationCreateOrUpdateStack@1
+          displayName: Create image repo stack
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            stackName: 'image-repo-$(project)-$(stage)-$(serviceName)'
+            templateSource: 'file'
+            templateFile: '$(System.DefaultWorkingDirectory)/iac/image-repository.yml'
+            s3BucketName: '$(cfBucketName)'
+            templateParametersFile: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
+            tags: '$(tags)'
+    - job: build_docker_image
+      displayName: Build & Push Docker Image
+      dependsOn: create_repo
+      variables:
+      - group: ${{ variables.infra_variable_group }}
+      - group: ${{ variables.service_variable_group }}
+      steps:
+      - task: AWSShellScript@1
+        displayName: Get Account Id
+        inputs:
+          awsCredentials: ${{ variables.aws_credentials }}
+          regionName: '$(region)'
+          scriptType: 'inline'
+          inlineScript: |
+            ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
+            echo "Account ID: $ACCOUNT_ID"
+            echo "##vso[task.setvariable variable=accountId;]$ACCOUNT_ID"
+      - task: AWSShellScript@1
+        displayName: ECR Docker Login
+        inputs:
+          awsCredentials: ${{ variables.aws_credentials }}
+          regionName: '$(region)'
+          scriptType: 'inline'
+          inlineScript: |
+            aws ecr get-login-password --region $(region) | docker login --username AWS --password-stdin $(accountId).dkr.ecr.$(region).amazonaws.com
+      - task: AWSShellScript@1
+        displayName: Docker build
+        inputs:
+          awsCredentials: ${{ variables.aws_credentials }}
+          regionName: '$(region)'
+          scriptType: 'inline'
+          inlineScript: |
+            docker build -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(stage)-$(serviceName):$(version) -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(stage)-$(serviceName):latest .
+      - task: AWSShellScript@1
+        displayName: Docker push
+        inputs:
+          awsCredentials: ${{ variables.aws_credentials }}
+          regionName: '$(region)'
+          scriptType: 'inline'
+          inlineScript: |
+            docker push $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(stage)-$(serviceName) --all-tags
+    - job: set_image_version
+      displayName: Set image version
+      dependsOn: build_docker_image
+      condition: succeeded('build_docker_image')
+      variables:
+      - group: ${{ variables.infra_variable_group }}
+      - group: ${{ variables.service_variable_group }}
+      steps:
+        - checkout: none
+        - task: SecretsManagerCreateOrUpdateSecret@1
+          displayName: Set version secret
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            secretNameOrId: 'secm-$(project)-$(stage)-$(serviceName)-version'
+            secretValueSource: 'inline'
+            secretValue: '{"version": "$(version)"}'
