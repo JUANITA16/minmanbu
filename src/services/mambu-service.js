@@ -1,8 +1,10 @@
+import dotenv from 'dotenv'
+dotenv.config();
 const axios = require('axios');
 
 export class MambuService {
 
-    urlBase = process.env.URL_BASE;
+    URL_API = process.env.URL_API;
     CLIENT_ID = process.env.CLIENT_ID;
     SECRET_ID = process.env.SECRET_ID;
     RESOURCE = process.env.RESOURCE;
@@ -12,7 +14,7 @@ export class MambuService {
 
     getToken = async () => {
         const path = "/dev/auth/token";
-        const endpoint = `${this.urlBase}${path}`;
+        const endpoint = `${this.URL_API}${path}`;
 
         const params = new URLSearchParams();
         params.append('client_id', this.MY_CLIENT_ID);
