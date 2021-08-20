@@ -1,20 +1,23 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import { Home, GenerateSap, NavBar } from './views/index'
+import { Container, Card, Section } from 'react-materialize'
+
+import M from 'materialize-css'
 
 export const App = () => {
   return (
-    <section className="App">
+    <Section className="blue-grey lighten-5 p0">
       <Router>
-        <NavBar />
-        <section className='container-fluid'>
-          <div className='container bg-white mt-3 p-5'>
-            <Switch>
-              <Route path='/home' exact component={Home} />
-              <Route path='/' exact component={GenerateSap} />
-            </Switch>
-          </div>
-        </section>
+        <NavBar />        
+          <Container className='bg-white'>
+            <Card className="z-depth-3">
+              <Switch>
+                <Route path='/home' exact component={Home} />
+                <Route path='/' exact component={GenerateSap} />
+              </Switch>
+            </Card>
+          </Container>
         <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -26,8 +29,12 @@ export const App = () => {
           draggable={false}
           pauseOnHover />
       </Router>
-    </section>
+    </Section>
   );
 }
+
+document.addEventListener('DomContentLoaded', function () {
+  M.AutoInit();
+})
 
 export default App;

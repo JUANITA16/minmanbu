@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'react-toastify/dist/ReactToastify.css';
-import './resources/css/bootstrap.min.css';
+import 'materialize-css/dist/css/materialize.min.css'
 import './index.css';
 
 import App from './App';

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "react-datepicker/dist/react-datepicker.css";
 
 export class InputDate extends Component {
   state = {
@@ -17,7 +16,7 @@ export class InputDate extends Component {
   render() {
     return (
       <React.Fragment>
-        <label>{this.props.labelName}</label>
+        <label className="active">{this.props.labelName}</label>
         <DatePicker
           className="form-control rounded-0"
           selected={this.state.date}
