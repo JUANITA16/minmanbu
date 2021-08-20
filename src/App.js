@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
 import { Home, GenerateSap, NavBar } from './views/index'
 
 export const App = () => {
@@ -14,6 +15,16 @@ export const App = () => {
             </Switch>
           </div>
         </section>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable={false}
+          pauseOnHover />
       </Router>
     </section>
   );

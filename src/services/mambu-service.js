@@ -1,3 +1,5 @@
+import { setError } from '../helpers/utils';
+
 const axios = require('axios');
 const oauth = require('axios-oauth-client');
 
@@ -13,8 +15,9 @@ export class MambuService {
 
     getToken = async () => {
         const path = "/dev/auth/token";
-        const headers = { 
-            'Accept': '*/*', 
+        const endpoint = `${this.url_api}${path}`;
+        const headers = {
+            'Accept': '*/*',
             'mode': 'cors',
             'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
             'Access-Control-Allow-Origin': '*'
@@ -22,7 +25,7 @@ export class MambuService {
 
         try {
             const getClientCredentials = oauth.client(axios.create(headers), {
-                url: path,
+                url: endpoint,
                 grant_type: 'client_credentials',
                 token_type: 'Bearer',
                 client_id: this.client_id,
@@ -32,13 +35,26 @@ export class MambuService {
             const auth = await getClientCredentials();
             console.log(auth);
         } catch (error) {
-            if (error.request)
-                console.log(error.request);
-            else if (error.response)
-                console.log(error.response);
-            else if (error.message)
-                console.log(error.message);
+            setError(error);
         }
+    }
+
+    generateFile = async (startDate, endDate) => {
+        const path = `/dev/mambu/api/v1/accounting-SAP?from=${startDate}&to=${endDate}`;
+        var config = {
+            method: 'POST',
+            url: path,
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        };
+        return await axios(config)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                setError(error);
+            });
     }
 }
 
