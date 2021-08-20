@@ -13,8 +13,8 @@ export const App = () => {
           <Container className='bg-white'>
             <Card className="z-depth-3">
               <Switch>
-                <Route path='/home' exact component={Home} />
-                <Route path='/' exact component={GenerateSap} />
+                <Route path='/' exact component={Home} />
+                <Route path='/generate-sap' exact component={GenerateSap} />
               </Switch>
             </Card>
           </Container>

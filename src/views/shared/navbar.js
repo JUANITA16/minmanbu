@@ -6,11 +6,11 @@ export class NavBar extends Component {
         menu: [
             {
                 name: "Home",
-                url: "/home"
+                url: "/"
             },
             {
                 name: "Sap",
-                url: "/"
+                url: "/generate-sap"
             }
         ]
     }
