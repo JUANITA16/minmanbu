@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { convertTZ } from "../../helpers/utils";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export default function InputDate (props) {
-  const [date, setDate] = useState(new Date());
-  const [labelName] = useState(props.labelName);
+export default function InputDate(props) {
+  const [date, setCurrentDate] = useState(convertTZ(new Date()));
+  const { setDate, labelName, maxValue, minValue } = props;
 
   function handleDate(selectDate) {
     selectDate = selectDate ? selectDate : date;
-    setDate(selectDate);
-    props.setDate(selectDate);
+    setCurrentDate(selectDate);
   }
+
+  useEffect(() => {
+    setDate(date);
+  }, [setDate, date])
 
   return (
     <React.Fragment>
@@ -21,8 +25,8 @@ export default function InputDate (props) {
         selected={date}
         onChange={handleDate}
         dateFormat='yyyy-MM-dd'
-        maxDate={props.maxValue ? props.maxValue : new Date()}
-        minDate={props.minValue}
+        maxDate={maxValue ? maxValue : convertTZ(new Date())}
+        minDate={minValue}
       />
     </React.Fragment>
   );

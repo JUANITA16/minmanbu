@@ -20,7 +20,7 @@ export const setFormatDate = (date) => {
 }
 
 export const showToast = (message) => {
-    toast.dark(message, {
+    toast(message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

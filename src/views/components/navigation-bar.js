@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navbar, NavItem, Icon } from 'react-materialize'
 import { Link } from "react-router-dom";
 
 export default function NavigationBar() {
-    const menu = [
+    const [menu] = useState([
         {
             name: "Home",
             url: "/"
@@ -12,7 +12,7 @@ export default function NavigationBar() {
             name: "Sap",
             url: "/generate-sap"
         }
-    ]
+    ])
 
     return (
         <Navbar

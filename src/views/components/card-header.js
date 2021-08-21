@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Section } from 'react-materialize'
+import { Row, Col, Divider, Section } from 'react-materialize'
 
 export default function CardHeader(props) {
 
@@ -10,7 +10,7 @@ export default function CardHeader(props) {
         <Row>
             <Col s={12}>
                 <h4 className='card-title indigo-text'><b>{title}</b></h4>
-                <div className="divider"></div>
+                <Divider></Divider>
                 <Section>
                     <p className="grey-text text-darken-2">{description}</p>
                 </Section>

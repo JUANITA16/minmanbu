@@ -1,4 +1,4 @@
-import React, { useState, useEffect, clean } from "react";
+import React, { useState, useEffect } from "react";
 import { InputDate, CardHeader, Loading } from '../components/index'
 import { MambuService } from "../../services/mambu-service";
 import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
@@ -7,40 +7,35 @@ import { Row, Col, Button } from 'react-materialize'
 export const service = new MambuService();
 
 export default function GenerateSap() {
-  const [startDate, setStartDate] = useState(convertTZ(new Date(), 'America/Bogota'));
-  const [endDate, setEndDate] = useState(convertTZ(new Date(), 'America/Bogota'));
+  const [startDate, setStartDate] = useState(convertTZ(new Date()));
+  const [endDate, setEndDate] = useState(convertTZ(new Date()));
   const [title] = useState('Archivo SAP');
   const [description] = useState('En esta sección podrá generar el archivo plano por parte de SAP, para generarlo solo debe seleccionar las fechas y enviar la solicitud la cual será generada de forma automatica.');
   const [aditional, setData] = useState(`Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   const [loaderText] = useState('Estamos generando el archivo, por favor espere...');
-  const [errorDetail] = useState('Ha ocurrido un error al generar el archivo, por favor intentalo nuevamente.');
   const [inProgress, setInProgress] = useState(false);
   const [response, setResponse] = useState('');
 
   useEffect(() => {
-    setData(`Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
+    setData(() => `Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   }, [startDate, endDate])
 
   useEffect(() => {
     if (response !== '') {
-      setInProgress(false);
-      showToast(response);
+      setInProgress(() => false);
+      showToast(() => response);
     }
   }, [response])
 
   async function submit(event) {
     event.preventDefault();
-    setResponse('');
-    setInProgress(true);
+    setResponse(() => '');
+    setInProgress(() => true);
     await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
       .then((response) => {
         if (response && response.detail) {
-          setResponse(response.detail);
+          setResponse(() => response.detail);
         }
-      })
-      .catch((err) => {
-        console.log(err);
-        setResponse(errorDetail);
       });
   }
 
