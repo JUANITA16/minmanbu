@@ -4,7 +4,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function InputDate (props) {
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState(new Date());
+  const [labelName] = useState(props.labelName);
 
   function handleDate(selectDate) {
     selectDate = selectDate ? selectDate : date;
@@ -14,13 +15,12 @@ export default function InputDate (props) {
 
   return (
     <React.Fragment>
-      <label className="active">{props.labelName}</label>
+      <label className="active">{labelName}</label>
       <DatePicker
         className="form-control rounded-0"
         selected={date}
         onChange={handleDate}
         dateFormat='yyyy-MM-dd'
-        disabled={props.disabled ? "disabled" : ""}
         maxDate={props.maxValue ? props.maxValue : new Date()}
         minDate={props.minValue}
       />

@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 import { Row, Col } from 'react-materialize'
 
 export default function Home() {
-  const [title] = useState('Home');
-  const [description] = useState('Minmambu pagina princial.');
+  const [title] = useState('Inicio');
+  const [description] = useState('Mini mambu pagina princial.');
   
   return (
     <React.Fragment>

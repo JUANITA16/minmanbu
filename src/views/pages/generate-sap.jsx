@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { InputDate, CardHeader, Loading } from '../components/index'
 import { MambuService } from "../../services/mambu-service";
-import { setFormatDate, showToast } from "../../helpers/utils";
+import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
 import { Row, Col, Button } from 'react-materialize'
 
 export const service = new MambuService();
 
 export default function GenerateSap() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(convertTZ(new Date(), 'America/Bogota'));
+  const [endDate, setEndDate] = useState(convertTZ(new Date(), 'America/Bogota'));
   const [title] = useState('Archivo SAP');
   const [description] = useState('En esta sección podrá generar el archivo plano por parte de SAP, para generarlo solo debe seleccionar las fechas y enviar la solicitud la cual será generada de forma automatica.');
   const [aditional, setData] = useState(`Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
@@ -17,6 +17,8 @@ export default function GenerateSap() {
 
   useEffect(() => {
     setData(`Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
+    console.log("startDate " + startDate);
+    console.log("end " + endDate);
   }, [startDate, endDate])
 
   async function submit(event) {
@@ -32,16 +34,16 @@ export default function GenerateSap() {
   }
 
   const renderElement = () => {
-    if (!inProgress) {
-      return (
+    return !inProgress
+      ? (
         <React.Fragment>
           <CardHeader title={title} description={description} aditional={aditional} />
           <form onSubmit={submit}>
             <Row>
-              <Col s={6} className="input-field date text-left">
+              <Col s={12} m={6} className="input-field date text-left">
                 <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate} />
               </Col>
-              <Col s={6} className="input-field date text-left">
+              <Col s={12} m={6} className="input-field date text-left">
                 <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate} />
               </Col>
               <Col s={12} className="input-field m0">
@@ -51,10 +53,9 @@ export default function GenerateSap() {
               </Col>
             </Row>
           </form>
-        </React.Fragment>);
-    } else {
-      return <Loading text={loaderText} aditional={aditional}/>
-    }
+        </React.Fragment>
+      )
+      : <Loading text={loaderText} aditional={aditional} />
   }
 
   return (
