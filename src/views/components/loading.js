@@ -13,8 +13,7 @@ export default function Loading(props) {
                     active
                     color="blue"
                     flashing={false}
-                    size="big"
-                />
+                    size="big" />
             </Col>
             <Col s={12} className="valign center">
                 <p className="grey-text text-darken-2">{text}</p>
