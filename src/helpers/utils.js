@@ -15,7 +15,7 @@ export const setError = (error) => {
 
 export const setFormatDate = (date) => {
     return new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
-        .toISOString()
+        .toISOString("en-ES", { timeZone: 'America/Bogota' })
         .split("T")[0];
 }
 
@@ -29,4 +29,10 @@ export const showToast = (message) => {
         draggable: false,
         progress: undefined,
     });
+}
+
+export function convertTZ(date) {
+    return new Date((typeof date === "string"
+        ? new Date(date)
+        : date).toISOString("en-ES", { timeZone: 'America/Bogota' }));
 }
