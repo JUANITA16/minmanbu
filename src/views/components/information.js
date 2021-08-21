@@ -9,7 +9,7 @@ export class Information extends Component {
                     <h4 className='card-title indigo-text'><b>{this.props.title}</b></h4>
                     <div className="divider"></div>
                     <Section>
-                        <p className="text-left m0">{this.props.description}</p>
+                        <p className="grey-text text-darken-2">{this.props.description}</p>
                     </Section>
                 </Col>
             </Row>

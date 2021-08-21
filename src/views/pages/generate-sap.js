@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { InputDate, Information } from '../components/index'
 import { MambuService } from "../../services/mambu-service";
 import { setFormatDate, showToast } from "../../helpers/utils";
@@ -9,14 +9,14 @@ export const service = new MambuService();
 export default function GenerateSap() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [title] = useState('Generación del archivo plano SAP');
-  const [description] = useState('En esta sección podrá generar el archivo plano por parte de SAP');
+  const [title] = useState('Archivo SAP');
+  const [description] = useState('En esta sección podrá generar el archivo plano por parte de SAP, para generarlo solo debe seleccionar las fechas y enviar la solicitud la cual será generada de forma automatica.');
+  const [aditional, setData] = useState('');
   const [loaderText] = useState('Estamos generando el archivo, por favor espere...');
   const [inProgress, setInProgress] = useState(false);
 
   useEffect(() => {
-    console.log(startDate);
-    console.log(endDate);
+    setData(`Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   }, [startDate, endDate])
 
   async function submit(event) {
@@ -35,7 +35,7 @@ export default function GenerateSap() {
     if (!inProgress) {
       return (
         <React.Fragment>
-          <Information title={title} description={description} />
+          <Information title={title} description={description} aditional={aditional} />
           <form onSubmit={submit}>
             <Row>
               <Col s={6} className="input-field date text-left">
@@ -63,7 +63,10 @@ export default function GenerateSap() {
               size="big"
             />
           </Col>
-          <p className="mt20 valign center">{loaderText}</p>
+          <Col s={12} className="valign center">
+            <p className="grey-text text-darken-2">{loaderText}</p>
+            <small>{aditional}</small>
+          </Col>
         </Row>
       );
     }

@@ -7,13 +7,10 @@ export default function InputDate (props) {
   const [date, setDate] = useState(new Date())
 
   function handleDate(selectDate) {
+    selectDate = selectDate ? selectDate : date;
     setDate(selectDate);
     props.setDate(selectDate);
   }
-
-  useEffect(() => {
-    //console.log(date);
-  }, [date])
 
   return (
     <React.Fragment>
