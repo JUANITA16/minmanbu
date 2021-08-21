@@ -1,27 +1,20 @@
-import React, { Component, navigation } from "react";
+import React, { useState } from "react";
 import { Information } from "../components/index";
 import { Link } from 'react-router-dom'
 import { Row, Col } from 'react-materialize'
 
-export class Home extends Component {
-
-  state = {
-    title: "Home",
-    description: "Mambu pagina principal"
-  };
-
-  render() {
-    return (
-      <React.Fragment>
-        <Information title={this.state.title} description={this.state.description} />
-        <Row>
-          <Col s={12}>
-            <Link to="/generate-sap" className="brand-logo indigo-text" onPress={() => navigation.setOptions({ title: 'SAP!' })}>Generar Archivo</Link>
-          </Col>
-        </Row>
-      </React.Fragment>
-    );
-  }
+export default function Home() {
+  const [title] = useState('Home');
+  const [description] = useState('Minmambu pagina princial.');
+  
+  return (
+    <React.Fragment>
+      <Information title={title} description={description} />
+      <Row>
+        <Col s={12}>
+          <Link to="/generate-sap" className="brand-logo indigo-text">Generar Archivo</Link>
+        </Col>
+      </Row>
+    </React.Fragment>
+  )
 }
-
-export default Home;

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
-import { InputDate, Information } from '../components/index'
+import React, { useState, useEffect } from "react";
+import { InputDate, Information, Loading } from '../components/index'
 import { MambuService } from "../../services/mambu-service";
 import { setFormatDate, showToast } from "../../helpers/utils";
-import { Row, Col, Button, Preloader } from 'react-materialize'
+import { Row, Col, Button } from 'react-materialize'
 
 export const service = new MambuService();
 
@@ -11,7 +11,7 @@ export default function GenerateSap() {
   const [endDate, setEndDate] = useState(new Date());
   const [title] = useState('Archivo SAP');
   const [description] = useState('En esta sección podrá generar el archivo plano por parte de SAP, para generarlo solo debe seleccionar las fechas y enviar la solicitud la cual será generada de forma automatica.');
-  const [aditional, setData] = useState('');
+  const [aditional, setData] = useState(`Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   const [loaderText] = useState('Estamos generando el archivo, por favor espere...');
   const [inProgress, setInProgress] = useState(false);
 
@@ -53,22 +53,7 @@ export default function GenerateSap() {
           </form>
         </React.Fragment>);
     } else {
-      return (
-        <Row className="card-content">
-          <Col s={12} className="valign center">
-            <Preloader
-              active
-              color="blue"
-              flashing={false}
-              size="big"
-            />
-          </Col>
-          <Col s={12} className="valign center">
-            <p className="grey-text text-darken-2">{loaderText}</p>
-            <small>{aditional}</small>
-          </Col>
-        </Row>
-      );
+      return <Loading text={loaderText} aditional={aditional}/>
     }
   }
 

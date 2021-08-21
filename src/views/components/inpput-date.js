@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -27,6 +27,10 @@ export default function InputDate (props) {
     </React.Fragment>
   );
 }
+
 InputDate.propTypes = {
-  selectDate: PropTypes.any
+  labelName: PropTypes.any,
+  maxValue: PropTypes.any,
+  minValue: PropTypes.any,
+  disabled: PropTypes.string
 }
