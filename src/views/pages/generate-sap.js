@@ -1,91 +1,77 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { InputDate, Information } from '../components/index'
 import { MambuService } from "../../services/mambu-service";
-import { setDate, showToast } from "../../helpers/utils";
+import { setFormatDate, showToast } from "../../helpers/utils";
 import { Row, Col, Button, Preloader } from 'react-materialize'
 
 export const service = new MambuService();
 
-export class GenerateSap extends Component {
+export default function GenerateSap() {
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [title] = useState('Generación del archivo plano SAP');
+  const [description] = useState('En esta sección podrá generar el archivo plano por parte de SAP');
+  const [loaderText] = useState('Estamos generando el archivo, por favor espere...');
+  const [inProgress, setInProgress] = useState(false);
 
-  service = new MambuService();
+  useEffect(() => {
+    console.log(startDate);
+    console.log(endDate);
+  }, [startDate, endDate])
 
-  state = {
-    title: "Generación del archivo plano SAP",
-    description: "En esta sección podrá generar el archivo plano por parte de SAP",
-    startDate: new Date(),
-    endDate: new Date(),
-    disabled: true,
-    inProgress: false,
-    response: ""
-  };
-
-  handleStartDate = (date) => {
-    this.setState({ startDate: date });
-  }
-
-  handleEndDate = (date) => {
-    this.setState({ endDate: date });
-  }
-
-  submit = async (event) => {
-    this.setState({ inProgress: true });
+  async function submit(event) {
     event.preventDefault();
-    await service.generateFile(setDate(this.state.startDate), setDate(this.state.endDate))
+    setInProgress(true);
+    await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
       .then((response) => {
         if (response) {
-          this.setState({ inProgress: false, response: response.detail });
+          setInProgress(false);
           showToast(response.detail);
         }
       });
   }
 
-  render() {
-    const renderElement = () => {
-      if (!this.state.inProgress) {
-        return (
-          <React.Fragment>
-            <Information title={this.state.title} description={this.state.description} />
-            <form onSubmit={this.submit}>
-              <Row>
-                <Col s={6} className="input-field date text-left">
-                  <InputDate labelName="Fecha inicial" maxValue={this.state.endDate} getShowDate={this.handleStartDate} />
-                </Col>
-                <Col s={6} className="input-field date text-left">
-                  <InputDate labelName="Fecha final" disabled={this.state.disabled} minValue={this.state.startDate} getShowDate={this.handleEndDate} />
-                </Col>
-                <Col s={12} className="input-field m0">
-                  <Button node="button" type="submit" small className="indigo darken-4" onClick={this.generateData}>
-                    Generar
-                  </Button>
-                </Col>
-              </Row>
-            </form>
-          </React.Fragment>);
-      } else {
-        return (
-          <Row className="card-content">
-            <Col s={12} className="valign center">
-              <Preloader
-                active
-                color="blue"
-                flashing={false}
-                size="big"
-              />
-            </Col>
-            <p className="mt20 valign center">Estamos generando el archivo, por favor espere...</p>
-          </Row>
-        );
-      }
+  const renderElement = () => {
+    if (!inProgress) {
+      return (
+        <React.Fragment>
+          <Information title={title} description={description} />
+          <form onSubmit={submit}>
+            <Row>
+              <Col s={6} className="input-field date text-left">
+                <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate} />
+              </Col>
+              <Col s={6} className="input-field date text-left">
+                <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate} />
+              </Col>
+              <Col s={12} className="input-field m0">
+                <Button node="button" type="submit" small className="indigo darken-4">
+                  Generar
+                </Button>
+              </Col>
+            </Row>
+          </form>
+        </React.Fragment>);
+    } else {
+      return (
+        <Row className="card-content">
+          <Col s={12} className="valign center">
+            <Preloader
+              active
+              color="blue"
+              flashing={false}
+              size="big"
+            />
+          </Col>
+          <p className="mt20 valign center">{loaderText}</p>
+        </Row>
+      );
     }
-
-    return (
-      <React.Fragment>
-        {renderElement()}
-      </React.Fragment>
-
-    );
   }
-}
 
-export default GenerateSap;
+  return (
+    <React.Fragment>
+      {renderElement()}
+    </React.Fragment>
+  )
+}

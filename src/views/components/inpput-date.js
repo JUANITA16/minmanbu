@@ -1,34 +1,35 @@
-import React, { Component } from "react";
-
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export class InputDate extends Component {
-  state = {
-    date: new Date(),
-  };
+export default function InputDate (props) {
+  const [date, setDate] = useState(new Date())
 
-  handleDate = (selectDate) => {
-    this.setState({ date: selectDate });
-    this.props.getShowDate(selectDate);
-  };
-
-  render() {
-    return (
-      <React.Fragment>
-        <label className="active">{this.props.labelName}</label>
-        <DatePicker
-          className="form-control rounded-0"
-          selected={this.state.date}
-          onChange={this.handleDate}
-          dateFormat='yyyy-MM-dd'
-          disabled={this.props.disabled ? "disabled" : ""}
-          maxDate={this.props.maxValue ? this.props.maxValue : new Date()}
-          minDate={this.props.minValue}
-        />
-      </React.Fragment>
-    );
+  function handleDate(selectDate) {
+    setDate(selectDate);
+    props.setDate(selectDate);
   }
-}
 
-export default InputDate;
+  useEffect(() => {
+    //console.log(date);
+  }, [date])
+
+  return (
+    <React.Fragment>
+      <label className="active">{props.labelName}</label>
+      <DatePicker
+        className="form-control rounded-0"
+        selected={date}
+        onChange={handleDate}
+        dateFormat='yyyy-MM-dd'
+        disabled={props.disabled ? "disabled" : ""}
+        maxDate={props.maxValue ? props.maxValue : new Date()}
+        minDate={props.minValue}
+      />
+    </React.Fragment>
+  );
+}
+InputDate.propTypes = {
+  selectDate: PropTypes.any
+}

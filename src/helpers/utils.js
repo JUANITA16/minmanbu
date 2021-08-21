@@ -13,7 +13,7 @@ export const setError = (error) => {
         console.log(error.message);
 }
 
-export const setDate = (date) => {
+export const setFormatDate = (date) => {
     return new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
         .toISOString()
         .split("T")[0];
