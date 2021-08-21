@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { InputDate, Information, Loading } from '../components/index'
+import { InputDate, CardHeader, Loading } from '../components/index'
 import { MambuService } from "../../services/mambu-service";
 import { setFormatDate, showToast } from "../../helpers/utils";
 import { Row, Col, Button } from 'react-materialize'
@@ -35,7 +35,7 @@ export default function GenerateSap() {
     if (!inProgress) {
       return (
         <React.Fragment>
-          <Information title={title} description={description} aditional={aditional} />
+          <CardHeader title={title} description={description} aditional={aditional} />
           <form onSubmit={submit}>
             <Row>
               <Col s={6} className="input-field date text-left">

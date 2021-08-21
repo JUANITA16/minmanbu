@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Information } from "../components/index";
+import { CardHeader } from "../components/index";
 import { Link } from 'react-router-dom'
 import { Row, Col } from 'react-materialize'
 
@@ -9,7 +9,7 @@ export default function Home() {
   
   return (
     <React.Fragment>
-      <Information title={title} description={description} />
+      <CardHeader title={title} description={description} />
       <Row>
         <Col s={12}>
           <Link to="/generate-sap" className="brand-logo indigo-text">Generar Archivo</Link>
