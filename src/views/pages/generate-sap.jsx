@@ -17,6 +17,10 @@ export default function GenerateSap() {
   const [response, setResponse] = useState('');
 
   useEffect(() => {
+    document.title = title
+  }, []);
+
+  useEffect(() => {
     setData(() => `Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   }, [startDate, endDate])
 
@@ -64,9 +68,5 @@ export default function GenerateSap() {
       : <Loading text={loaderText} aditional={aditional} />
   }
 
-  return (
-    <React.Fragment>
-      {renderElement()}
-    </React.Fragment>
-  )
+  return renderElement()
 }

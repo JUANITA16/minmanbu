@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CardHeader } from "../components/index";
 import { Link } from 'react-router-dom'
 import { Row, Col } from 'react-materialize'
@@ -7,6 +7,10 @@ export default function Home() {
   const [title] = useState('Inicio');
   const [description] = useState('Mini mambu pagina princial.');
   
+  useEffect(() => {
+    document.title = title
+  }, []);
+
   return (
     <React.Fragment>
       <CardHeader title={title} description={description} />
