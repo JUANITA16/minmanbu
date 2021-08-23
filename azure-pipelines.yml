@@ -5,8 +5,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  branch: $(branch)
-  environment: $(stage)
+  branch: development
+  environment: DEV
   serviceName: minmambu
   infra_variable_group: ${{ upper( variables.serviceName ) }}_ECS_${{ variables.environment }}
   service_variable_group: ${{ upper( variables.serviceName ) }}_${{ variables.environment }}
