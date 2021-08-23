@@ -5,9 +5,9 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  serviceName: pasivosFechaMambu
+  serviceName: minmambu
   environment: DEV
-  infra_variable_group: ECS_MINMAMBU_${{ variables.environment }}
+  infra_variable_group: ECSLAB_${{ variables.environment }}
   service_variable_group: ${{ upper( variables.serviceName ) }}_${{ variables.environment }}
   aws_credentials: MINMAMBU-${{ variables.environment }}
   version: $(Build.BuildNumber)
