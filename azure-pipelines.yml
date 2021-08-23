@@ -9,7 +9,7 @@ variables:
   environment: DEV
   infra_variable_group: ECS_MINMAMBU_${{ variables.environment }}
   service_variable_group: ${{ upper( variables.serviceName ) }}_${{ variables.environment }}
-  aws_credentials: CLOUD_SANDBOX_${{ variables.environment }}
+  aws_credentials: MINMAMBU-${{ variables.environment }}
   version: $(Build.BuildNumber)
 
 stages:
