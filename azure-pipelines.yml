@@ -1,15 +1,16 @@
 trigger:
-- main
+- ${{ variables.branch }}
 
 pool:
   vmImage: ubuntu-latest
 
 variables:
+  branch: $(branch)
+  environment: $(stage)
   serviceName: minmambu
-  environment: DEV
   infra_variable_group: ${{ upper( variables.serviceName ) }}_ECS_${{ variables.environment }}
   service_variable_group: ${{ upper( variables.serviceName ) }}_${{ variables.environment }}
-  aws_credentials: MINMAMBU-${{ variables.environment }}
+  aws_credentials: ${{ upper( variables.serviceName ) }}-${{ variables.environment }}
   version: $(Build.BuildNumber)
 
 stages:
