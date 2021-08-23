@@ -7,7 +7,7 @@ pool:
 variables:
   serviceName: minmambu
   environment: DEV
-  infra_variable_group: ECSLAB_${{ variables.environment }}
+  infra_variable_group: ${{ upper( variables.serviceName ) }}_ECS_${{ variables.environment }}
   service_variable_group: ${{ upper( variables.serviceName ) }}_${{ variables.environment }}
   aws_credentials: MINMAMBU-${{ variables.environment }}
   version: $(Build.BuildNumber)
