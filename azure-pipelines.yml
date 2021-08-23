@@ -1,8 +1,7 @@
 trigger:
 - development
 
-pool:
-  vmImage: ubuntu-latest
+pool: 'BTG Colombia - Azure DepOPS'
 
 variables:
   environment: DEV
