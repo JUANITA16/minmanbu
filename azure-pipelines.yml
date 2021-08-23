@@ -1,11 +1,10 @@
 trigger:
-- ${{ variables.branch }}
+- main
 
 pool:
   vmImage: ubuntu-latest
 
 variables:
-  branch: development
   environment: DEV
   serviceName: minmambu
   infra_variable_group: ${{ upper( variables.serviceName ) }}_ECS_${{ variables.environment }}
