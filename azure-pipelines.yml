@@ -18,6 +18,7 @@ stages:
   jobs:
     - job: create_repo
       displayName: Create Image Repository
+      pool: "BTG Colombia - Azure DepOPS" # agent pool
       variables:
       - group: ${{ variables.infra_variable_group }}
       - group: ${{ variables.service_variable_group }}
@@ -48,6 +49,7 @@ stages:
             tags: '$(tags)'     
     - job: build_docker_image
       displayName: Build & Push Docker Image
+      pool: "BTG Colombia - Azure DepOPS" # agent pool
       dependsOn: create_repo
       variables:
       - group: ${{ variables.infra_variable_group }}
@@ -89,6 +91,7 @@ stages:
             docker push $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(stage)-$(serviceName) --all-tags
     - job: set_image_version
       displayName: Set image version
+      pool: "BTG Colombia - Azure DepOPS" # agent pool
       dependsOn: build_docker_image
       condition: succeeded('build_docker_image')
       variables:
