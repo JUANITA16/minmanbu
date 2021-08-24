@@ -9,8 +9,7 @@ variables:
   serviceName: minmambu
   infra_variable_group: ${{ upper( variables.serviceName ) }}_ECS_${{ variables.environment }}
   service_variable_group: ${{ upper( variables.serviceName ) }}_${{ variables.environment }}
-  #aws_credentials: ${{ upper( variables.serviceName ) }}-${{ variables.environment }}
-  aws_credentials: MINMAMBU-${{ variables.environment }}  #Service connections: reemplazar NameServiceConnections por el asignado a cada proyecto 
+  aws_credentials: ${{ upper( variables.serviceName ) }}-${{ variables.environment }}
   version: $(Build.BuildNumber)
 
 stages:
