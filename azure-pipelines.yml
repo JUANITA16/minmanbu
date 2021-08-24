@@ -104,6 +104,6 @@ stages:
           inputs:
             awsCredentials: ${{ variables.aws_credentials }}
             regionName: '$(region)'
-            secretNameOrId: 'secm-$(project)-$(stage)-$(serviceName)-version'
+            secretNameOrId: 'scm-$(project)-$(stage)-$(serviceName)-version'
             secretValueSource: 'inline'
             secretValue: '{"version": "$(version)"}'
