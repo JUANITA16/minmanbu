@@ -1,7 +1,8 @@
 trigger:
 - development
 
-pool: 'BTG Colombia - Azure DepOPS'
+pool:
+  vmImage: ubuntu-latest
 
 variables:
   environment: DEV
@@ -26,7 +27,6 @@ stages:
             filepath: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
             endWithNewLine: true
             verbose: true
-
         - task: file-to-variable@1
           displayName: Load tags to variable
           inputs:
@@ -34,22 +34,6 @@ stages:
             variableName: 'tags'
             replaceVariables: true
             verbose: true
-            
-        - task: CopyFiles@2
-          displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/ecs-cluster-$(project)-$(stage)'
-          inputs:
-            SourceFolder: '$(Build.SourcesDirectory)'
-            Contents: |
-              **/*
-              !.git/**/*
-            TargetFolder: '$(Build.ArtifactStagingDirectory)/ecs-cluster-$(project)-$(stage)'
-
-        - task: PublishBuildArtifacts@1
-          displayName: 'Publish Files to: $(Build.ArtifactStagingDirectory)/ecs-cluster-$(project)-$(stage)'
-          inputs:
-            pathToPublish: $(Build.ArtifactStagingDirectory)
-            artifactName: ecs-cluster-$(project)-$(stage)
-
         - task: CloudFormationCreateOrUpdateStack@1
           displayName: Create image repo stack
           inputs:
@@ -60,8 +44,7 @@ stages:
             templateFile: '$(System.DefaultWorkingDirectory)/iac/image-repository.yml'
             s3BucketName: '$(cfBucketName)'
             templateParametersFile: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
-            tags: '$(tags)'
-            
+            tags: '$(tags)'     
     - job: build_docker_image
       displayName: Build & Push Docker Image
       dependsOn: create_repo
