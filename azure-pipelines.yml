@@ -6,10 +6,11 @@ pool:
 
 variables:
   environment: DEV
-  serviceName: minmambu
-  infra_variable_group: ${{ upper( variables.serviceName ) }}_ECS_${{ variables.environment }}
+  service: minmambu
+  serviceName: minmambu-process
+  infra_variable_group: ${{ upper( variables.service ) }}_ECS_${{ variables.environment }}
   service_variable_group: ${{ upper( variables.serviceName ) }}_${{ variables.environment }}
-  aws_credentials: ${{ upper( variables.serviceName ) }}-${{ variables.environment }}
+  aws_credentials: ${{ upper( variables.service ) }}-${{ variables.environment }}
   version: $(Build.BuildNumber)
 
 stages:
