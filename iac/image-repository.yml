@@ -22,20 +22,20 @@ Resources:
       ImageScanningConfiguration: 
         ScanOnPush: True
       ImageTagMutability: MUTABLE
-      RepositoryName: !Sub 'ecr-${project}-${stage}-${serviceName}'
+      RepositoryName: !Sub 'ecr-${project}-${appName}-${serviceName}-${stage}'
       Tags:
         - Key: Name
-          Value: !Sub 'ecr-${project}-${stage}-${serviceName}'
+          Value: !Sub 'ecr-${project}-${appName}-${serviceName}-${stage}'
 
   ImageVersionSecret:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
-      Name: !Sub 'scm-${project}-${stage}-${serviceName}-version'
-      Description: !Sub 'Deployed version for image ecr-${project}-${stage}-${serviceName}'
+      Name: !Sub 'scm-${project}-${appName}-${serviceName}-${stage}-version'
+      Description: !Sub 'Deployed version for image ecr-${project}-${appName}-${serviceName}-${stage}'
       SecretString: '{"version":"latest"}'
       Tags:
         - Key: Name
-          Value: !Sub 'scm-${project}-${stage}-${serviceName}-version'
+          Value: !Sub 'scm-${project}-${appName}-${serviceName}-${stage}-version'
 Outputs:
   imageRepositoryName:
     Description: Image Repository Name
@@ -59,6 +59,6 @@ Outputs:
       Name: !Sub '${AWS::StackName}-imageVersionSecretARN'
   imageVersionSecretName:
     Description: Image Version Secret Name
-    Value: !Sub 'scm-${project}-${stage}-${serviceName}-version'
+    Value: !Sub 'scm-${project}-${appName}-${serviceName}-${stage}-version'
     Export:
       Name: !Sub '${AWS::StackName}-imageVersionSecretName'

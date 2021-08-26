@@ -41,7 +41,7 @@ stages:
           inputs:
             awsCredentials: ${{ variables.aws_credentials }}
             regionName: '$(region)'
-            stackName: 'image-repo-$(project)-$(appName)-$(stage)-$(serviceName)'
+            stackName: 'image-repo-$(project)-$(appName)-$(serviceName)-$(stage)'
             templateSource: 'file'
             templateFile: '$(System.DefaultWorkingDirectory)/iac/image-repository.yml'
             s3BucketName: '$(cfBucketName)'
@@ -80,7 +80,7 @@ stages:
           regionName: '$(region)'
           scriptType: 'inline'
           inlineScript: |
-            docker build -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(stage)-$(serviceName):$(version) -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(stage)-$(serviceName):latest .
+            docker build -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):$(version) -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):latest .
       - task: AWSShellScript@1
         displayName: Docker push
         inputs:
@@ -88,7 +88,7 @@ stages:
           regionName: '$(region)'
           scriptType: 'inline'
           inlineScript: |
-            docker push $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(stage)-$(serviceName) --all-tags
+            docker push $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage) --all-tags
     - job: set_image_version
       displayName: Set image version
       pool: "BTG Colombia - Azure DepOPS" # agent pool
@@ -104,6 +104,6 @@ stages:
           inputs:
             awsCredentials: ${{ variables.aws_credentials }}
             regionName: '$(region)'
-            secretNameOrId: 'scm-$(project)-$(appName)-$(stage)-$(serviceName)-version'
+            secretNameOrId: 'scm-$(project)-$(appName)-$(serviceName)-$(stage)-version'
             secretValueSource: 'inline'
             secretValue: '{"version": "$(version)"}'
