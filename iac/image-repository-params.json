@@ -2,6 +2,10 @@
     {
         "ParameterKey": "stage",
         "ParameterValue": "$(stage)"
+    },   
+    {
+        "ParameterKey": "appName",
+        "ParameterValue": "$(appName)"
     },
     {
         "ParameterKey": "project",

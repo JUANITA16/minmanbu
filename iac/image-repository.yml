@@ -9,6 +9,8 @@ Parameters:
       - dev
   project:
     Type: String
+  appName:
+    Type: String
   serviceName:
     Type: String
 Resources:

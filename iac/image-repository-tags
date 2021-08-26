@@ -1,4 +1,5 @@
 Ambiente=$(stage)
+AppName=$(appName)
 AreaResponsable=$(areaResponsable)
 CentroDeCostos=$(centroDeCostos)
 Criticidad=ALTA
