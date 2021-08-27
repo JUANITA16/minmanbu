@@ -1,22 +1,20 @@
-# From base image node
-FROM node:14-alpine
+# build environment
+FROM node:15.4 as build
 
-# Install extra packages
-RUN apk update && apk add bash && apk add bind-tools && apk add curl
-
-# Create working directory
-RUN mkdir -p /usr/src/app
+RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
-RUN npm install
 
-# Copying required files from your file system to container file system
-COPY ./src/ package.json ./
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+COPY package.json /usr/src/app/package.json
 
-# Install all dependencies
-RUN npm install
+RUN npm install --silent
+RUN npm install react-scripts@3.4.1 -g — silent
 
-# Expose the port
-EXPOSE 3000
+COPY . /usr/src/app
+RUN npm run build
 
-# Command to run when intantiate an image
-CMD ["npm","start"]
+# production environment
+FROM nginx:stable-alpine
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"] 
