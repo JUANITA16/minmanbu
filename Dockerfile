@@ -1,20 +1,22 @@
 # build environment
 FROM node:15.4 as build
 
-RUN mkdir /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /app
 
-ENV PATH /usr/src/app/node_modules/.bin:$PATH
-COPY package.json /usr/src/app/package.json
+COPY package*.json ./
 
 RUN npm install --silent
-RUN npm install -g react-scripts@7.21.1 
 
-COPY . /usr/src/app
+COPY . ./
 RUN npm run build
 
 # production environment
-FROM nginx:stable-alpine
-COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+FROM nginx:1.19
+
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/build /usr/share/nginx/html
+
+#Expose port
 EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"] 
