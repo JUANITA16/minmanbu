@@ -1,20 +1,16 @@
-# pull official base image
-FROM node:15.4 as build
+# From base image node
+FROM node:14-alpine
 
-# set working directory
-WORKDIR /app
+# Install extra packages
+RUN apk update && apk add bash && apk add bind-tools && apk add curl
 
-# Copy and build
-COPY package*.json ./
+# Create working directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+RUN npm install
 
-# add app
-COPY . ./
-RUN npm run build
-
-FROM nginx:1.19
-
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /app/build /usr/share/nginx/html
+# Copying required files from your file system to container file system
+COPY ./src/ package.json ./
 
 # Install all dependencies
 RUN npm install
