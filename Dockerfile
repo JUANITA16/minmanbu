@@ -5,11 +5,11 @@ FROM node:15.4 as build
 WORKDIR /app
 
 # Copy and build
-COPY package*.json .
+COPY package*.json ./
 RUN npm install
 
 # add app
-COPY . .
+COPY . ./
 RUN npm run build
 
 FROM nginx:1.19
