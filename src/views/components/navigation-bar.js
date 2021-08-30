@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Navbar, NavItem, Icon } from 'react-materialize'
+import { Navbar, Icon } from 'react-materialize'
 import { Link } from "react-router-dom";
 
 export default function NavigationBar() {
     const base = process.env.PUBLIC_URL;
-    
+
     const [menu] = useState([
         {
             name: "Home",
@@ -19,7 +19,8 @@ export default function NavigationBar() {
     return (
         <Navbar
             alignLinks="right"
-            brand={<Link className="brand-logo" to="/"><img className="brand-logo-img" src='./logo-white.svg' alt="Btg Pactual" /></Link>}
+            brand={<Link className="brand-logo" to={base}>
+                <img className="brand-logo-img" src='./logo-white.svg' alt="Btg Pactual" /></Link>}
             centerChildren
             className="indigo darken-4"
             id="mobile-nav"
@@ -36,11 +37,7 @@ export default function NavigationBar() {
                 preventScrolling: true
             }}>
             {menu.map((menu, i) => {
-                return (
-                    <NavItem className="" key={i} to={menu.url}>
-                        {menu.name}
-                    </NavItem>
-                );
+                return <Link key={i} to={menu.url}>{menu.name}</Link>
             })}
         </Navbar>
     );
