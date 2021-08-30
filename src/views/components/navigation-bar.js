@@ -37,7 +37,7 @@ export default function NavigationBar() {
             }}>
             {menu.map((menu, i) => {
                 return (
-                    <NavItem className="" key={i} href={menu.url}>
+                    <NavItem className="" key={i} to={menu.url}>
                         {menu.name}
                     </NavItem>
                 );
