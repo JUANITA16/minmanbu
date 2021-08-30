@@ -9,9 +9,7 @@ export class MambuService {
     client_id = process.env.REACT_APP_CLIENT_ID;
     client_secret = process.env.REACT_APP_SECRET_ID;
     resource = process.env.REACT_APP_RESOURCE;
-    state = {
-        token: ""
-    }
+    token = "";
 
     getToken = async () => {
         const path = "/dev/auth/token";
@@ -41,9 +39,10 @@ export class MambuService {
 
     generateFile = async (startDate, endDate) => {
         const path = `/dev/mambu/api/v1/accountings-SAP?from=${startDate}&to=${endDate}`;
+        const endpoint = `${this.url_api}${path}`;
         var config = {
             method: 'POST',
-            url: path,
+            url: endpoint,
             headers: {
                 'Content-Type': 'application/json',
             }
