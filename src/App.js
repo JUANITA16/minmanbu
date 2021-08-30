@@ -4,18 +4,20 @@ import { ToastContainer } from 'react-toastify';
 import { Home, GenerateSap, NavigationBar } from './views/index'
 
 export default function App() {
+  const base = process.env.PUBLIC_URL;
+
   return (
     <Section className="blue-grey lighten-5 p0">
       <Router>
-        <NavigationBar />        
-          <Container className='bg-white'>
-            <Card className="z-depth-3">
-              <Switch>
-                <Route path='/' exact component={Home} />
-                <Route path='/generate-sap' exact component={GenerateSap} />
-              </Switch>
-            </Card>
-          </Container>
+        <NavigationBar />
+        <Container className='bg-white'>
+          <Card className="z-depth-3">
+            <Switch>
+              <Route path={base + '/'} exact component={Home} />
+              <Route path={base + '/generate-sap'} exact component={GenerateSap} />
+            </Switch>
+          </Card>
+        </Container>
         <ToastContainer
           position="top-right"
           autoClose={5000}

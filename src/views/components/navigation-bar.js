@@ -3,14 +3,16 @@ import { Navbar, NavItem, Icon } from 'react-materialize'
 import { Link } from "react-router-dom";
 
 export default function NavigationBar() {
+    const base = process.env.PUBLIC_URL;
+    
     const [menu] = useState([
         {
             name: "Home",
-            url: "/"
+            url: `${base}/`
         },
         {
             name: "Sap",
-            url: "/generate-sap"
+            url: `${base}/generate-sap`
         }
     ])
 
