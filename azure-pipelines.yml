@@ -84,14 +84,21 @@ stages:
           scriptType: 'inline'
           inlineScript: |
             aws ecr get-login-password --region $(region) | docker login --username AWS --password-stdin $(accountId).dkr.ecr.$(region).amazonaws.com
-      - task: AWSShellScript@1
-        displayName: Docker build
+      - task: Docker@2
         inputs:
-          awsCredentials: ${{ variables.aws_credentials }}
-          regionName: '$(region)'
-          scriptType: 'inline'
-          inlineScript: |
-            docker build -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):$(version) -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):latest .
+          command: 'build'
+          Dockerfile: '**/Dockerfile'
+          tags: |
+            $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):$(version) 
+            $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):latest
+      # - task: AWSShellScript@1
+      #   displayName: Docker build
+      #   inputs:
+      #     awsCredentials: ${{ variables.aws_credentials }}
+      #     regionName: '$(region)'
+      #     scriptType: 'inline'
+      #     inlineScript: |
+      #       docker build -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):$(version) -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):latest .
       - task: AWSShellScript@1
         displayName: Docker push
         inputs:
