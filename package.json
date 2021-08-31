@@ -49,6 +49,5 @@
   "devDependencies": {
     "@types/react": "^17.0.18",
     "dotenv": "^10.0.0"
-  },
-  "proxy": "https://fjlijtivf4-vpce-072b7e61b5b294dd4.execute-api.us-east-1.amazonaws.com"
+  }
 }
