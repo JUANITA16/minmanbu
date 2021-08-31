@@ -5,7 +5,7 @@ const oauth = require('axios-oauth-client');
 
 export class MambuService {
 
-    url_api = process.env.REACT_APP_URL_API;
+    url_api = 'https://fjlijtivf4-vpce-072b7e61b5b294dd4.execute-api.us-east-1.amazonaws.com';
     client_id = process.env.REACT_APP_CLIENT_ID;
     client_secret = process.env.REACT_APP_SECRET_ID;
     resource = process.env.REACT_APP_RESOURCE;
@@ -42,7 +42,7 @@ export class MambuService {
         const endpoint = `${this.url_api}${path}`;
         var config = {
             method: 'POST',
-            url: path,
+            url: endpoint,
             headers: {
                 'Content-Type': 'application/json',
             }
