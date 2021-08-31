@@ -42,7 +42,7 @@ export class MambuService {
         const endpoint = `${this.url_api}${path}`;
         var config = {
             method: 'POST',
-            url: endpoint,
+            url: path,
             headers: {
                 'Content-Type': 'application/json',
             }
