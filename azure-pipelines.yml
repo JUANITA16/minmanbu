@@ -85,12 +85,14 @@ stages:
           inlineScript: |
             aws ecr get-login-password --region $(region) | docker login --username AWS --password-stdin $(accountId).dkr.ecr.$(region).amazonaws.com
       - task: Docker@2
+        displayName: Generate docker build 
         inputs:
+          repository: $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage)
           command: 'build'
           Dockerfile: '**/Dockerfile'
           tags: |
-            $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):$(version) 
-            $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):latest
+            $(version) 
+            latest
       # - task: AWSShellScript@1
       #   displayName: Docker build
       #   inputs:
