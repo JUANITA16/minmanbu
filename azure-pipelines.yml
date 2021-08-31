@@ -35,6 +35,11 @@ stages:
             filepath: '$(System.DefaultWorkingDirectory)/.env'
             endWithNewLine: true
             verbose: true
+        - task: CmdLine@2
+          displayName: Show .env variables
+          inputs:
+            script: |
+              cat $(System.DefaultWorkingDirectory)/.env
         - task: file-to-variable@1
           displayName: Load tags to variable
           inputs:
