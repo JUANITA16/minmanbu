@@ -38,11 +38,11 @@ export class MambuService {
     }
 
     generateFile = async (startDate, endDate) => {
-        const path = `/dev/mambu/api/v1/accounting-SAP?from=${startDate}&to=${endDate}`;        
+        const path = `/process/dev/mambu/api/v1/accounting-SAP?from=${startDate}&to=${endDate}`;        
         const endpoint = `${this.url_api}${path}`;
         var config = {
             method: 'POST',
-            url: path,
+            url: endpoint,
             headers: {
                 'Content-Type': 'application/json',
             }
