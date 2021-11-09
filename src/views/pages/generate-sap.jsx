@@ -35,15 +35,10 @@ export default function GenerateSap() {
     event.preventDefault();
     setResponse(() => '');
     setInProgress(() => true);
-    await service.getToken()
-      .then((response) => {
-        console.log(response);
-        console.log(process.env);
-      });
     await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
       .then((response) => {
         if (response && response.detail) {
-          setResponse(() => response.detail);
+          setResponse(() => response.detail + "-" + response.filename);
         }
       });
   }

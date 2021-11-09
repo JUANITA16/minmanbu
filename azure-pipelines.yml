@@ -14,7 +14,7 @@ variables:
   version: $(Build.BuildNumber)
 
 stages:
-- stage: ${{ variables.environment }}
+- stage: $(stage)
   jobs:
     - job: create_repo
       displayName: Create Image Repository
