@@ -106,8 +106,7 @@ stages:
             regionName: '$(region)'
             secretNameOrId: 'scm-$(project)-$(appName)-$(serviceName)-$(stage)-version'
             secretValueSource: 'inline'
-            secretValue: '{"version": "$(version)"}'
-      steps: 
+            secretValue: '{"version": "$(version)"}'      
         - task: AmazonWebServices.aws-vsts-tools.AWSShellScript.AWSShellScript@1 
           displayName: 'AWS Shell Script' 
           inputs: 
