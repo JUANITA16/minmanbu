@@ -20,7 +20,7 @@ export default function NavigationBar() {
         <Navbar
             alignLinks="right"
             brand={<Link className="brand-logo" to={base}>
-                <img className="brand-logo-img" src='./logo-white.svg' alt="Btg Pactual" /></Link>}
+                <img className="brand-logo-img" src='./logo-white.svg' alt="Btg Pactual V2" /></Link>}
             centerChildren
             className="indigo darken-4"
             id="mobile-nav"
