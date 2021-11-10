@@ -113,6 +113,6 @@ stages:
             awsCredentials: ${{ variables.aws_credentials }} 
             regionName: '$(region)' 
             scriptType: inline 
-            inlineScript: 'aws ecs update-service --cluster ecs-${project}-${appName}-${stage}-cluster --service ecs-${project}-${appName}-${stage}-process-service --force-new-deployment' 
+            inlineScript: 'aws ecs update-service --cluster ecs-$(project)-$(appName)-$(stage)-cluster --service ecs-$(project)-$(appName)-$(stage)-process-service --force-new-deployment' 
             disableAutoCwd: true 
             workingDirectory: '$(System.DefaultWorkingDirectory)'
