@@ -111,7 +111,7 @@ stages:
           displayName: 'AWS Shell Script' 
           inputs: 
             awsCredentials: ${{ variables.aws_credentials }} 
-            regionName: 'us-east-1' 
+            regionName: '$(region)' 
             scriptType: 
               inline inlineScript: 'aws ecs update-service --cluster ecs-${project}-${appName}-${stage}-cluster --service ecs-${project}-${appName}-${stage}-process-service --force-new-deployment' 
               disableAutoCwd: true 
