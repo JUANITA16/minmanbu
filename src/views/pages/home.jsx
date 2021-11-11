@@ -5,7 +5,7 @@ import { Row, Col } from 'react-materialize'
 
 export default function Home() {
   const base = process.env.PUBLIC_URL;
-  const title = 'Inicio';
+  const title = 'Inicio. V2';
   const description = 'Mini mambu pagina princial.';
 
   useEffect(() => {

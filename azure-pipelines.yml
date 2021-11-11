@@ -29,6 +29,12 @@ stages:
             filepath: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
             endWithNewLine: true
             verbose: true
+        - task: replace-variables-in-file@2
+          displayName: Set parameters values file .env
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/.env'
+            endWithNewLine: true
+            verbose: true
         - task: file-to-variable@1
           displayName: Load tags to variable
           inputs:
@@ -106,7 +112,7 @@ stages:
             regionName: '$(region)'
             secretNameOrId: 'scm-$(project)-$(appName)-$(serviceName)-$(stage)-version'
             secretValueSource: 'inline'
-            secretValue: '{"version": "$(version)"}'      
+            secretValue: '{"version": "latest"}'      
         - task: AmazonWebServices.aws-vsts-tools.AWSShellScript.AWSShellScript@1 
           displayName: 'AWS Shell Script' 
           inputs: 
