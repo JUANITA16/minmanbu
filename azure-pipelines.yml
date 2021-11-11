@@ -28,7 +28,13 @@ stages:
           inputs:
             filepath: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
             endWithNewLine: true
-            verbose: true       
+            verbose: true
+        - task: replace-variables-in-file@1
+          displayName: Set parameters values file .env
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/.env'
+            endWithNewLine: true
+            verbose: true
         - task: file-to-variable@1
           displayName: Load tags to variable
           inputs:
@@ -73,12 +79,6 @@ stages:
           scriptType: 'inline'
           inlineScript: |
             aws ecr get-login-password --region $(region) | docker login --username AWS --password-stdin $(accountId).dkr.ecr.$(region).amazonaws.com
-      - task: replace-variables-in-file@1
-          displayName: Set parameters values file .env
-          inputs:
-            filepath: './.env'
-            endWithNewLine: true
-            verbose: true
       - task: AWSShellScript@1
         displayName: Docker build
         inputs:
