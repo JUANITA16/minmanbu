@@ -29,7 +29,7 @@ stages:
             filepath: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
             endWithNewLine: true
             verbose: true
-        - task: replace-variables-in-file@2
+        - task: replace-variables-in-file-env
           displayName: Set parameters values file .env
           inputs:
             filepath: '$(System.DefaultWorkingDirectory)/.env'
