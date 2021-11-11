@@ -76,7 +76,7 @@ stages:
       - task: replace-variables-in-file@1
           displayName: Set parameters values file .env
           inputs:
-            filepath: '$(System.DefaultWorkingDirectory)/.env'
+            filepath: './.env'
             endWithNewLine: true
             verbose: true
       - task: AWSShellScript@1
