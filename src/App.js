@@ -5,7 +5,7 @@ import { Home, GenerateSap, NavigationBar } from './views/index'
 
 export default function App() {
   const base = process.env.PUBLIC_URL;
-
+  console.log(process.env.REACT_APP_BASE_URL_API);
   return (
     <Section className="blue-grey lighten-5 p0">
       <Router>

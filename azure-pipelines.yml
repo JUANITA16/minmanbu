@@ -29,12 +29,6 @@ stages:
             filepath: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
             endWithNewLine: true
             verbose: true
-        - task: replace-variables-in-file@1
-          displayName: Set parameters values file .env
-          inputs:
-            filepath: '$(System.DefaultWorkingDirectory)/.env'
-            endWithNewLine: true
-            verbose: true
         - task: file-to-variable@1
           displayName: Load tags to variable
           inputs:
@@ -61,40 +55,55 @@ stages:
       - group: ${{ variables.infra_variable_group }}
       - group: ${{ variables.service_variable_group }}
       steps:
-      - task: AWSShellScript@1
-        displayName: Get Account Id
-        inputs:
-          awsCredentials: ${{ variables.aws_credentials }}
-          regionName: '$(region)'
-          scriptType: 'inline'
-          inlineScript: |
-            ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
-            echo "Account ID: $ACCOUNT_ID"
-            echo "##vso[task.setvariable variable=accountId;]$ACCOUNT_ID"
-      - task: AWSShellScript@1
-        displayName: ECR Docker Login
-        inputs:
-          awsCredentials: ${{ variables.aws_credentials }}
-          regionName: '$(region)'
-          scriptType: 'inline'
-          inlineScript: |
-            aws ecr get-login-password --region $(region) | docker login --username AWS --password-stdin $(accountId).dkr.ecr.$(region).amazonaws.com
-      - task: AWSShellScript@1
-        displayName: Docker build
-        inputs:
-          awsCredentials: ${{ variables.aws_credentials }}
-          regionName: '$(region)'
-          scriptType: 'inline'
-          inlineScript: |
-            docker build -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):$(version) -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):latest .
-      - task: AWSShellScript@1
-        displayName: Docker push
-        inputs:
-          awsCredentials: ${{ variables.aws_credentials }}
-          regionName: '$(region)'
-          scriptType: 'inline'
-          inlineScript: |
-            docker push $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage) --all-tags
+        - task: AWSShellScript@1
+          displayName: Get Account Id
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            scriptType: 'inline'
+            inlineScript: |
+              ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
+              echo "Account ID: $ACCOUNT_ID"
+              echo "##vso[task.setvariable variable=accountId;]$ACCOUNT_ID"
+        - task: replace-variables-in-file@1
+          displayName: Set parameters values file .env
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/.env'
+            endWithNewLine: true
+            verbose: true
+        - task: AWSShellScript@1
+          displayName: ECR Docker Login
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            scriptType: 'inline'
+            inlineScript: |
+              aws ecr get-login-password --region $(region) | docker login --username AWS --password-stdin $(accountId).dkr.ecr.$(region).amazonaws.com
+        - task: AWSShellScript@1
+          displayName: Docker build
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            scriptType: 'inline'
+            inlineScript: |
+              docker build -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):$(version) -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):latest .
+        - task: AWSShellScript@1
+          displayName: Docker push
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            scriptType: 'inline'
+            inlineScript: |
+              docker push $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage) --all-tags
+        - task: AmazonWebServices.aws-vsts-tools.AWSShellScript.AWSShellScript@1 
+          displayName: 'AWS Shell Script' 
+          inputs: 
+            awsCredentials: ${{ variables.aws_credentials }} 
+            regionName: '$(region)' 
+            scriptType: inline 
+            inlineScript: 'aws ecs update-service --cluster ecs-$(project)-$(appName)-$(stage)-cluster --service ecs-$(project)-$(appName)-$(stage)-process-service --force-new-deployment' 
+            disableAutoCwd: true 
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
     - job: set_image_version
       displayName: Set image version
       pool: "BTG Colombia - Azure DepOPS" # agent pool
@@ -113,12 +122,3 @@ stages:
             secretNameOrId: 'scm-$(project)-$(appName)-$(serviceName)-$(stage)-version'
             secretValueSource: 'inline'
             secretValue: '{"version": "$(version)"}'      
-        - task: AmazonWebServices.aws-vsts-tools.AWSShellScript.AWSShellScript@1 
-          displayName: 'AWS Shell Script' 
-          inputs: 
-            awsCredentials: ${{ variables.aws_credentials }} 
-            regionName: '$(region)' 
-            scriptType: inline 
-            inlineScript: 'aws ecs update-service --cluster ecs-$(project)-$(appName)-$(stage)-cluster --service ecs-$(project)-$(appName)-$(stage)-process-service --force-new-deployment' 
-            disableAutoCwd: true 
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
