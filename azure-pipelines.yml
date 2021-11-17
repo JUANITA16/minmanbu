@@ -104,21 +104,21 @@ stages:
             inlineScript: 'aws ecs update-service --cluster ecs-$(project)-$(appName)-$(stage)-cluster --service ecs-$(project)-$(appName)-$(stage)-process-service --force-new-deployment' 
             disableAutoCwd: true 
             workingDirectory: '$(System.DefaultWorkingDirectory)'
-    - job: set_image_version
-      displayName: Set image version
-      pool: "BTG Colombia - Azure DepOPS" # agent pool
-      dependsOn: build_docker_image
-      condition: succeeded('build_docker_image')
-      variables:
-      - group: ${{ variables.infra_variable_group }}
-      - group: ${{ variables.service_variable_group }}
-      steps:
-        - checkout: none
-        - task: SecretsManagerCreateOrUpdateSecret@1
-          displayName: Set version secret
-          inputs:
-            awsCredentials: ${{ variables.aws_credentials }}
-            regionName: '$(region)'
-            secretNameOrId: 'scm-$(project)-$(appName)-$(serviceName)-$(stage)-version'
-            secretValueSource: 'inline'
-            secretValue: '{"version": "$(version)"}'      
+    # - job: set_image_version
+    #   displayName: Set image version
+    #   pool: "BTG Colombia - Azure DepOPS" # agent pool
+    #   dependsOn: build_docker_image
+    #   condition: succeeded('build_docker_image')
+    #   variables:
+    #   - group: ${{ variables.infra_variable_group }}
+    #   - group: ${{ variables.service_variable_group }}
+    #   steps:
+    #     - checkout: none
+    #     - task: SecretsManagerCreateOrUpdateSecret@1
+    #       displayName: Set version secret
+    #       inputs:
+    #         awsCredentials: ${{ variables.aws_credentials }}
+    #         regionName: '$(region)'
+    #         secretNameOrId: 'scm-$(project)-$(appName)-$(serviceName)-$(stage)-version'
+    #         secretValueSource: 'inline'
+    #         secretValue: '{"version": "$(version)"}'      
