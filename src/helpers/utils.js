@@ -13,6 +13,19 @@ export const setError = (error) => {
         console.log(error.message);
 }
 
+export const setErrorTable = (error) => {
+    if (error.request) {
+        console.error(error.request);
+        return {
+            detail: "No se pudo obtener los datos de la tabla"
+        }
+    }
+    else if (error.response)
+        console.log(error.response);
+    else if (error.message)
+        console.log(error.message);
+}
+
 export const setFormatDate = (date) => {
     return new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
         .toISOString("en-ES", { timeZone: 'America/Bogota' })
