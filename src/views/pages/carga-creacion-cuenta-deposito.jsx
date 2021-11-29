@@ -82,15 +82,15 @@ export default function CreacionCuenta() {
 
     //recargarTablaResultado();
     contentTableResultado = [
-      { id: '1', name: 'carguecuentasdepositocdt_V2 (1).xlsx' },
-      { id: '2', name: 'carguecuentasdepositocdt_V2 (2).xlsx' },
-      { id: '3', name: 'carguecuentasdepositocdt_V2 (3).xlsx' },
-      { id: '4', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-      { id: '5', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-      { id: '6', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-      { id: '7', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-      { id: '8', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-      { id: '9', name: 'carguecuentasdepositocdt_V2 (4).xlsx' }
+      { consecutivo: '1', resultado: 'ok', detalle : 'detalle' },
+      { consecutivo: '2', resultado: 'ok' , detalle : 'detalle' },
+      { consecutivo: '3', resultado: 'ok' , detalle : 'detalle' },
+      { consecutivo: '4', resultado: 'ok' , detalle : 'detalle' },
+      { consecutivo: '5', resultado: 'ok' , detalle : 'detalle' },
+      { consecutivo: '6', resultado: 'ok' , detalle : 'detalle' },
+      { consecutivo: '7', resultado: 'ok' , detalle : 'detalle' },
+      { consecutivo: '8', resultado: 'ok' , detalle : 'detalle' },
+      { consecutivo: '9', resultado: 'ok' , detalle : 'detalle' }
     ];
 
     const endOffsetResultado = itemOffsetResultado + 7;
@@ -104,8 +104,8 @@ export default function CreacionCuenta() {
     console.log('currentItems:' + currentItemsResultado);
     setTableResultadoRender(<tbody>
       {currentItemsResultado.map((contenido, index) => {
-        return <TableBodyResultado id={contenido.id}
-          name={contenido.name} />
+        return <TableBodyResultado consecutivo={contenido.consecutivo}
+        resultado={contenido.resultado} detalle={contenido.detalle} />
       })}
     </tbody>);
     setPaginationFooterResultado(
@@ -148,14 +148,14 @@ export default function CreacionCuenta() {
   const TableBodyResultado = (props) => {
     return (
       <tr>
-        <td >
-          {props.id}
+        <td>
+          {props.consecutivo}
         </td>
         <td>
-          {props.name}
+          {props.resultado}
         </td>
-        <td style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-          Estado
+        <td >
+        {props.detalle}
         </td>
       </tr>
     )
@@ -476,8 +476,8 @@ export default function CreacionCuenta() {
             <Table>
               <thead>
                 <tr>
-                  <th data-field="consecutivo ">Consecutivo</th>
-                  <th data-field="estado" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>  Estado </th>
+                  <th data-field="consecutivo " style={{width:"120px" }}>Consecutivo</th>
+                  <th data-field="estado"  style={{width:"130px" }}>  Estado </th>
                   <th data-field="detalle"> Detalle </th>
                 </tr>
               </thead>
