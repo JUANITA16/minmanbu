@@ -396,7 +396,7 @@ export default function CreacionCuenta() {
           </Col>
         </Row>
         <Row>
-          <Col s={12} m={3} >
+          <Col s={12} m={2} >
             <input
               id="file-upload"
               name="file"
@@ -410,7 +410,7 @@ export default function CreacionCuenta() {
           </Button>
           </Col>
 
-          <Col s={12} m={6}>
+          <Col s={12} m={7}>
             <p>
               {nameFileSelected}
             </p>
