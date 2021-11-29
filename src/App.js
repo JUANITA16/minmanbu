@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Container, Card, Section } from 'react-materialize'
 import { ToastContainer } from 'react-toastify';
-import { Home, GenerateSap, NavigationBar } from './views/index'
+import { Home, GenerateSap, NavigationBar ,CreacionCuenta} from './views/index'
 
 export default function App() {
   const base = process.env.PUBLIC_URL;
@@ -15,6 +15,7 @@ export default function App() {
             <Switch>
               <Route path={base + '/'} exact component={Home} />
               <Route path={base + '/generate-sap'} exact component={GenerateSap} />
+              <Route path={base + '/crea-cuenta-deposito'} exact component={CreacionCuenta} />
             </Switch>
           </Card>
         </Container>
