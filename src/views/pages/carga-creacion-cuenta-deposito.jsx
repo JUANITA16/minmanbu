@@ -10,12 +10,15 @@ import ReactPaginate from 'react-paginate';
 
 import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
 
+import ExportExcel from 'react-export-excel'
 
-//import { setFormatDate, convertTZ } from "../../helpers/utils";
-//import "bootstrap/dist/css/bootstrap.min.css";
 
 export const tableService = new TablaCuentaService();
 export const tableResultadoService = new TablaResultadoService();
+
+const ExcelFile = ExportExcel.ExcelFile;
+const ExcelSheet = ExportExcel.ExcelSheet;
+const ExcelColumn = ExportExcel.ExcelColumn;
 
 
 
@@ -37,9 +40,6 @@ export default function CreacionCuenta() {
   const [tableRender, setTableRender] = useState();
   const [paginationFooter, setPaginationFooter] = useState();
   const [tableHeader, setTableHeader] = useState();
-  // const [currentItems, setCurrentItems] = useState(null);
-  // const [pageCount, setPageCount] = useState(0);
-  // const [itemOffset, setItemOffset] = useState(0);
   const [startDate, setStartDate] = useState(convertTZ(new Date()));
   const [endDate, setEndDate] = useState(convertTZ(new Date()));
   //Principal
@@ -82,15 +82,15 @@ export default function CreacionCuenta() {
 
     //recargarTablaResultado();
     contentTableResultado = [
-      { consecutivo: '1', resultado: 'ok', detalle : 'detalle' },
-      { consecutivo: '2', resultado: 'ok' , detalle : 'detalle' },
-      { consecutivo: '3', resultado: 'ok' , detalle : 'detalle' },
-      { consecutivo: '4', resultado: 'ok' , detalle : 'detalle' },
-      { consecutivo: '5', resultado: 'ok' , detalle : 'detalle' },
-      { consecutivo: '6', resultado: 'ok' , detalle : 'detalle' },
-      { consecutivo: '7', resultado: 'ok' , detalle : 'detalle' },
-      { consecutivo: '8', resultado: 'ok' , detalle : 'detalle' },
-      { consecutivo: '9', resultado: 'ok' , detalle : 'detalle' }
+      { consecutivo: '1', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '2', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '3', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '4', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '5', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '6', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '7', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '8', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '9', resultado: 'ok', detalle: 'detalle' }
     ];
 
     const endOffsetResultado = itemOffsetResultado + 7;
@@ -105,7 +105,7 @@ export default function CreacionCuenta() {
     setTableResultadoRender(<tbody>
       {currentItemsResultado.map((contenido, index) => {
         return <TableBodyResultado consecutivo={contenido.consecutivo}
-        resultado={contenido.resultado} detalle={contenido.detalle} />
+          resultado={contenido.resultado} detalle={contenido.detalle} />
       })}
     </tbody>);
     setPaginationFooterResultado(
@@ -114,9 +114,17 @@ export default function CreacionCuenta() {
     setExportaResultado(
       <Row>
         <Col s={12} m={12} className="input-field m0">
-          <Button node="button" style={{ float: 'right' }} small className="indigo darken-4">
-            Exportar en Excel
-        </Button>
+          <ExcelFile
+            element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+            filename="Resultado de carga masiva">
+            <ExcelSheet data={contentTableResultado} name="Resultados">
+              <ExcelColumn label="Consecutivo" value="consecutivo" />
+              <ExcelColumn label="Resultado" value="resultado" />
+              <ExcelColumn label="Detalle" value="detalle" />
+            </ExcelSheet>
+
+          </ExcelFile>
+          
         </Col>
       </Row>
     )
@@ -155,7 +163,7 @@ export default function CreacionCuenta() {
           {props.resultado}
         </td>
         <td >
-        {props.detalle}
+          {props.detalle}
         </td>
       </tr>
     )
@@ -339,9 +347,16 @@ export default function CreacionCuenta() {
         setExporta(
           <Row>
             <Col s={12} m={12} className="input-field m0">
-              <Button node="button" style={{ float: 'right' }} small className="indigo darken-4">
-                Exportar en Excel
-            </Button>
+              <ExcelFile
+                element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+                filename="Carga masiva de Cuentas Deposito">
+                <ExcelSheet data={contentTable} name="Archivos cargados">
+                  <ExcelColumn label="Consecutivo" value="id" />
+                  <ExcelColumn label="Nombre" value="name" />
+                </ExcelSheet>
+
+              </ExcelFile>
+
             </Col>
           </Row>
         )
@@ -436,13 +451,13 @@ export default function CreacionCuenta() {
                 <Col s={12} m={3} className="text-left">
                   <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate} />
                 </Col>
-                
+
                 <Col s={12} m={3} >
                   <div>
-                  <label>Consecutivo del cargue</label>
+                    <label>Consecutivo del cargue</label>
                   </div>
                   <input type="text" />
-                  
+
 
                 </Col>
                 <Col s={12} m={3} className="input-field ">
@@ -476,8 +491,8 @@ export default function CreacionCuenta() {
             <Table>
               <thead>
                 <tr>
-                  <th data-field="consecutivo " style={{width:"120px" }}>Consecutivo</th>
-                  <th data-field="estado"  style={{width:"130px" }}>  Estado </th>
+                  <th data-field="consecutivo " style={{ width: "120px" }}>Consecutivo</th>
+                  <th data-field="estado" style={{ width: "130px" }}>  Estado </th>
                   <th data-field="detalle"> Detalle </th>
                 </tr>
               </thead>
