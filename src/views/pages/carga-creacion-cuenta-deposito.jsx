@@ -476,9 +476,9 @@ export default function CreacionCuenta() {
             <Table>
               <thead>
                 <tr>
-                  <th data-field="id">N°</th>
-                  <th data-field="registro"> Registro </th>
-                  <th data-field="estado" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}> Estado  </th>
+                  <th data-field="consecutivo ">Consecutivo</th>
+                  <th data-field="estado" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>  Estado </th>
+                  <th data-field="detalle"> Detalle </th>
                 </tr>
               </thead>
               {tableResultadoRender}
