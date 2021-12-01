@@ -271,8 +271,8 @@ export default function CreacionCuenta() {
     currentItemsResultado = contentTableResultado.slice(itemOffsetResultado, endOffsetResultado);
     setTableResultadoRender(<tbody>
       {currentItemsResultado.map((contenido, index) => {
-        return <TableBodyResultado id={contenido.id}
-          name={contenido.name} />
+       return <TableBodyResultado consecutivo={contenido.consecutivo}
+       resultado={contenido.resultado} detalle={contenido.detalle} />
       })}
     </tbody>);
   };
