@@ -1,0 +1,23 @@
+# build environment
+FROM node:15.4 as build
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install --silent
+
+COPY . ./
+RUN npm run build
+
+# production environment
+FROM nginx:1.19
+
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+RUN mkdir -p /usr/share/nginx/html/process
+COPY --from=build /app/build /usr/share/nginx/html/process
+
+#Expose port
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"] 

@@ -1,0 +1,18 @@
+[
+    {
+        "ParameterKey": "stage",
+        "ParameterValue": "$(stage)"
+    },   
+    {
+        "ParameterKey": "appName",
+        "ParameterValue": "$(appName)"
+    },
+    {
+        "ParameterKey": "project",
+        "ParameterValue": "$(project)"
+    },
+    {
+        "ParameterKey": "serviceName",
+        "ParameterValue": "$(serviceName)"
+    }
+]
