@@ -30,24 +30,13 @@ export default function GenerateSap() {
     if (response !== '') {
       setInProgress(() => false);
       showToast(() => response);
+      download();
     }
   }, [response])
 
-  async function submit(event) {
-    event.preventDefault();
-    setResponse(() => '');
-    setFileName(() => '');
-    setInProgress(() => true);
-    await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
-      .then((response) => {
-        if (response && response.detail) {
-          setFileName(() => response.filename);
-          setResponse(() => response.detail + "-" + response.filename);
-        }
-      });
 
-    console.log('fileName:' + fileName);
-
+  async function download(event) {
+    console.log('fileName useEffect:' + fileName);
     await service.downloadFile(fileName)
       .then((response) => {
         if (response && response.detail) {
@@ -60,7 +49,21 @@ export default function GenerateSap() {
           element.click();
         }
       });
+  }
 
+  async function submit(event) {
+    event.preventDefault();
+    setResponse(() => '');
+    setFileName(() => '');
+    setInProgress(() => true);
+    await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
+      .then((response) => {
+        if (response && response.detail) {
+          // setFileName(() => response.filename);
+          setFileName(() => "fileName seteado");
+          setResponse(() => response.detail + "-" + response.filename);
+        }
+      });
   }
 
   const renderElement = () => {
