@@ -72,8 +72,8 @@ async function submit(event) {
   await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
     .then((response) => {
       if (response && response.detail) {
-        // setFileName(() => response.filename);
-        setFileName(() => "fileName seteado");
+        setFileName(() => response.filename);
+        // setFileName(() => "fileName seteado");
         setResponse(() => response.detail + "-" + response.filename);
       }
     });
