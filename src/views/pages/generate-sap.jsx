@@ -15,6 +15,8 @@ export default function GenerateSap() {
   const [loaderText] = useState('Estamos generando el archivo, por favor espere...');
   const [inProgress, setInProgress] = useState(false);
   const [response, setResponse] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [contentFile, setContenFile] = useState('');
 
   useEffect(() => {
     document.title = title
@@ -38,9 +40,24 @@ export default function GenerateSap() {
     await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
       .then((response) => {
         if (response && response.detail) {
+          setFileName(response.filename);
           setResponse(() => response.detail + "-" + response.filename);
         }
       });
+
+    await service.downloadFile(fileName)
+      .then((response) => {
+        if (response && response.detail) {
+          setContenFile(() => response.information);
+          const element = document.createElement("fileDownload");
+          const file = new Blob([contentFile], { type: 'text/plain' });
+          element.href = URL.createObjectURL(file);
+          element.download = "myFile.txt";
+          document.body.appendChild(element); // Required for this to work in FireFox
+          element.click();
+        }
+      });
+
   }
 
   const renderElement = () => {
