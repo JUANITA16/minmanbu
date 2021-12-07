@@ -36,14 +36,17 @@ export default function GenerateSap() {
   async function submit(event) {
     event.preventDefault();
     setResponse(() => '');
+    setFileName(() => '');
     setInProgress(() => true);
     await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
       .then((response) => {
         if (response && response.detail) {
-          setFileName(response.filename);
+          setFileName(() => response.filename);
           setResponse(() => response.detail + "-" + response.filename);
         }
       });
+
+    console.log('fileName:' + fileName);
 
     await service.downloadFile(fileName)
       .then((response) => {
