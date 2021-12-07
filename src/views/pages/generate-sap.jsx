@@ -16,7 +16,9 @@ export default function GenerateSap() {
   const [inProgress, setInProgress] = useState(false);
   const [response, setResponse] = useState('');
   const [fileName, setFileName] = useState('');
-  const [contentFile, setContenFile] = useState('');
+  // const [contentFile, setContenFile] = useState('');
+
+  var contentFile = '';
 
   useEffect(() => {
     document.title = title
@@ -27,69 +29,80 @@ export default function GenerateSap() {
   }, [startDate, endDate])
 
   useEffect(() => {
+
     if (response !== '') {
       setInProgress(() => false);
       showToast(() => response);
-      download();
+      serviceDownload();
     }
   }, [response])
 
-
-  async function download(event) {
+  function download() {
     console.log('fileName useEffect:' + fileName);
+    // setContenFile(() => 'Ejemplo de text\n Despues otra linea');
+    // contentFile = 'Ejemplo de text\n Despues otra linea';
+    const element = document.createElement("a");
+    const file = new Blob([contentFile], { type: 'text/plain;charset-utf-8' });
+    element.href = URL.createObjectURL(file);
+    element.download = fileName;
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+    // console.log(' contentFile:' + contentFile);
+  }
+
+  async function serviceDownload(event) {
     await service.downloadFile(fileName)
       .then((response) => {
-        if (response && response.detail) {
-          setContenFile(() => response.information);
-          const element = document.createElement("fileDownload");
-          const file = new Blob([contentFile], { type: 'text/plain' });
-          element.href = URL.createObjectURL(file);
-          element.download = "myFile.txt";
-          document.body.appendChild(element); // Required for this to work in FireFox
-          element.click();
+        if (response && response.information) {
+          // contentFile = 'Ejemplo de text\n Despues otra linea';
+          contentFile = response.information;
+          download();
         }
       });
   }
 
-  async function submit(event) {
-    event.preventDefault();
-    setResponse(() => '');
-    setFileName(() => '');
-    setInProgress(() => true);
-    await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
-      .then((response) => {
-        if (response && response.detail) {
-          // setFileName(() => response.filename);
-          setFileName(() => "fileName seteado");
-          setResponse(() => response.detail + "-" + response.filename);
-        }
-      });
-  }
 
-  const renderElement = () => {
-    return !inProgress
-      ? (
-        <React.Fragment>
-          <CardHeader title={title} description={description} aditional={aditional} />
-          <form onSubmit={submit}>
-            <Row>
-              <Col s={12} m={6} className="input-field date text-left">
-                <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate} />
-              </Col>
-              <Col s={12} m={6} className="input-field date text-left">
-                <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate} />
-              </Col>
-              <Col s={12} className="input-field m0">
-                <Button node="button" type="submit" small className="indigo darken-4">
-                  Generar
+
+async function submit(event) {
+  event.preventDefault();
+  setResponse(() => '');
+  setFileName(() => '');
+  // setContenFile(() => '');
+  setInProgress(() => true);
+  await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
+    .then((response) => {
+      if (response && response.detail) {
+        // setFileName(() => response.filename);
+        setFileName(() => "fileName seteado");
+        setResponse(() => response.detail + "-" + response.filename);
+      }
+    });
+}
+
+const renderElement = () => {
+  return !inProgress
+    ? (
+      <React.Fragment>
+        <CardHeader title={title} description={description} aditional={aditional} />
+        <form onSubmit={submit}>
+          <Row>
+            <Col s={12} m={6} className="input-field date text-left">
+              <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate} />
+            </Col>
+            <Col s={12} m={6} className="input-field date text-left">
+              <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate} />
+            </Col>
+            <Col s={12} className="input-field m0">
+              <Button node="button" type="submit" small className="indigo darken-4">
+                Generar
                 </Button>
-              </Col>
-            </Row>
-          </form>
-        </React.Fragment>
-      )
-      : <Loading text={loaderText} aditional={aditional} />
-  }
+            </Col>
+          </Row>
+        </form>
+      </React.Fragment>
+    )
+    : <Loading text={loaderText} aditional={aditional} />
+}
 
-  return renderElement()
+return renderElement()
 }
