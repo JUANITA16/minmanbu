@@ -16,9 +16,9 @@ export default function GenerateSap() {
   const [inProgress, setInProgress] = useState(false);
   const [response, setResponse] = useState('');
   const [fileName, setFileName] = useState('');
-  // const [contentFile, setContenFile] = useState('');
+  const [contentFile, setContenFile] = useState('');
 
-  var contentFile = '';
+  // var contentFile = '';
 
   useEffect(() => {
     document.title = title
@@ -34,7 +34,7 @@ export default function GenerateSap() {
       setInProgress(() => false);
       showToast(() => response);
       // serviceDownload();
-      //download();
+      download();
     }
   }, [response])
 
@@ -51,16 +51,16 @@ export default function GenerateSap() {
     // console.log(' contentFile:' + contentFile);
   }
 
-  async function serviceDownload(event) {
-    await service.downloadFile(fileName)
-      .then((response) => {
-        if (response && response.information) {
-          // contentFile = 'Ejemplo de text\n Despues otra linea';
-          contentFile = response.information;
-          download();
-        }
-      });
-  }
+  // async function serviceDownload(event) {
+  //   await service.downloadFile(fileName)
+  //     .then((response) => {
+  //       if (response && response.information) {
+  //         // contentFile = 'Ejemplo de text\n Despues otra linea';
+  //         contentFile = response.information;
+  //         download();
+  //       }
+  //     });
+  // }
 
 
 
@@ -68,15 +68,16 @@ async function submit(event) {
   event.preventDefault();
   setResponse(() => '');
   setFileName(() => '');
-  // setContenFile(() => '');
+  setContenFile(() => '');
   setInProgress(() => true);
   await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
     .then((response) => {
       if (response && response.detail) {
         setFileName(() => response.filename);
+        setContenFile(() => response.information);
         // setFileName(() => "fileName seteado");
         setResponse(() => response.detail + "-" + response.filename);
-        serviceDownload();
+        
       }
     });
 }
