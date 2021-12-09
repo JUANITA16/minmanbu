@@ -38,7 +38,7 @@ export default function GenerateSap() {
   }, [response])
 
   function download() {
-    console.log('fileName useEffect:' + fileName);
+    console.log('fileName download:' + fileName);
     // setContenFile(() => 'Ejemplo de text\n Despues otra linea');
     // contentFile = 'Ejemplo de text\n Despues otra linea';
     const element = document.createElement("a");
