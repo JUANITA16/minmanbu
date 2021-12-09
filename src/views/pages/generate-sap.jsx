@@ -33,14 +33,15 @@ export default function GenerateSap() {
     if (response !== '') {
       setInProgress(() => false);
       showToast(() => response);
-      serviceDownload();
+      // serviceDownload();
+      download();
     }
   }, [response])
 
   function download() {
     console.log('fileName download:' + fileName);
     // setContenFile(() => 'Ejemplo de text\n Despues otra linea');
-    // contentFile = 'Ejemplo de text\n Despues otra linea';
+    contentFile = 'Ejemplo de text\n Despues otra linea';
     const element = document.createElement("a");
     const file = new Blob([contentFile], { type: 'text/plain;charset-utf-8' });
     element.href = URL.createObjectURL(file);
