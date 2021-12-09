@@ -18,7 +18,6 @@ export default function GenerateSap() {
   const [fileName, setFileName] = useState('');
   const [contentFile, setContenFile] = useState('');
 
-  // var contentFile = '';
 
   useEffect(() => {
     document.title = title
@@ -33,34 +32,19 @@ export default function GenerateSap() {
     if (response !== '') {
       setInProgress(() => false);
       showToast(() => response);
-      // serviceDownload();
       download();
     }
   }, [response])
 
   function download() {
     console.log('fileName download:' + fileName);
-    // setContenFile(() => 'Ejemplo de text\n Despues otra linea');
-    //contentFile = 'Ejemplo de text\n Despues otra linea';
     const element = document.createElement("a");
     const file = new Blob([contentFile], { type: 'text/plain;charset-utf-8' });
     element.href = URL.createObjectURL(file);
     element.download = fileName;
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
-    // console.log(' contentFile:' + contentFile);
   }
-
-  // async function serviceDownload(event) {
-  //   await service.downloadFile(fileName)
-  //     .then((response) => {
-  //       if (response && response.information) {
-  //         // contentFile = 'Ejemplo de text\n Despues otra linea';
-  //         contentFile = response.information;
-  //         download();
-  //       }
-  //     });
-  // }
 
 
 
@@ -75,9 +59,7 @@ async function submit(event) {
       if (response && response.detail) {
         setFileName(() => response.filename);
         setContenFile(() => response.information);
-        // setFileName(() => "fileName seteado");
         setResponse(() => response.detail + "-" + response.filename);
-        
       }
     });
 }
