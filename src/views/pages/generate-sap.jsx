@@ -32,7 +32,11 @@ export default function GenerateSap() {
     if (response !== '') {
       setInProgress(() => false);
       showToast(() => response);
-      download();
+
+      if(fileName !== '' && (typeof fileName !== 'undefined') && contentFile!=='' ) {
+        download();
+      }
+      
     }
   }, [response])
 
