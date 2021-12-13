@@ -14,8 +14,8 @@ export default function App() {
           <Card className="z-depth-3">
             <Switch>
               <Route path={base + '/'} exact component={Home} />
-              <Route path={base + '/generate-sap'} exact component={GenerateSap} />
-              <Route path={base + '/crea-cuenta-deposito'} exact component={CreacionCuenta} />
+              <Route path={base + '/ui-generate-sap'} exact component={GenerateSap} />
+              <Route path={base + '/ui-crea-cuenta-deposito'} exact component={CreacionCuenta} />
             </Switch>
           </Card>
         </Container>
