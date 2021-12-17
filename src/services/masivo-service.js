@@ -14,8 +14,7 @@ export class MasivoService {
             method: 'POST',
             url: endpoint,
             headers: {
-                'Content-Type': '*/*',
-                'Accept' : '*/*',
+                'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'product' : product,
                 'file-name' : fileName
             },
