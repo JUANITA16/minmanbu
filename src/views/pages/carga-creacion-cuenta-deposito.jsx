@@ -4,6 +4,7 @@ import { Table } from 'react-materialize'
 import { Row, Col, Button, Collapsible, CollapsibleItem, Icon } from 'react-materialize'
 import { TablaCuentaService } from "../../services/tabla-cuenta-service";
 import { TablaResultadoService } from "../../services/tabla-resultado-service";
+import { MasivoService } from "../../services/masivo-service";
 import { toast } from 'react-toastify';
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
@@ -15,6 +16,7 @@ import ExportExcel from 'react-export-excel'
 
 export const tableService = new TablaCuentaService();
 export const tableResultadoService = new TablaResultadoService();
+export const masivoService = new MasivoService();
 
 const ExcelFile = ExportExcel.ExcelFile;
 const ExcelSheet = ExportExcel.ExcelSheet;
@@ -61,7 +63,7 @@ export default function CreacionCuenta() {
   var paginaActual = 1;
   var totalPaginasResultado = 0, paginaActualResultado = 1;
   var codeRespArchivo = false;
-
+  var product = '';
 
 
   const TableHeader = (props) => {
@@ -235,7 +237,6 @@ export default function CreacionCuenta() {
       setIsSelected(true);
       setIsDisabledButton(false);
       console.log("nameFile:" + nameFileSelected)
-      console.log("selectedFile:" + selectedFile)
     }
   };
 
@@ -277,19 +278,28 @@ export default function CreacionCuenta() {
     </tbody>);
   };
 
+  // async function submit(event) {
 
-  const handleSubmission = () => {
+
+  // }
+
+  async function handleSubmission (event) {
     const formData = new FormData();
 
     formData.append('File', selectedFile);
     // Details of the uploaded file 
-    console.log(selectedFile);
-    console.log(formData);
-    console.log(isSelected);
+    console.log('selectedFile: '+selectedFile);
+    console.log('formData: ' +formData);
+    console.log('isSelected: '+isSelected);
+    console.log('nameFileSelected: '+nameFileSelected);
 
     if (isSelected) {
       //Se invoca al servicio S3
+      
+      const responseMasivoService = await masivoService.uploadFile(product,nameFileSelected,formData);
+      console.log('responseMasivoService: '+responseMasivoService);
       codeRespArchivo = true;
+      console.log('codeRespArchivo: '+codeRespArchivo);
 
       if (codeRespArchivo == true) {
         //Ok -> aparece mensaje de "Subido correctamente" y se llama al servicio para recargar la tabla
@@ -371,6 +381,8 @@ export default function CreacionCuenta() {
 
 
   useEffect(() => {
+    product = 'CDT';
+    console.log('product: '+product)
     obtenerDataTable();
 
     if (totalPaginas != 0) {
@@ -400,6 +412,24 @@ export default function CreacionCuenta() {
     { value: '3', label: 'Bonos' }
   ]
 
+  const onChangeOptions=(event) => {
+    const selectValue = event.value;
+    console.log("selectValue : "+selectValue)
+    if(selectValue === '1'){
+      product = 'CDT';
+      
+    }else if (selectValue ==='2'){
+      product = 'Cuentas Corrientes'
+      
+    }else if(selectValue === '3'){
+      product = 'Bonos'
+      
+    }
+    
+    console.log("product : "+product)
+    
+  }
+
   const renderElement = () => {
     return isPantallaPrincipal ? (
       <React.Fragment>
@@ -407,7 +437,7 @@ export default function CreacionCuenta() {
         <Row>
           <Col s={8} m={3}>
             <label className="active">Tipo de Cargue</label>
-            <Select className="basic-single" defaultValue={options[0]} options={options} />
+            <Select className="basic-single" defaultValue={options[0]} options={options} onChange={onChangeOptions}/>
           </Col>
         </Row>
         <Row>
