@@ -4,8 +4,8 @@
  <provider>BTG Pactual pasivos</provider>
  <description>minmambu creado por la celula de pasivos</description>
  <extensionpoint>
-    <location>EXTENSION_MENU </location>
+    <location>EXTENSION_MENU</location>
     <label>minmambu</label>
-    <url>http://internal-elb-banco-mambu-dev-1220837881.us-east-1.elb.amazonaws.com/</url>
+    <url>https://minmambu-dev.btgpactual.com.co/</url>
  </extensionpoint>
 </app>
