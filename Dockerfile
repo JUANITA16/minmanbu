@@ -9,7 +9,7 @@ RUN npm install --silent
 
 COPY . ./
 RUN npm run build
-COPY /build /proxy/src/main/resources/static
+COPY /app/build/ /app/proxy/src/main/resources/static
 RUN mvn clean install
 
 # production environment
