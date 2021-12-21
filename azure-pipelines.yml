@@ -1,17 +1,30 @@
 trigger:
-- development
-
-pool:
-  vmImage: ubuntu-latest
-
+  - development
+  - release 
+  - master 
+  
+pool: "BTG Colombia - Azure DepOPS"
+  
 variables:
-  environment: DEV
-  service: minmambu
-  serviceName: process
-  infra_variable_group: ${{ upper( variables.service ) }}_ECS_${{ variables.environment }}
-  service_variable_group: ${{ upper( variables.service ) }}-${{ upper( variables.serviceName ) }}_${{ variables.environment }}
-  aws_credentials: ${{ upper( variables.service ) }}-${{ variables.environment }}
-  version: $(Build.BuildNumber)
+  - name: environment
+    ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+      value: DEV
+    ${{ elseif eq(variables['Build.SourceBranchName'], 'release') }}:
+      value: UAT
+    ${{ elseif eq(variables['Build.SourceBranchName'], 'master') }}:
+      value: PDN
+  - name: service
+    value: minmambu
+  - name: serviceName
+    value: process
+  - name: infra_variable_group
+    value: ${{ upper( variables.service ) }}_ECS_${{ variables.environment }}
+  - name: service_variable_group
+    value: ${{ upper( variables.service ) }}-${{ upper( variables.serviceName ) }}_${{ variables.environment }}
+  - name: aws_credentials
+    value: ${{ upper( variables.service ) }}-${{ variables.environment }}
+  - name: version
+    value: $(Build.BuildNumber)
 
 stages:
 - stage: ${{ variables.environment }}

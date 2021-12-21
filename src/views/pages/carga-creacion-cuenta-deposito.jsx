@@ -4,18 +4,23 @@ import { Table } from 'react-materialize'
 import { Row, Col, Button, Collapsible, CollapsibleItem, Icon } from 'react-materialize'
 import { TablaCuentaService } from "../../services/tabla-cuenta-service";
 import { TablaResultadoService } from "../../services/tabla-resultado-service";
+import { MasivoService } from "../../services/masivo-service";
 import { toast } from 'react-toastify';
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
 
 import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
 
+import ExportExcel from 'react-export-excel'
 
-//import { setFormatDate, convertTZ } from "../../helpers/utils";
-//import "bootstrap/dist/css/bootstrap.min.css";
 
 export const tableService = new TablaCuentaService();
 export const tableResultadoService = new TablaResultadoService();
+export const masivoService = new MasivoService();
+
+const ExcelFile = ExportExcel.ExcelFile;
+const ExcelSheet = ExportExcel.ExcelSheet;
+const ExcelColumn = ExportExcel.ExcelColumn;
 
 
 
@@ -37,9 +42,6 @@ export default function CreacionCuenta() {
   const [tableRender, setTableRender] = useState();
   const [paginationFooter, setPaginationFooter] = useState();
   const [tableHeader, setTableHeader] = useState();
-  // const [currentItems, setCurrentItems] = useState(null);
-  // const [pageCount, setPageCount] = useState(0);
-  // const [itemOffset, setItemOffset] = useState(0);
   const [startDate, setStartDate] = useState(convertTZ(new Date()));
   const [endDate, setEndDate] = useState(convertTZ(new Date()));
   //Principal
@@ -61,7 +63,7 @@ export default function CreacionCuenta() {
   var paginaActual = 1;
   var totalPaginasResultado = 0, paginaActualResultado = 1;
   var codeRespArchivo = false;
-
+  var product = '';
 
 
   const TableHeader = (props) => {
@@ -82,15 +84,15 @@ export default function CreacionCuenta() {
 
     //recargarTablaResultado();
     contentTableResultado = [
-      { id: '1', name: 'carguecuentasdepositocdt_V2 (1).xlsx' },
-      { id: '2', name: 'carguecuentasdepositocdt_V2 (2).xlsx' },
-      { id: '3', name: 'carguecuentasdepositocdt_V2 (3).xlsx' },
-      { id: '4', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-      { id: '5', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-      { id: '6', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-      { id: '7', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-      { id: '8', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-      { id: '9', name: 'carguecuentasdepositocdt_V2 (4).xlsx' }
+      { consecutivo: '1', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '2', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '3', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '4', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '5', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '6', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '7', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '8', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '9', resultado: 'ok', detalle: 'detalle' }
     ];
 
     const endOffsetResultado = itemOffsetResultado + 7;
@@ -104,8 +106,8 @@ export default function CreacionCuenta() {
     console.log('currentItems:' + currentItemsResultado);
     setTableResultadoRender(<tbody>
       {currentItemsResultado.map((contenido, index) => {
-        return <TableBodyResultado id={contenido.id}
-          name={contenido.name} />
+        return <TableBodyResultado consecutivo={contenido.consecutivo}
+          resultado={contenido.resultado} detalle={contenido.detalle} />
       })}
     </tbody>);
     setPaginationFooterResultado(
@@ -114,9 +116,17 @@ export default function CreacionCuenta() {
     setExportaResultado(
       <Row>
         <Col s={12} m={12} className="input-field m0">
-          <Button node="button" style={{ float: 'right' }} small className="indigo darken-4">
-            Exportar en Excel
-        </Button>
+          <ExcelFile
+            element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+            filename="Resultado de carga masiva">
+            <ExcelSheet data={contentTableResultado} name="Resultados">
+              <ExcelColumn label="Consecutivo" value="consecutivo" />
+              <ExcelColumn label="Resultado" value="resultado" />
+              <ExcelColumn label="Detalle" value="detalle" />
+            </ExcelSheet>
+
+          </ExcelFile>
+          
         </Col>
       </Row>
     )
@@ -148,14 +158,14 @@ export default function CreacionCuenta() {
   const TableBodyResultado = (props) => {
     return (
       <tr>
-        <td >
-          {props.id}
+        <td>
+          {props.consecutivo}
         </td>
         <td>
-          {props.name}
+          {props.resultado}
         </td>
-        <td style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-          Estado
+        <td >
+          {props.detalle}
         </td>
       </tr>
     )
@@ -227,7 +237,6 @@ export default function CreacionCuenta() {
       setIsSelected(true);
       setIsDisabledButton(false);
       console.log("nameFile:" + nameFileSelected)
-      console.log("selectedFile:" + selectedFile)
     }
   };
 
@@ -263,25 +272,34 @@ export default function CreacionCuenta() {
     currentItemsResultado = contentTableResultado.slice(itemOffsetResultado, endOffsetResultado);
     setTableResultadoRender(<tbody>
       {currentItemsResultado.map((contenido, index) => {
-        return <TableBodyResultado id={contenido.id}
-          name={contenido.name} />
+       return <TableBodyResultado consecutivo={contenido.consecutivo}
+       resultado={contenido.resultado} detalle={contenido.detalle} />
       })}
     </tbody>);
   };
 
+  // async function submit(event) {
 
-  const handleSubmission = () => {
+
+  // }
+
+  async function handleSubmission (event) {
     const formData = new FormData();
 
     formData.append('File', selectedFile);
     // Details of the uploaded file 
-    console.log(selectedFile);
-    console.log(formData);
-    console.log(isSelected);
+    console.log('selectedFile: '+selectedFile);
+    console.log('formData: ' +formData);
+    console.log('isSelected: '+isSelected);
+    console.log('nameFileSelected: '+nameFileSelected);
 
     if (isSelected) {
       //Se invoca al servicio S3
+      
+      const responseMasivoService = await masivoService.uploadFile(product,nameFileSelected,formData);
+      console.log('responseMasivoService: '+responseMasivoService);
       codeRespArchivo = true;
+      console.log('codeRespArchivo: '+codeRespArchivo);
 
       if (codeRespArchivo == true) {
         //Ok -> aparece mensaje de "Subido correctamente" y se llama al servicio para recargar la tabla
@@ -339,9 +357,16 @@ export default function CreacionCuenta() {
         setExporta(
           <Row>
             <Col s={12} m={12} className="input-field m0">
-              <Button node="button" style={{ float: 'right' }} small className="indigo darken-4">
-                Exportar en Excel
-            </Button>
+              <ExcelFile
+                element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+                filename="Carga masiva de Cuentas Deposito">
+                <ExcelSheet data={contentTable} name="Archivos cargados">
+                  <ExcelColumn label="Consecutivo" value="id" />
+                  <ExcelColumn label="Nombre" value="name" />
+                </ExcelSheet>
+
+              </ExcelFile>
+
             </Col>
           </Row>
         )
@@ -356,6 +381,8 @@ export default function CreacionCuenta() {
 
 
   useEffect(() => {
+    product = 'CDT';
+    console.log('product: '+product)
     obtenerDataTable();
 
     if (totalPaginas != 0) {
@@ -385,6 +412,24 @@ export default function CreacionCuenta() {
     { value: '3', label: 'Bonos' }
   ]
 
+  const onChangeOptions=(event) => {
+    const selectValue = event.value;
+    console.log("selectValue : "+selectValue)
+    if(selectValue === '1'){
+      product = 'CDT';
+      
+    }else if (selectValue ==='2'){
+      product = 'Cuentas Corrientes'
+      
+    }else if(selectValue === '3'){
+      product = 'Bonos'
+      
+    }
+    
+    console.log("product : "+product)
+    
+  }
+
   const renderElement = () => {
     return isPantallaPrincipal ? (
       <React.Fragment>
@@ -392,7 +437,7 @@ export default function CreacionCuenta() {
         <Row>
           <Col s={8} m={3}>
             <label className="active">Tipo de Cargue</label>
-            <Select className="basic-single" defaultValue={options[0]} options={options} />
+            <Select className="basic-single" defaultValue={options[0]} options={options} onChange={onChangeOptions}/>
           </Col>
         </Row>
         <Row>
@@ -436,13 +481,13 @@ export default function CreacionCuenta() {
                 <Col s={12} m={3} className="text-left">
                   <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate} />
                 </Col>
-                
+
                 <Col s={12} m={3} >
                   <div>
-                  <label>Consecutivo del cargue</label>
+                    <label>Consecutivo del cargue</label>
                   </div>
                   <input type="text" />
-                  
+
 
                 </Col>
                 <Col s={12} m={3} className="input-field ">
@@ -476,9 +521,9 @@ export default function CreacionCuenta() {
             <Table>
               <thead>
                 <tr>
-                  <th data-field="id">N°</th>
-                  <th data-field="registro"> Registro </th>
-                  <th data-field="estado" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}> Estado  </th>
+                  <th data-field="consecutivo " style={{ width: "120px" }}>Consecutivo</th>
+                  <th data-field="estado" style={{ width: "130px" }}>  Estado </th>
+                  <th data-field="detalle"> Detalle </th>
                 </tr>
               </thead>
               {tableResultadoRender}
