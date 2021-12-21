@@ -90,7 +90,7 @@ stages:
             filepath: '$(System.DefaultWorkingDirectory)/.env'
             endWithNewLine: true
             verbose: true
-         - task: replace-variables-in-file@1
+        - task: replace-variables-in-file@1
           displayName: Set parameters values file .properties
           inputs:
             filepath: '$(System.DefaultWorkingDirectory)/proxy/src/main/resources/application.properties'
