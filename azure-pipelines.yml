@@ -45,7 +45,7 @@ stages:
         - task: replace-variables-in-file@1
           displayName: Set parameters values proxy
           inputs:
-            filepath: '$(System.DefaultWorkingDirectory)/proxy/src/resources/application.properties'
+            filepath: '$(System.DefaultWorkingDirectory)/proxy/src/main/resources/application.properties'
             endWithNewLine: true
             verbose: true
         - task: file-to-variable@1
