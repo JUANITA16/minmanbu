@@ -1,5 +1,5 @@
 # build environment
-FROM jimador/docker-jdk-8-maven-node as build
+FROM rowanto/docker-java8-mvn-nodejs-npm as build
 
 WORKDIR /app
 

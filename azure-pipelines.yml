@@ -90,6 +90,12 @@ stages:
             filepath: '$(System.DefaultWorkingDirectory)/.env'
             endWithNewLine: true
             verbose: true
+         - task: replace-variables-in-file@1
+          displayName: Set parameters values file .properties
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/proxy/src/main/resources/application.properties'
+            endWithNewLine: true
+            verbose: true
         - task: AWSShellScript@1
           displayName: ECR Docker Login
           inputs:
