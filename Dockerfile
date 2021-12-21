@@ -1,5 +1,5 @@
 # build environment
-FROM ayan4m1/maven-node as build
+FROM atools/jdk-maven-node as build
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ COPY /app/build /app/proxy/src/main/resources/static
 RUN mvn clean install
 
 # production environment
-FROM ayan4m1/maven-node
+FROM atools/jdk-maven-node
 
 RUN mkdir -p /proxy/jar/
 COPY --from=build /app/target/proxy-0.0.1-SNAPSHOT.jar /proxy/jar
