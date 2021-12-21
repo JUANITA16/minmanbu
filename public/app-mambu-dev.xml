@@ -6,6 +6,6 @@
  <extensionpoint>
     <location>EXTENSION_MENU</location>
     <label>minmambu</label>
-    <url>https://minmambu.btgpactual.com.co/</url>
+    <url>https://minmambu-dev.btgpactual.com.co/</url>
  </extensionpoint>
 </app>

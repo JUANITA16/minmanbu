@@ -12,11 +12,11 @@ export default function NavigationBar() {
         },
         {
             name: "Sap",
-            url: `${base}/generate-sap`
+            url: `${base}/ui-generate-sap`
         },
         {
             name: "Creacion cuenta",
-            url: `${base}/crea-cuenta-deposito`
+            url: `${base}/ui-crea-cuenta-deposito`
         }
     ])
 

@@ -1,5 +1,5 @@
 # build environment
-FROM node:15.4 as build
+FROM jimador/docker-jdk-8-maven-node as build
 
 WORKDIR /app
 
@@ -9,15 +9,16 @@ RUN npm install --silent
 
 COPY . ./
 RUN npm run build
+COPY /app/build /app/proxy/src/main/resources/static
+RUN mvn clean install
 
 # production environment
-FROM nginx:1.19
+FROM jimador/docker-jdk-8-maven-node
 
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
-RUN mkdir -p /usr/share/nginx/html/process
-COPY --from=build /app/build /usr/share/nginx/html/process
+RUN mkdir -p /proxy/jar/
+COPY --from=build /app/target/proxy-0.0.1-SNAPSHOT.jar /proxy/jar
 
 #Expose port
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"] 
+CMD ["java", "-jar", "/proxy/jar/proxy-0.0.1-SNAPSHOT.jar"] 
