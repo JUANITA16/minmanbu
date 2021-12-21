@@ -1,6 +1,6 @@
 # build environment
-FROM atools/jdk-maven-node as build
-
+FROM atools/jdk-maven-node:mvn3-jdk11-node16 as build
+ 
 WORKDIR /app
 
 COPY package*.json ./
@@ -13,7 +13,7 @@ COPY /app/build /app/proxy/src/main/resources/static
 RUN mvn clean install
 
 # production environment
-FROM atools/jdk-maven-node
+FROM atools/jdk-maven-node:mvn3-jdk11-node16
 
 RUN mkdir -p /proxy/jar/
 COPY --from=build /app/target/proxy-0.0.1-SNAPSHOT.jar /proxy/jar
