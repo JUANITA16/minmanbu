@@ -11,4 +11,6 @@ public class MambuSignedObject {
     private String algorithm;
     @JsonProperty("TENANT_ID")
     private String tenantId;
+    @JsonProperty("DOMAIN")
+    private String domain;
 }
