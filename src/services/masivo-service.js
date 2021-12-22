@@ -7,14 +7,14 @@ export class MasivoService {
     url_api = process.env.REACT_APP_BASE_URL_API  
 
     uploadFile = async (product, fileName, file) => {
-        //const path = `/minmambu/api/v1/sap/file/generate?from=${startDate}&to=${endDate}`;        
-        const endpoint = 'https://7zdggfbli5.execute-api.us-east-2.amazonaws.com/dev/upload' // `${this.url_api}${path}`;
+        const path = `/minmambu/api/v1/massive-acount/upload`;        
+        const endpoint =  `${this.url_api}${path}`;
         console.log(endpoint);
         var config = {
             method: 'POST',
             url: endpoint,
             headers: {
-                'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Type': 'text/plain',
                 'product' : product,
                 'file-name' : fileName
             },
