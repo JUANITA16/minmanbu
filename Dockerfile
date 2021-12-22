@@ -9,9 +9,9 @@ RUN npm install --silent
 
 COPY . ./
 RUN npm run build; \
-    cp ./build/ ./proxy/src/main/resources/static/; \
+    cp ./build/build/ ./proxy/src/main/resources/static/; \
     mvn -f ./proxy/pom.xml clean install; \
-    cd ./proxy/src/main/resources/static/; \
+    cd proxy/src/main/resources/static/; \
     ls ;
 
 # production environment
