@@ -21,7 +21,7 @@ public class TokenValidation {
         if(tokenParts == null || tokenParts.length != 2){
             throw new RuntimeException("Invalid token");
         }
-        log.info("Token valido: "+token)
+        log.info("Token valido: "+token);
         String header = tokenParts[0];
         String body = tokenParts[1];
         byte[] decodeBytes = Base64.getDecoder().decode(body);
@@ -30,7 +30,7 @@ public class TokenValidation {
             throw new RuntimeException("Invalid request");
         }
         body = new String(decodeBytes);
-        log.info("Token verificado con exito: "+body)
+        log.info("Token verificado con exito: "+body);
         ObjectMapper om = new ObjectMapper();
         om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
