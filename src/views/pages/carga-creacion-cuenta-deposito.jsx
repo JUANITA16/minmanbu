@@ -62,7 +62,6 @@ export default function CreacionCuenta() {
   var totalPaginas = 0;
   var paginaActual = 1;
   var totalPaginasResultado = 0, paginaActualResultado = 1;
-  var codeRespArchivo = false;
   var product = '';
 
 
@@ -231,6 +230,7 @@ export default function CreacionCuenta() {
   const changeHandler = (event) => {
     if (event) {
       setSelectedFile(event.target.files[0]);
+      
       console.log("Modificado" + event.target.files[0].name)
       setNameFileSelected(event.target.files[0].name);
       // nameFileSelected=  event.target.files[0].name;
@@ -278,30 +278,51 @@ export default function CreacionCuenta() {
     </tbody>);
   };
 
-  // async function submit(event) {
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
+  async function uploadPrueba(){
+    await sleep(4000);
+    var reponseService = {
+      "description": "ok"
+    }
+    return reponseService;
+  }
 
-  // }
+  function getBinaryFromFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.addEventListener("load", () => resolve(reader.result));
+        reader.addEventListener("error", err => reject(err));
+
+        reader.readAsBinaryString(file);
+    });
+  }
+  
 
   async function handleSubmission (event) {
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    formData.append('File', selectedFile);
+    // formData.append('File', selectedFile);
     // Details of the uploaded file 
     console.log('selectedFile: '+selectedFile);
-    console.log('formData: ' +formData);
+    // console.log('formData: ' +formData);
     console.log('isSelected: '+isSelected);
     console.log('nameFileSelected: '+nameFileSelected);
+
+    const binaryFile = await getBinaryFromFile(selectedFile);
+    console.log('binaryFile: '+binaryFile);
 
     if (isSelected) {
       //Se invoca al servicio S3
       
-      const responseMasivoService = await masivoService.uploadFile(product,nameFileSelected,formData);
-      console.log('responseMasivoService: '+responseMasivoService);
-      codeRespArchivo = true;
-      console.log('codeRespArchivo: '+codeRespArchivo);
-
-      if (codeRespArchivo == true) {
+      // const responseMasivoService = await masivoService.uploadFile(product,nameFileSelected,binaryFile);
+      const responseMasivoService = await uploadPrueba();
+      console.log('async uploadPrueba terminado ');
+      if(responseMasivoService && responseMasivoService.description === "ok"){
+        console.log('responseMasivoService.description: '+responseMasivoService.description);
         //Ok -> aparece mensaje de "Subido correctamente" y se llama al servicio para recargar la tabla
         toast.success("Archivo subido corrrectamente.");
         setNameFileSelected("Ningún archivo seleccionado.");
