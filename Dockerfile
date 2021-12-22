@@ -9,7 +9,7 @@ RUN npm install --silent
 
 COPY . ./
 RUN npm run build; \
-    cp ./build/build/ ./proxy/src/main/resources/static/; \
+    cp ./build/ ./proxy/src/main/resources/static/; \
     mvn -f ./proxy/pom.xml clean install; \
     ls proxy/src/main/resources/static/;
 
