@@ -11,8 +11,7 @@ COPY . ./
 RUN npm run build; \
     cp ./build/build/ ./proxy/src/main/resources/static/; \
     mvn -f ./proxy/pom.xml clean install; \
-    cd proxy/src/main/resources/static/; \
-    ls ;
+    ls proxy/src/main/resources/static/;
 
 # production environment
 FROM atools/jdk-maven-node:mvn3-jdk11-node16
