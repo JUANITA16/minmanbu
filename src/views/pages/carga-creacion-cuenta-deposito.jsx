@@ -125,7 +125,7 @@ export default function CreacionCuenta() {
             </ExcelSheet>
 
           </ExcelFile>
-          
+
         </Col>
       </Row>
     )
@@ -230,7 +230,7 @@ export default function CreacionCuenta() {
   const changeHandler = (event) => {
     if (event) {
       setSelectedFile(event.target.files[0]);
-      
+
       console.log("Modificado" + event.target.files[0].name)
       setNameFileSelected(event.target.files[0].name);
       // nameFileSelected=  event.target.files[0].name;
@@ -272,8 +272,8 @@ export default function CreacionCuenta() {
     currentItemsResultado = contentTableResultado.slice(itemOffsetResultado, endOffsetResultado);
     setTableResultadoRender(<tbody>
       {currentItemsResultado.map((contenido, index) => {
-       return <TableBodyResultado consecutivo={contenido.consecutivo}
-       resultado={contenido.resultado} detalle={contenido.detalle} />
+        return <TableBodyResultado consecutivo={contenido.consecutivo}
+          resultado={contenido.resultado} detalle={contenido.detalle} />
       })}
     </tbody>);
   };
@@ -282,117 +282,124 @@ export default function CreacionCuenta() {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  async function uploadPrueba(){
-    await sleep(4000);
-    var reponseService = {
-      "description": "ok"
-    }
-    return reponseService;
-  }
+  // async function uploadPrueba() {
+  //   await sleep(4000);
+  //   var reponseService = {
+  //     "description": "ok"
+  //   }
+  //   return reponseService;
+  // }
 
-  function getBinaryFromFile(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+  const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
+      if ((encoded.length % 4) > 0) {
+        encoded += '='.repeat(4 - (encoded.length % 4));
+      }
+      resolve(encoded);
+    };
+    reader.onerror = error => reject(error);
+  });
 
-        reader.addEventListener("load", () => resolve(reader.result));
-        reader.addEventListener("error", err => reject(err));
 
-        reader.readAsBinaryString(file);
-    });
-  }
-  
-
-  async function handleSubmission (event) {
-    // const formData = new FormData();
-
-    // formData.append('File', selectedFile);
-    // Details of the uploaded file 
-    console.log('selectedFile: '+selectedFile);
-    // console.log('formData: ' +formData);
-    console.log('isSelected: '+isSelected);
-    console.log('nameFileSelected: '+nameFileSelected);
-
-    const binaryFile = await getBinaryFromFile(selectedFile);
-    console.log('binaryFile: '+binaryFile);
+  async function handleSubmission(event) {
+    console.log('selectedFile: ' + selectedFile);
+    console.log('isSelected: ' + isSelected);
+    console.log('nameFileSelected: ' + nameFileSelected);
 
     if (isSelected) {
-      //Se invoca al servicio S3
-      
-      // const responseMasivoService = await masivoService.uploadFile(product,nameFileSelected,binaryFile);
-      const responseMasivoService = await uploadPrueba();
-      console.log('async uploadPrueba terminado ');
-      if(responseMasivoService && responseMasivoService.description === "ok"){
-        console.log('responseMasivoService.description: '+responseMasivoService.description);
-        //Ok -> aparece mensaje de "Subido correctamente" y se llama al servicio para recargar la tabla
-        toast.success("Archivo subido corrrectamente.");
-        setNameFileSelected("Ningún archivo seleccionado.");
-        setSelectedFile(null);
-        setIsSelected(false);
-        setIsDisabledButton(true);
-        //Recargar tabla
 
-        //obtenerDataTable();
-        contentTable = [
-          { id: '1', name: 'carguecuentasdepositocdt_V2 (1).xlsx' },
-          { id: '2', name: 'carguecuentasdepositocdt_V2 (2).xlsx' },
-          { id: '3', name: 'carguecuentasdepositocdt_V2 (3).xlsx' },
-          { id: '4', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '5', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '6', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '7', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '8', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '9', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '10', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '11', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '12', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '13', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '14', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '15', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-          { id: '16', name: 'carguecuentasdepositocdt_V2 (4).xlsx' }
-        ];
+      const base64File = await toBase64(selectedFile).catch(e => Error(e));
 
+      if (base64File instanceof Error) {
 
-        const endOffset = itemOffset + 7;
-        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-        // setCurrentItems(contentTable.slice(itemOffset, endOffset));
-        currentItems = contentTable.slice(itemOffset, endOffset);
-        // setPageCount(Math.ceil(contentTable.length / 7));
-        totalPaginas = Math.ceil(contentTable.length / 7);
-        console.log('PageConut:' + Math.ceil(contentTable.length / 7));
-        console.log('totalPaginas:' + totalPaginas);
-        console.log('currentItems:' + currentItems);
-        setTableHeader(
-          <TableHeader />
-        );
-
-
-        setTableRender(<tbody>
-          {currentItems.map((contenido, index) => {
-            return <TableBody id={contenido.id}
-              name={contenido.name} />
-          })}
-        </tbody>);
-        setPaginationFooter(
-          <TableFooterPagination />
-        );
-        setExporta(
-          <Row>
-            <Col s={12} m={12} className="input-field m0">
-              <ExcelFile
-                element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
-                filename="Carga masiva de Cuentas Deposito">
-                <ExcelSheet data={contentTable} name="Archivos cargados">
-                  <ExcelColumn label="Consecutivo" value="id" />
-                  <ExcelColumn label="Nombre" value="name" />
-                </ExcelSheet>
-
-              </ExcelFile>
-
-            </Col>
-          </Row>
-        )
-      } else {
+        console.log('Error: ', base64File.message);
         toast.error("Error al subir archivo.");
+
+      } else {
+        
+        console.log('base64File: ' + base64File);
+
+        //Se invoca al servicio S3
+        const responseMasivoService = await masivoService.uploadFile(product, nameFileSelected, base64File);
+        // const responseMasivoService = await uploadPrueba();
+        console.log('async masivoService.uploadFile terminado ');
+
+        if (responseMasivoService && responseMasivoService.description === "ok") {
+          console.log('responseMasivoService.description: ' + responseMasivoService.description);
+          //Ok -> aparece mensaje de "Subido correctamente" y se llama al servicio para recargar la tabla
+          toast.success("Archivo subido corrrectamente.");
+          setNameFileSelected("Ningún archivo seleccionado.");
+          setSelectedFile(null);
+          setIsSelected(false);
+          setIsDisabledButton(true);
+          //Recargar tabla
+
+          //obtenerDataTable();
+          contentTable = [
+            { id: '1', name: 'carguecuentasdepositocdt_V2 (1).xlsx' },
+            { id: '2', name: 'carguecuentasdepositocdt_V2 (2).xlsx' },
+            { id: '3', name: 'carguecuentasdepositocdt_V2 (3).xlsx' },
+            { id: '4', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '5', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '6', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '7', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '8', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '9', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '10', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '11', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '12', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '13', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '14', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '15', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
+            { id: '16', name: 'carguecuentasdepositocdt_V2 (4).xlsx' }
+          ];
+
+
+          const endOffset = itemOffset + 7;
+          console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+          // setCurrentItems(contentTable.slice(itemOffset, endOffset));
+          currentItems = contentTable.slice(itemOffset, endOffset);
+          // setPageCount(Math.ceil(contentTable.length / 7));
+          totalPaginas = Math.ceil(contentTable.length / 7);
+          console.log('PageConut:' + Math.ceil(contentTable.length / 7));
+          console.log('totalPaginas:' + totalPaginas);
+          console.log('currentItems:' + currentItems);
+          setTableHeader(
+            <TableHeader />
+          );
+
+
+          setTableRender(<tbody>
+            {currentItems.map((contenido, index) => {
+              return <TableBody id={contenido.id}
+                name={contenido.name} />
+            })}
+          </tbody>);
+          setPaginationFooter(
+            <TableFooterPagination />
+          );
+          setExporta(
+            <Row>
+              <Col s={12} m={12} className="input-field m0">
+                <ExcelFile
+                  element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+                  filename="Carga masiva de Cuentas Deposito">
+                  <ExcelSheet data={contentTable} name="Archivos cargados">
+                    <ExcelColumn label="Consecutivo" value="id" />
+                    <ExcelColumn label="Nombre" value="name" />
+                  </ExcelSheet>
+
+                </ExcelFile>
+
+              </Col>
+            </Row>
+          )
+        } else {
+          toast.error("Error al subir archivo.");
+        }
       }
     } else {
       toast.error("No se ha seleccionado ningun archivo.");
@@ -403,7 +410,7 @@ export default function CreacionCuenta() {
 
   useEffect(() => {
     product = 'CDT';
-    console.log('product: '+product)
+    console.log('product: ' + product)
     obtenerDataTable();
 
     if (totalPaginas != 0) {
@@ -433,22 +440,22 @@ export default function CreacionCuenta() {
     { value: '3', label: 'Bonos' }
   ]
 
-  const onChangeOptions=(event) => {
+  const onChangeOptions = (event) => {
     const selectValue = event.value;
-    console.log("selectValue : "+selectValue)
-    if(selectValue === '1'){
+    console.log("selectValue : " + selectValue)
+    if (selectValue === '1') {
       product = 'CDT';
-      
-    }else if (selectValue ==='2'){
+
+    } else if (selectValue === '2') {
       product = 'Cuentas Corrientes'
-      
-    }else if(selectValue === '3'){
+
+    } else if (selectValue === '3') {
       product = 'Bonos'
-      
+
     }
-    
-    console.log("product : "+product)
-    
+
+    console.log("product : " + product)
+
   }
 
   const renderElement = () => {
@@ -458,7 +465,7 @@ export default function CreacionCuenta() {
         <Row>
           <Col s={8} m={3}>
             <label className="active">Tipo de Cargue</label>
-            <Select className="basic-single" defaultValue={options[0]} options={options} onChange={onChangeOptions}/>
+            <Select className="basic-single" defaultValue={options[0]} options={options} onChange={onChangeOptions} />
           </Col>
         </Row>
         <Row>
