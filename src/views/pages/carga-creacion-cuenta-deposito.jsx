@@ -44,6 +44,7 @@ export default function CreacionCuenta() {
   const [tableHeader, setTableHeader] = useState();
   const [startDate, setStartDate] = useState(convertTZ(new Date()));
   const [endDate, setEndDate] = useState(convertTZ(new Date()));
+  const [product, setProduct] = useState('');
   //Principal
 
   //Resultados
@@ -62,7 +63,7 @@ export default function CreacionCuenta() {
   var totalPaginas = 0;
   var paginaActual = 1;
   var totalPaginasResultado = 0, paginaActualResultado = 1;
-  var product = '';
+
 
 
   const TableHeader = (props) => {
@@ -321,7 +322,7 @@ export default function CreacionCuenta() {
       } else {
         
         console.log('base64File: ' + base64File);
-
+        console.log('product-handleSubmission: ' + product);
         //Se invoca al servicio S3
         const responseMasivoService = await masivoService.uploadFile(product, nameFileSelected, base64File);
         // const responseMasivoService = await uploadPrueba();
@@ -409,7 +410,7 @@ export default function CreacionCuenta() {
 
 
   useEffect(() => {
-    product = 'CDT';
+    setProduct('CDT');
     console.log('product: ' + product)
     obtenerDataTable();
 
@@ -444,13 +445,13 @@ export default function CreacionCuenta() {
     const selectValue = event.value;
     console.log("selectValue : " + selectValue)
     if (selectValue === '1') {
-      product = 'CDT';
+      setProduct('CDT');
 
     } else if (selectValue === '2') {
-      product = 'Cuentas Corrientes'
+      setProduct('Cuentas Corrientes');
 
     } else if (selectValue === '3') {
-      product = 'Bonos'
+      setProduct('Bonos')
 
     }
 
