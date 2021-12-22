@@ -1,6 +1,6 @@
 # build environment
-FROM node:15.4 as build
-
+FROM atools/jdk-maven-node:mvn3-jdk11-node16 as build
+ 
 WORKDIR /app
 
 COPY package*.json ./
@@ -8,16 +8,18 @@ COPY package*.json ./
 RUN npm install --silent
 
 COPY . ./
-RUN npm run build
+RUN npm run build; \
+    ls; \
+    cp ./build/ ./proxy/src/main/resources/static/; \
+    mvn -f ./proxy/pom.xml clean install; 
 
 # production environment
-FROM nginx:1.19
+FROM atools/jdk-maven-node:mvn3-jdk11-node16
 
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
-RUN mkdir -p /usr/share/nginx/html/process
-COPY --from=build /app/build /usr/share/nginx/html/process
+RUN mkdir -p /proxy_app/jar/
+COPY --from=build /app/proxy/target/proxy-0.0.1-SNAPSHOT.jar /proxy_app/jar
 
 #Expose port
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"] 
+CMD ["java", "-jar", "/proxy_app/jar/proxy-0.0.1-SNAPSHOT.jar"] 
