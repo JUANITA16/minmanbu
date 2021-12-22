@@ -9,8 +9,8 @@ RUN npm install --silent
 
 COPY . ./
 RUN npm run build
-COPY --from=build /app/build/ /app/proxy/src/main/resources/static/
-RUN mvn -f  /app/proxy/pom.xml clean install
+COPY ./build/ ./proxy/src/main/resources/static/
+RUN mvn -f ./proxy/pom.xml clean install
 
 # production environment
 FROM atools/jdk-maven-node:mvn3-jdk11-node16
