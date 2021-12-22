@@ -6,7 +6,7 @@ export class MasivoService {
 
     url_api = process.env.REACT_APP_BASE_URL_API  
 
-    uploadFile = async (product, fileName, file) => {
+    uploadFile = async (bodyUpload) => {
         const path = `/minmambu/api/v1/massive-acount/upload`;        
         const endpoint =  `${this.url_api}${path}`;
         console.log(endpoint);
@@ -14,11 +14,9 @@ export class MasivoService {
             method: 'POST',
             url: endpoint,
             headers: {
-                'Content-Type': 'text/plain',
-                'product' : product,
-                'file-name' : fileName
+                'Content-Type': 'application/json',
             },
-            data: file
+            data: bodyUpload
         };
         return await axios(config)
             .then((response) => {

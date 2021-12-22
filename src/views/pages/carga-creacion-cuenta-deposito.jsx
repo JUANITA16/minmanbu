@@ -323,8 +323,13 @@ export default function CreacionCuenta() {
         
         console.log('base64File: ' + base64File);
         console.log('product-handleSubmission: ' + product);
+        var bodyUpload = {
+          "product" : product,
+          "file_name" : nameFileSelected,
+          "file_content" : base64File
+        }
         //Se invoca al servicio S3
-        const responseMasivoService = await masivoService.uploadFile(product, nameFileSelected, base64File);
+        const responseMasivoService = await masivoService.uploadFile(bodyUpload);
         // const responseMasivoService = await uploadPrueba();
         console.log('async masivoService.uploadFile terminado ');
 
