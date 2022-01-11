@@ -1,21 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import { InputDate, CardHeader/*, Loading*/ } from '../components/index'
+import { InputDate, CardHeader,Loading } from '../components/index'
 import { Table } from 'react-materialize'
 import { Row, Col, Button, Collapsible, CollapsibleItem, Icon } from 'react-materialize'
 import { TablaCuentaService } from "../../services/tabla-cuenta-service";
-import { TablaResultadoService } from "../../services/tabla-resultado-service";
 import { MasivoService } from "../../services/masivo-service";
 import { toast } from 'react-toastify';
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
 
-import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
+import { convertTZ } from "../../helpers/utils";
 
 import ExportExcel from 'react-export-excel'
 
 
 export const tableService = new TablaCuentaService();
-export const tableResultadoService = new TablaResultadoService();
 export const masivoService = new MasivoService();
 
 const ExcelFile = ExportExcel.ExcelFile;
@@ -25,8 +23,6 @@ const ExcelColumn = ExportExcel.ExcelColumn;
 
 
 export default function CreacionCuenta() {
-
-  const base = process.env.PUBLIC_URL;
 
   const title = 'Creacion de cuentas depósito';
   const description = 'En esta sección podrá cargar archivos para creación de cuenta depósito.';
@@ -44,16 +40,30 @@ export default function CreacionCuenta() {
   const [tableHeader, setTableHeader] = useState();
   const [startDate, setStartDate] = useState(convertTZ(new Date()));
   const [endDate, setEndDate] = useState(convertTZ(new Date()));
-  const [product, setProduct] = useState('');
+  const [consecutivoCargue, setConsecutivoCargue] = useState('');
+  // const [tipoConsulta, setTipoConsulta] = useState('');
+  const [product, setProduct] = useState('CDT');
+  const [idRegistro, setIdRegistro] = useState('');
+  const [cantPaginasSelect, setCantPaginasSelect] = useState('10');
+
+  const [paginaActual, setPaginaActual] = useState(1);
+
+  const [loaderText] = useState('');
+  const [aditional, setAditional] = useState('');
   //Principal
 
   //Resultados
+  const [tableHeaderResultado, setTableHeaderResultado] = useState();
   const [tableResultadoRender, setTableResultadoRender] = useState();
   const [paginationFooterResultado, setPaginationFooterResultado] = useState();
+  const [cantPaginasSelectResultado, setCantPaginasSelectResultado] = useState('10');
+  const [paginaActualResultado, setPaginaActualResultado] = useState(1);
+
+
   //resultados
 
   const fileInputRef = useRef(null);
-  var id_prueba = '3';
+  var tipoConsulta = '';
   var contentTable = []
   var contentTableResultado = []
   var currentItems = [];
@@ -61,28 +71,405 @@ export default function CreacionCuenta() {
   var itemOffset = 0;
   var itemOffsetResultado = 0;
   var totalPaginas = 0;
-  var paginaActual = 1;
-  var totalPaginasResultado = 0, paginaActualResultado = 1;
+  // var paginaActual = 3;
+  var cantPaginasSelect2 = 10;
+  var cantPaginasSelectResultado2 = 10;
+  var totalPaginasResultado = 0;//, paginaActualResultado = 1;
 
 
+  /*
+  *   
+  *
+  *   M  É  T  O  D  O  S         D  E        L  A        P  A  G  I  N  A        P  R  I  N  C  I  P  A  L
+  * 
+  * */
 
   const TableHeader = (props) => {
     return (
       <thead>
         <tr>
-          <th data-field="id" width="40" >N°</th>
-          <th data-field="name"> Nombre de archivo </th>
+          <th data-field="Consecutivo" >Consecutivo</th>
+          <th data-field="nameOriginal"> Nombre original</th>
+          <th data-field="nameModified"> Nombre modificado</th>
+          <th data-field="fechaCarga"> Fecha de carga</th>
+          <th data-field="userModified"> Usuario</th>
           <th data-field="action" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}> Acción  </th>
         </tr>
       </thead>
     )
   };
 
+  const TableBody = (props) => {
+    return (
+      <tr>
+        <td>
+          {props.consecutive}
+        </td>
+        <td>
+          {props.name_original}
+        </td>
+        <td>
+          {props.name_modified}
+        </td>
+        <td>
+          {props.fecha}
+        </td>
+        <td>
+          {props.user}
+        </td>
+        <td style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <Button value={props.consecutive} node="button" onClick={changePantallaResultado} small className="indigo darken-4">
+            Ver Resultado
+          </Button>
+        </td>
+      </tr>
+    )
+  };
 
-  const changePantallaResultado = (event) => {
-    setIsPantallaPrincipal(false);
+  const TableFooterPagination = (props) => {
+    return (
+      <div>
+        <ReactPaginate
+          previousLabel={<Icon>chevron_left</Icon>}
+          nextLabel={<Icon>chevron_right</Icon>}
+          breakLabel="..."
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={totalPaginas}
+          renderOnZeroPageCount={null}
+          containerClassName={"pagination"}
+        />
+      </div>
+    )
+  };
 
-    //recargarTablaResultado();
+
+  async function obtenerDataTable(nroPage, cantReg) {
+    await tableService.getDataTable(nroPage, cantReg, startDate, endDate, consecutivoCargue, tipoConsulta, true, "")
+      .then((response) => {
+        if (response) {
+          contentTable = response.contentTable;
+          // setPageCount(response.totalPaginas);
+        }
+      });
+
+  }
+
+  const changeHandler = (event) => {
+    if (event) {
+
+      if (event.target.files[0] !== undefined) {
+        console.log('archivo seleccionado')
+        setSelectedFile(event.target.files[0]);
+
+        console.log("Modificado" + event.target.files[0].name)
+        setNameFileSelected(event.target.files[0].name);
+        setIsSelected(true);
+        setIsDisabledButton(false);
+      }
+
+    }
+  };
+
+
+  // Invoke when user click to request another page.
+  async function handlePageClick(event){
+    const pagina = event.selected + 1;
+    await reloadTableMain(pagina, cantPaginasSelect2);
+    console.log('Se cambia de pagina principal: ' + pagina)
+    console.log('cantPaginasSelect: ' + cantPaginasSelect2)
+    const newOffset = (event.selected * cantPaginasSelect2) % contentTable.length;
+    
+
+    itemOffset = newOffset;
+    console.log('itemOffset: ' + itemOffset)
+    const endOffset = itemOffset + cantPaginasSelect2;
+    console.log('endOffset: ' + endOffset)
+    currentItems = contentTable.slice(itemOffset, endOffset);
+    console.log('currentItems: ' + currentItems)
+    setTableRender(<tbody>
+      {currentItems.map((contenido, index) => {
+        return <TableBody consecutive={contenido.consecutive}
+        name_original={contenido.name_original}
+        name_modified={contenido.name_modified}
+        fecha={contenido.fecha}
+        user={contenido.user} />
+      })}
+    </tbody>);
+  };
+
+  const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
+      if ((encoded.length % 4) > 0) {
+        encoded += '='.repeat(4 - (encoded.length % 4));
+      }
+      resolve(encoded);
+    };
+    reader.onerror = error => reject(error);
+  });
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function reloadTableMain(nroPage, cantReg) {
+    setTableRender(
+      <Loading text={loaderText} aditional={aditional} />
+    );
+
+    // setPaginationFooter(null);
+    setExporta(null)
+
+    
+    await sleep(5000)
+    // const dataTable = await obtenerDataTable(nroPage, cantReg);
+    console.log('terminó sleep')
+
+    contentTable = [
+      { consecutive: '1', name_original: 'carguecuentasdepositocdt_V2 (1).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '2', name_original: 'carguecuentasdepositocdt_V2 (2).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '3', name_original: 'carguecuentasdepositocdt_V2 (3).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '4', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '5', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '6', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '7', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '8', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '9', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '10', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '11', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '12', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '13', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '14', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '15', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '16', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '17', name_original: 'carguecuentasdepositocdt_V2 (1).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '18', name_original: 'carguecuentasdepositocdt_V2 (2).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '19', name_original: 'carguecuentasdepositocdt_V2 (3).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '20', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '21', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' },
+      { consecutive: '22', name_original: 'carguecuentasdepositocdt_V2 (4).xlsx', name_modified: 'name_modificado_.xlsx', fecha: '2022-04-05', user: '' }
+    ];
+
+
+    console.log('cantPaginasSelect:' + cantReg);
+
+    const endOffset = itemOffset + cantReg;
+    // console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+
+    currentItems = contentTable.slice(itemOffset, endOffset);
+    // console.log('currentItems:' + currentItems);
+
+    totalPaginas = Math.ceil(contentTable.length / cantReg);
+    // console.log('totalPaginas:' + totalPaginas);
+    if (totalPaginas !== 0) {
+      setTableHeader(
+        <TableHeader />
+      );
+
+      setTableRender(<tbody>
+        {currentItems.map((contenido, index) => {
+          return <TableBody consecutive={contenido.consecutive}
+            name_original={contenido.name_original}
+            name_modified={contenido.name_modified}
+            fecha={contenido.fecha}
+            user={contenido.user} />
+        })}
+      </tbody>);
+
+
+      setPaginationFooter(
+        <TableFooterPagination />
+      );
+
+      setExporta(
+        <Row>
+          <Col s={12} m={12} className="input-field m0">
+            <ExcelFile
+              element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+              filename="Carga masiva de Cuentas Deposito">
+              <ExcelSheet data={contentTable} name="Archivos cargados">
+                <ExcelColumn label="Consecutivo" value="id" />
+                <ExcelColumn label="Nombre" value="name" />
+              </ExcelSheet>
+
+            </ExcelFile>
+
+          </Col>
+        </Row>
+      )
+    }
+
+  }
+
+  async function applyFilters() {
+    console.log("Se aplican filtros")
+    console.log("startDate: " + startDate)
+    console.log("endDate: " + endDate)
+    tipoConsulta = 'filtro';
+    await reloadTableMain(paginaActual, cantPaginasSelect);
+  }
+
+  async function deleteFilters() {
+    //Pendiente resetear fechas
+    tipoConsulta = '';
+    setConsecutivoCargue('');
+    await reloadTableMain(paginaActual, cantPaginasSelect);
+  }
+
+  async function handleSubmission(event) {
+    // console.log('selectedFile: ' + selectedFile);
+    // console.log('isSelected: ' + isSelected);
+    // console.log('nameFileSelected: ' + nameFileSelected);
+
+
+    if (isSelected) {
+
+      const base64File = await toBase64(selectedFile).catch(e => Error(e));
+
+      if (base64File instanceof Error) {
+
+        //console.log('Error: ', base64File.message);
+        toast.error("Error al subir archivo.");
+
+      } else {
+
+        console.log('base64File: ' + base64File);
+        //console.log('product-handleSubmission: ' + product);
+        var bodyUpload = {
+          "product": product,
+          "file_name": nameFileSelected,
+          "file_content": base64File
+        }
+        //Se invoca al servicio S3
+        const responseMasivoService = await masivoService.uploadFile(bodyUpload);
+        console.log('async masivoService.uploadFile terminado ');
+
+        if (responseMasivoService && responseMasivoService.description === "ok") {
+        // if (true) {
+
+          toast.success("Archivo subido corrrectamente.");
+          setNameFileSelected("Ningún archivo seleccionado.");
+          setSelectedFile(null);
+          setIsSelected(false);
+          setIsDisabledButton(true);
+
+          tipoConsulta = ''
+          setConsecutivoCargue('');
+          console.log('cantPaginasSelect:' + cantPaginasSelect)
+          //Pendiente reiniciar fecha
+          await reloadTableMain(1, cantPaginasSelect);
+
+        } else {
+          toast.error("Error al subir archivo.");
+        }
+      }
+    } else {
+      toast.error("No se ha seleccionado ningun archivo.");
+    }
+
+  };
+
+
+  useEffect(() => {
+    reloadTableMain(paginaActual, cantPaginasSelect);
+    document.title = title
+  }, []);
+
+
+  const options = [
+    { value: '1', label: 'CDT' },
+    { value: '2', label: 'Cuentas Corrientes' },
+    { value: '3', label: 'Bonos' }
+  ]
+
+  const cantPaginas = [
+    { value: 10, label: '10' },
+    { value: 20, label: '20' },
+    { value: 30, label: '30' }
+  ]
+
+  const onChangeOptions = (event) => {
+    const selectValue = event.value;
+    if (selectValue === '1') {
+      setProduct('CDT');
+
+    } else if (selectValue === '2') {
+      setProduct('Cuentas Corrientes');
+
+    } else if (selectValue === '3') {
+      setProduct('Bonos')
+
+    }
+
+  }
+
+  const onChangeCantPaginas = (event) => {
+    const selectValue = event.value;
+    console.log('selectValue: ' + selectValue)
+    setCantPaginasSelect(selectValue)
+    cantPaginasSelect2 = selectValue;
+    setPaginaActual(1);
+    console.log('cantPaginasSelect: ' + cantPaginasSelect)
+    console.log('cantPaginasSelect2: ' + cantPaginasSelect2)
+    reloadTableMain(1, selectValue);
+  }
+
+  const onChangeInputConsecutivo = (event) => {
+    const inputConsecutivo = event.target.value;
+    setConsecutivoCargue(inputConsecutivo);
+  }
+
+
+  /*
+  *   
+  *
+  *   M  É  T  O  D  O  S         D  E        L  A        P  A  G  I  N  A        R  E  S  U  L  T  A  D  O  S
+  * 
+  *
+  *  */
+
+  const cantPaginasResultado = [
+    { value: 10, label: '10' },
+    { value: 20, label: '20' },
+    { value: 30, label: '30' }
+  ]
+
+  const onChangeCantPaginasResultado = (event) => {
+    const selectValue = event.value;
+    itemOffsetResultado=0;
+    console.log('selectValue-resultado' + selectValue)
+    console.log('itemOffsetResultado-resultado' + itemOffsetResultado)
+    setCantPaginasSelectResultado(selectValue)
+    cantPaginasSelectResultado2 = selectValue;
+    setPaginaActualResultado(1);
+    console.log('cantPaginasSelectResultado' + cantPaginasSelectResultado)
+    console.log('cantPaginasSelectResultado2' + cantPaginasSelectResultado2)
+    console.log('idRegistro' + idRegistro)
+    reloadTableResultado(1, selectValue,idRegistro);
+  }
+
+  async function obtenerDataTableResultado(nroPage, cantReg, id) {
+    await tableService.getDataTable(nroPage, cantReg, startDate, endDate, consecutivoCargue, tipoConsulta, false, id)
+      .then((response) => {
+        if (response) {
+          contentTableResultado = response.contentTable;
+          // setPageCount(response.totalPaginas);
+        }
+      });
+
+  }
+
+  async function reloadTableResultado(nroPage, cantReg, id) {
+    setTableResultadoRender(
+      <Loading text={loaderText} aditional={aditional} />
+    );
+
+    await sleep(5000);
+    // const dataResultado = await obtenerDataTableResultado(nroPage, cantReg, id);
+    console.log('terminado sleeip resutlado')
     contentTableResultado = [
       { consecutivo: '1', resultado: 'ok', detalle: 'detalle' },
       { consecutivo: '2', resultado: 'ok', detalle: 'detalle' },
@@ -92,18 +479,48 @@ export default function CreacionCuenta() {
       { consecutivo: '6', resultado: 'ok', detalle: 'detalle' },
       { consecutivo: '7', resultado: 'ok', detalle: 'detalle' },
       { consecutivo: '8', resultado: 'ok', detalle: 'detalle' },
-      { consecutivo: '9', resultado: 'ok', detalle: 'detalle' }
+      { consecutivo: '9', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '10', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '11', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '12', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '13', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '14', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '15', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '16', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '17', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '18', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '19', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '20', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '21', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '22', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '23', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '24', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '25', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '26', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '27', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '28', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '29', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '30', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '31', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '32', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '33', resultado: 'ok', detalle: 'detalle' },
+      { consecutivo: '34', resultado: 'ok', detalle: 'detalle' }
     ];
 
-    const endOffsetResultado = itemOffsetResultado + 7;
-    console.log(`Loading items from ${itemOffsetResultado} to ${endOffsetResultado}`);
-    // setCurrentItems(contentTable.slice(itemOffset, endOffset));
+    const endOffsetResultado = itemOffsetResultado + parseInt(cantReg);
+    console.log('endOffsetResultado: '+endOffsetResultado);
+    console.log('itemOffsetResultado: '+itemOffsetResultado);
     currentItemsResultado = contentTableResultado.slice(itemOffsetResultado, endOffsetResultado);
-    // setPageCount(Math.ceil(contentTable.length / 7));
-    totalPaginasResultado = Math.ceil(contentTableResultado.length / 7);
-    console.log('PageConut:' + Math.ceil(contentTableResultado.length / 7));
-    console.log('totalPaginas:' + totalPaginasResultado);
-    console.log('currentItems:' + currentItemsResultado);
+    console.log('currentItemsResultado: '+currentItemsResultado);
+
+    totalPaginasResultado = Math.ceil(contentTableResultado.length / cantReg);
+    setTableHeaderResultado(<thead>
+      <tr>
+        <th data-field="consecutivo " style={{ width: "120px" }}>Consecutivo</th>
+        <th data-field="estado" style={{ width: "130px" }}>  Estado </th>
+        <th data-field="detalle"> Detalle </th>
+      </tr>
+    </thead>);
     setTableResultadoRender(<tbody>
       {currentItemsResultado.map((contenido, index) => {
         return <TableBodyResultado consecutivo={contenido.consecutivo}
@@ -130,30 +547,30 @@ export default function CreacionCuenta() {
         </Col>
       </Row>
     )
+  }
+
+
+  async function changePantallaResultado(event) {
+    setIsPantallaPrincipal(false);
+    itemOffsetResultado=0;
+    var id = event.target.value;
+    setIdRegistro(id);
+    console.log('id: ' + id)
+    reloadTableResultado(1,'10',id);
+    
 
   };
-  const changePantallaCargar = (event) => {
+
+
+  async function changePantallaCargar (event) {
+    console.log('cambia a principal')
     setIsPantallaPrincipal(true);
 
+    reloadTableMain(1, 10);
+
   };
 
-  const TableBody = (props) => {
-    return (
-      <tr>
-        <td>
-          {props.id}
-        </td>
-        <td>
-          {props.name}
-        </td>
-        <td style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <Button node="button" onClick={changePantallaResultado} small className="indigo darken-4">
-            Ver Resultado
-          </Button>
-        </td>
-      </tr>
-    )
-  };
+
 
   const TableBodyResultado = (props) => {
     return (
@@ -168,23 +585,6 @@ export default function CreacionCuenta() {
           {props.detalle}
         </td>
       </tr>
-    )
-  };
-
-  const TableFooterPagination = (props) => {
-    return (
-      <div>
-        <ReactPaginate
-          previousLabel={<Icon>chevron_left</Icon>}
-          nextLabel={<Icon>chevron_right</Icon>}
-          breakLabel="..."
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={totalPaginas}
-          renderOnZeroPageCount={null}
-          containerClassName={"pagination"}
-        />
-      </div>
     )
   };
 
@@ -205,72 +605,28 @@ export default function CreacionCuenta() {
     )
   };
 
-  async function obtenerDataTable() {
-    await tableService.getDataTable(paginaActual)
-      .then((response) => {
-        if (response) {
-          contentTable = response.contentTable;
-          // setPageCount(response.totalPaginas);
-        }
-      });
-
-  }
-
-  async function recargarTablaResultado() {
-    await tableService.getDataTable(paginaActual)
-      .then((response) => {
-        if (response) {
-          contentTableResultado = response.contentTable;
-          totalPaginasResultado = response.totalPaginas;
-        }
-      });
-
-  }
-
-
-  const changeHandler = (event) => {
-    if (event) {
-      setSelectedFile(event.target.files[0]);
-
-      console.log("Modificado" + event.target.files[0].name)
-      setNameFileSelected(event.target.files[0].name);
-      // nameFileSelected=  event.target.files[0].name;
-      setIsSelected(true);
-      setIsDisabledButton(false);
-      console.log("nameFile:" + nameFileSelected)
-    }
-  };
 
   // Invoke when user click to request another page.
-  const handlePageClick = (event) => {
-    const newOffset = (event.selected * 7) % contentTable.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
-    itemOffset = newOffset;
-    const endOffset = itemOffset + 7;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+  async function handlePageClickResultado (event) {
+    const pagina = event.selected + 1;
+    await reloadTableResultado(pagina, cantPaginasSelectResultado2, idRegistro);
+    console.log('Se cambia de pagina resultado: ' + pagina)
+    console.log('cantPaginasSelectResultado2: ' + cantPaginasSelectResultado2)
+    const newOffsetResultado = (event.selected * cantPaginasSelectResultado2) % contentTableResultado.length;
 
-    currentItems = contentTable.slice(itemOffset, endOffset);
-    setTableRender(<tbody>
-      {currentItems.map((contenido, index) => {
-        return <TableBody id={contenido.id}
-          name={contenido.name} />
-      })}
-    </tbody>);
-  };
-
-  // Invoke when user click to request another page.
-  const handlePageClickResultado = (event) => {
-    const newOffsetResultado = (event.selected * 7) % contentTableResultado.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffsetResultado}`
-    );
     itemOffsetResultado = newOffsetResultado;
-    const endOffsetResultado = itemOffsetResultado + 7;
-    console.log(`Loading items from ${itemOffsetResultado} to ${endOffsetResultado}`);
-
+    console.log('itemOffsetResultado: ' + itemOffsetResultado)
+    const endOffsetResultado = itemOffsetResultado + cantPaginasSelectResultado2;
+    console.log('endOffsetResultado: ' + endOffsetResultado)
     currentItemsResultado = contentTableResultado.slice(itemOffsetResultado, endOffsetResultado);
+    console.log('currentItemsResultado: ' + currentItemsResultado)
+    setTableHeaderResultado(<thead>
+      <tr>
+        <th data-field="consecutivo " style={{ width: "120px" }}>Consecutivo</th>
+        <th data-field="estado" style={{ width: "130px" }}>  Estado </th>
+        <th data-field="detalle"> Detalle </th>
+      </tr>
+    </thead>);
     setTableResultadoRender(<tbody>
       {currentItemsResultado.map((contenido, index) => {
         return <TableBodyResultado consecutivo={contenido.consecutivo}
@@ -279,190 +635,16 @@ export default function CreacionCuenta() {
     </tbody>);
   };
 
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  // async function uploadPrueba() {
-  //   await sleep(4000);
-  //   var reponseService = {
-  //     "description": "ok"
-  //   }
-  //   return reponseService;
-  // }
-
-  const toBase64 = file => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
-      if ((encoded.length % 4) > 0) {
-        encoded += '='.repeat(4 - (encoded.length % 4));
-      }
-      resolve(encoded);
-    };
-    reader.onerror = error => reject(error);
-  });
 
 
-  async function handleSubmission(event) {
-    console.log('selectedFile: ' + selectedFile);
-    console.log('isSelected: ' + isSelected);
-    console.log('nameFileSelected: ' + nameFileSelected);
+  /*
+  *   
+  *
+  *   R  E  N  D  E  R      D  E        L  A        P  A  G  I  N  A
+  * 
+  * 
+  * */
 
-    if (isSelected) {
-
-      const base64File = await toBase64(selectedFile).catch(e => Error(e));
-
-      if (base64File instanceof Error) {
-
-        console.log('Error: ', base64File.message);
-        toast.error("Error al subir archivo.");
-
-      } else {
-        
-        console.log('base64File: ' + base64File);
-        console.log('product-handleSubmission: ' + product);
-        var bodyUpload = {
-          "product" : product,
-          "file_name" : nameFileSelected,
-          "file_content" : base64File
-        }
-        //Se invoca al servicio S3
-        const responseMasivoService = await masivoService.uploadFile(bodyUpload);
-        // const responseMasivoService = await uploadPrueba();
-        console.log('async masivoService.uploadFile terminado ');
-
-        if (responseMasivoService && responseMasivoService.description === "ok") {
-          console.log('responseMasivoService.description: ' + responseMasivoService.description);
-          //Ok -> aparece mensaje de "Subido correctamente" y se llama al servicio para recargar la tabla
-          toast.success("Archivo subido corrrectamente.");
-          setNameFileSelected("Ningún archivo seleccionado.");
-          setSelectedFile(null);
-          setIsSelected(false);
-          setIsDisabledButton(true);
-          //Recargar tabla
-
-          //obtenerDataTable();
-          contentTable = [
-            { id: '1', name: 'carguecuentasdepositocdt_V2 (1).xlsx' },
-            { id: '2', name: 'carguecuentasdepositocdt_V2 (2).xlsx' },
-            { id: '3', name: 'carguecuentasdepositocdt_V2 (3).xlsx' },
-            { id: '4', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '5', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '6', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '7', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '8', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '9', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '10', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '11', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '12', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '13', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '14', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '15', name: 'carguecuentasdepositocdt_V2 (4).xlsx' },
-            { id: '16', name: 'carguecuentasdepositocdt_V2 (4).xlsx' }
-          ];
-
-
-          const endOffset = itemOffset + 7;
-          console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-          // setCurrentItems(contentTable.slice(itemOffset, endOffset));
-          currentItems = contentTable.slice(itemOffset, endOffset);
-          // setPageCount(Math.ceil(contentTable.length / 7));
-          totalPaginas = Math.ceil(contentTable.length / 7);
-          console.log('PageConut:' + Math.ceil(contentTable.length / 7));
-          console.log('totalPaginas:' + totalPaginas);
-          console.log('currentItems:' + currentItems);
-          setTableHeader(
-            <TableHeader />
-          );
-
-
-          setTableRender(<tbody>
-            {currentItems.map((contenido, index) => {
-              return <TableBody id={contenido.id}
-                name={contenido.name} />
-            })}
-          </tbody>);
-          setPaginationFooter(
-            <TableFooterPagination />
-          );
-          setExporta(
-            <Row>
-              <Col s={12} m={12} className="input-field m0">
-                <ExcelFile
-                  element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
-                  filename="Carga masiva de Cuentas Deposito">
-                  <ExcelSheet data={contentTable} name="Archivos cargados">
-                    <ExcelColumn label="Consecutivo" value="id" />
-                    <ExcelColumn label="Nombre" value="name" />
-                  </ExcelSheet>
-
-                </ExcelFile>
-
-              </Col>
-            </Row>
-          )
-        } else {
-          toast.error("Error al subir archivo.");
-        }
-      }
-    } else {
-      toast.error("No se ha seleccionado ningun archivo.");
-    }
-
-  };
-
-
-  useEffect(() => {
-    setProduct('CDT');
-    console.log('product: ' + product)
-    obtenerDataTable();
-
-    if (totalPaginas != 0) {
-      setTableHeader(
-        <TableHeader />
-      );
-      // console.log("totalPaginas: " + pageCount);
-      setTableRender(<tbody>
-        {contentTable.map((contenido, index) => {
-          return <TableBody id={contenido.id}
-            name={contenido.name} />
-        })}
-      </tbody>);
-      setPaginationFooter(
-        <TableFooterPagination />
-      );
-      setExporta(null);
-    }
-
-    document.title = title
-  }, []);
-
-
-  const options = [
-    { value: '1', label: 'CDT' },
-    { value: '2', label: 'Cuentas Corrientes' },
-    { value: '3', label: 'Bonos' }
-  ]
-
-  const onChangeOptions = (event) => {
-    const selectValue = event.value;
-    console.log("selectValue : " + selectValue)
-    if (selectValue === '1') {
-      setProduct('CDT');
-
-    } else if (selectValue === '2') {
-      setProduct('Cuentas Corrientes');
-
-    } else if (selectValue === '3') {
-      setProduct('Bonos')
-
-    }
-
-    console.log("product : " + product)
-
-  }
 
   const renderElement = () => {
     return isPantallaPrincipal ? (
@@ -512,6 +694,7 @@ export default function CreacionCuenta() {
                 <Col s={12} m={3} className="text-left">
                   <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate} />
                 </Col>
+
                 <Col s={12} m={3} className="text-left">
                   <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate} />
                 </Col>
@@ -520,14 +703,17 @@ export default function CreacionCuenta() {
                   <div>
                     <label>Consecutivo del cargue</label>
                   </div>
-                  <input type="text" />
-
-
+                  <input type="text" onChange={onChangeInputConsecutivo} value={consecutivoCargue} />
                 </Col>
-                <Col s={12} m={3} className="input-field ">
-                  <Button node="button" style={{ float: 'right' }} small className="indigo darken-4">
+                <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
+                  <Button node="button" small className="indigo darken-4" onClick={applyFilters}>
                     Aplicar filtros
-              </Button>
+                  </Button>
+                </Col>
+                <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
+                  <Button node="button" small className="indigo darken-4" onClick={deleteFilters}>
+                    Borrar filtros
+                  </Button>
                 </Col>
               </Row>
             </CollapsibleItem>
@@ -535,6 +721,10 @@ export default function CreacionCuenta() {
         </Row>
 
         <Row>
+          <Col s={2} m={2}>
+            <label className="active">Cantidad de registros</label>
+            <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginas} />
+          </Col>
           <Table>
             {tableHeader}
             {tableRender}
@@ -547,19 +737,19 @@ export default function CreacionCuenta() {
     ) : (
         <React.Fragment>
           <Row>
-            <Button node="button" small className="indigo darken-4" onClick={changePantallaCargar}>
-              Retroceder
-        </Button>
+            <Col s={2} m={2}>
+              <Button node="button" small className="indigo darken-4" onClick={changePantallaCargar}>
+                Retroceder
+              </Button>
+            </Col>
+            <Col s={2} m={2} style={{ float: 'right' }} >
+              <label className="active">Cantidad de registros</label>
+              <Select className="basic-single" defaultValue={cantPaginasResultado[0]}  options={cantPaginasResultado} onChange={onChangeCantPaginasResultado} />
+            </Col>
           </Row>
           <Row>
             <Table>
-              <thead>
-                <tr>
-                  <th data-field="consecutivo " style={{ width: "120px" }}>Consecutivo</th>
-                  <th data-field="estado" style={{ width: "130px" }}>  Estado </th>
-                  <th data-field="detalle"> Detalle </th>
-                </tr>
-              </thead>
+              {tableHeaderResultado}
               {tableResultadoRender}
             </Table>
             {paginationFooterResultado}

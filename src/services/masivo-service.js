@@ -9,7 +9,8 @@ export class MasivoService {
     uploadFile = async (bodyUpload) => {
         const path = `/minmambu/api/v1/massive-acount/upload`;        
         const endpoint =  `${this.url_api}${path}`;
-        console.log(endpoint);
+        console.log('endpoint-masivo'+endpoint);
+        console.log('bodyUpload'+bodyUpload);
         var config = {
             method: 'POST',
             url: endpoint,
