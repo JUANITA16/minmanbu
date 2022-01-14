@@ -32,6 +32,7 @@ export default function CreacionCuenta() {
   const [exporta, setExporta] = useState();
   const [exportaResultado, setExportaResultado] = useState();
   const [isDisabledButton, setIsDisabledButton] = useState(true);
+  const [isDisabledButtonFilter, setIsDisabledButtonFilter] = useState(true);
   const [isPantallaPrincipal, setIsPantallaPrincipal] = useState(true);
 
   //Principal
@@ -284,7 +285,8 @@ export default function CreacionCuenta() {
           setConsecutivoCargue('');
           console.log('cantPaginasSelect:' + cantPaginasSelect)
           cantPaginasSelect2 = cantPaginasSelect;
-          //Pendiente reiniciar fecha
+          setStartDate(convertTZ(new Date()));//Prueba de fechas
+          setEndDate(convertTZ(new Date()));
           await reloadTableMain(1, cantPaginasSelect);
           console.log('cantPaginasSelect2: ' + cantPaginasSelect2)
         } else {
@@ -305,15 +307,18 @@ export default function CreacionCuenta() {
     cantPaginasSelect2 =cantPaginasSelect;
     await reloadTableMain(paginaActual, cantPaginasSelect);
     console.log('cantPaginasSelect2: ' + cantPaginasSelect2)
+    setIsDisabledButtonFilter(false);
   }
 
   async function deleteFilters() {
-    //Pendiente resetear fechas
+    setStartDate(convertTZ(new Date()));//Prueba de fechas
+    setEndDate(convertTZ(new Date()));
     tipoConsulta = '';
     setConsecutivoCargue('');
     cantPaginasSelect2 =cantPaginasSelect;
     await reloadTableMain(paginaActual, cantPaginasSelect);
     console.log('cantPaginasSelect2: ' + cantPaginasSelect2)
+    setIsDisabledButtonFilter(true);
   }
 
   const changeHandler = (event) => {
@@ -700,11 +705,11 @@ export default function CreacionCuenta() {
             >
               <Row>
                 <Col s={12} m={3} className="text-left">
-                  <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate} />
+                  <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate} dateInput={startDate} />
                 </Col>
 
                 <Col s={12} m={3} className="text-left">
-                  <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate} />
+                  <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate}  dateInput={endDate} />
                 </Col>
 
                 <Col s={12} m={3} >
@@ -719,7 +724,7 @@ export default function CreacionCuenta() {
                   </Button>
                 </Col>
                 <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
-                  <Button node="button" small className="indigo darken-4" onClick={deleteFilters}>
+                  <Button node="button" disabled={isDisabledButtonFilter} small className="indigo darken-4" onClick={deleteFilters}>
                     Borrar filtros
                   </Button>
                 </Col>

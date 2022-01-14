@@ -76,10 +76,10 @@ const renderElement = () => {
         <form onSubmit={submit}>
           <Row>
             <Col s={12} m={6} className="input-field date text-left">
-              <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate} />
+              <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate}  dateInput={startDate}  />
             </Col>
             <Col s={12} m={6} className="input-field date text-left">
-              <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate} />
+              <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate}   dateInput={endDate} />
             </Col>
             <Col s={12} className="input-field m0">
               <Button node="button" type="submit" small className="indigo darken-4">
