@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
 
-import { convertTZ } from "../../helpers/utils";
+import { convertTZ, addDays } from "../../helpers/utils";
 
 import ExportExcel from 'react-export-excel'
 
@@ -39,10 +39,9 @@ export default function CreacionCuenta() {
   const [tableRender, setTableRender] = useState();
   const [paginationFooter, setPaginationFooter] = useState();
   const [tableHeader, setTableHeader] = useState();
-  const [startDate, setStartDate] = useState(convertTZ(new Date()));
+  const [startDate, setStartDate] = useState(convertTZ(addDays(new Date(),-7)))
   const [endDate, setEndDate] = useState(convertTZ(new Date()));
   const [consecutivoCargue, setConsecutivoCargue] = useState('');
-  // const [tipoConsulta, setTipoConsulta] = useState('');
   const [product, setProduct] = useState('CDT');
   const [idRegistro, setIdRegistro] = useState('');
   const [cantPaginasSelect, setCantPaginasSelect] = useState('10');
@@ -64,7 +63,7 @@ export default function CreacionCuenta() {
   //resultados
 
   const fileInputRef = useRef(null);
-  var tipoConsulta = '';
+  var isWeek=true;
   var contentTable = []
   var contentTableResultado = []
   var currentItems = [];
@@ -164,6 +163,9 @@ export default function CreacionCuenta() {
     if(true){
       // if (dataTable){ se descomenta cuando se tenga L3
         // contentTable = dataTable; se descomenta cuando se tenga L3
+        if(isWeek){
+          toast.info("Se muestra registros de los últimos 7 días.");
+        }
         contentTable = [
           { file_id: '1', original_filename: 'carguecuentasdepositocdt_V2 (1).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
           { file_id: '2', original_filename: 'carguecuentasdepositocdt_V2 (2).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
@@ -240,6 +242,9 @@ export default function CreacionCuenta() {
             </Row>
           )
         }
+    }else{
+      toast.error("Falló al cargar registros.");
+      setTableRender(null);
     }
   }
 
@@ -281,12 +286,13 @@ export default function CreacionCuenta() {
           setIsSelected(false);
           setIsDisabledButton(true);
 
-          tipoConsulta = ''
+          isWeek = true;
           setConsecutivoCargue('');
           console.log('cantPaginasSelect:' + cantPaginasSelect)
           cantPaginasSelect2 = cantPaginasSelect;
-          setStartDate(convertTZ(new Date()));//Prueba de fechas
+          setStartDate(convertTZ(addDays(new Date(),-7)))
           setEndDate(convertTZ(new Date()));
+          setIsDisabledButtonFilter(true);
           await reloadTableMain(1, cantPaginasSelect);
           console.log('cantPaginasSelect2: ' + cantPaginasSelect2)
         } else {
@@ -303,7 +309,7 @@ export default function CreacionCuenta() {
     console.log("Se aplican filtros")
     console.log("startDate: " + startDate)
     console.log("endDate: " + endDate)
-    tipoConsulta = 'filtro';
+    isWeek=false;
     cantPaginasSelect2 =cantPaginasSelect;
     await reloadTableMain(paginaActual, cantPaginasSelect);
     console.log('cantPaginasSelect2: ' + cantPaginasSelect2)
@@ -311,9 +317,9 @@ export default function CreacionCuenta() {
   }
 
   async function deleteFilters() {
-    setStartDate(convertTZ(new Date()));//Prueba de fechas
+    setStartDate(convertTZ(addDays(new Date(),-7)))
     setEndDate(convertTZ(new Date()));
-    tipoConsulta = '';
+    isWeek = true;
     setConsecutivoCargue('');
     cantPaginasSelect2 =cantPaginasSelect;
     await reloadTableMain(paginaActual, cantPaginasSelect);
@@ -356,9 +362,6 @@ export default function CreacionCuenta() {
 
   // Invoke when user click to request another page.
   async function handlePageClick(event){
-    // const pagina = event.selected + 1;
-    // await reloadTableMain(pagina, cantPaginasSelect2);
-    // console.log('Se cambia de pagina principal: ' + pagina)
     console.log('cantPaginasSelect: ' + cantPaginasSelect2)
     const newOffset = (event.selected * cantPaginasSelect2) % contentTable.length;
     
@@ -383,7 +386,9 @@ export default function CreacionCuenta() {
 
 
   useEffect(() => {
+    isWeek=true;
     reloadTableMain(paginaActual, cantPaginasSelect);
+
     document.title = title
   }, []);
 
@@ -423,6 +428,7 @@ export default function CreacionCuenta() {
     setPaginaActual(1);
     console.log('cantPaginasSelect: ' + cantPaginasSelect)
     console.log('cantPaginasSelect2: ' + cantPaginasSelect2)
+    isWeek=false;
     reloadTableMain(1, selectValue);
   }
 
@@ -460,30 +466,28 @@ export default function CreacionCuenta() {
     reloadTableResultado(1, selectValue,idRegistro);
   }
 
-  // async function obtenerDataTableResultado(nroPage, cantReg, id) {
-  //   await tableService.getDataTable(nroPage, cantReg, startDate, endDate, consecutivoCargue, tipoConsulta, false, id)
-  //     .then((response) => {
-  //       if (response) {
-  //         contentTableResultado = response.contentTable;
-  //         // setPageCount(response.totalPaginas);
-  //       }
-  //     });
-
-  // }
-
   async function reloadTableResultado(nroPage, cantReg, id) {
     setTableResultadoRender(
       <Loading text={loaderText} aditional={aditional} />
     );
+    
+    isWeek=true;
+
     setConsecutivoCargue('');
-    tipoConsulta= ''
+    setCantPaginasSelect('10')
+    // cantPaginasSelect2 = cantPaginasSelect;
+    setStartDate(convertTZ(addDays(new Date(),-7)))
+    setEndDate(convertTZ(new Date()));
+    setIsDisabledButtonFilter(true);
+
 
     await sleep(5000);
     
-    const dataResultado = await tableService.getDataTable(nroPage, cantReg, startDate, endDate, consecutivoCargue, tipoConsulta, false, id)
+    // const dataResultado = await tableService.getDataTable(nroPage, cantReg, startDate, endDate, consecutivoCargue, false, id)
 
     console.log('terminado sleeip resutlado')
-    if(dataResultado){
+    // if(dataResultado){
+    if(true){
       // contentTableResultado = dataResultado[0].results_per_row;
       contentTableResultado = [
         { rowID: '1', codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
@@ -583,7 +587,6 @@ export default function CreacionCuenta() {
   async function changePantallaCargar (event) {
     console.log('cambia a principal')
     setIsPantallaPrincipal(true);
-
     reloadTableMain(1, 10);
 
   };

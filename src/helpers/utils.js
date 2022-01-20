@@ -49,3 +49,9 @@ export function convertTZ(date) {
         ? new Date(date)
         : date).toISOString("en-ES", { timeZone: 'America/Bogota' }));
 }
+
+//Si el parámetro days se envia en negativo se realiza una resta en los días
+export function addDays(date, days) {
+    date.setDate(date.getDate() + days)
+    return date;
+}
