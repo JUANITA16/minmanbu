@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
 
-import { convertTZ, addDays } from "../../helpers/utils";
+import { convertTZ, addDays, convertirFecha } from "../../helpers/utils";
 
 import ExportExcel from 'react-export-excel'
 
@@ -160,7 +160,8 @@ export default function CreacionCuenta() {
     console.log('dataTable: '+dataTable)
     if (dataTable && dataTable.length!==0){
       contentTable = dataTable; 
-      console.log(contentTable.sort((a, b) => a.date_upload > b.date_upload));
+      console.log(contentTable[0].date_upload)
+      console.log(contentTable.sort((a, b) => new Date(a.date_upload).getTime() > new Date(b.date_upload).getTime()));
 
       if(isWeek){
         toast.info("Se muestra registros de los últimos 7 días.");
@@ -400,7 +401,7 @@ export default function CreacionCuenta() {
     setPaginaActual(1);
     console.log('cantPaginasSelect: ' + cantPaginasSelect)
     console.log('cantPaginasSelect2: ' + cantPaginasSelect2)
-    isWeek=true;
+    // isWeek=false;
     reloadTableMain(1, selectValue);
   }
 
