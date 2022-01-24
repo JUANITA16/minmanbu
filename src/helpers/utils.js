@@ -17,6 +17,7 @@ export const setErrorTable = (error) => {
     if (error.request) {
         console.error(error.request);
         return {
+            status:  error.response.status,
             detail: "No se pudo obtener los datos de la tabla"
         }
     }

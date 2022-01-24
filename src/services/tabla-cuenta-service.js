@@ -121,10 +121,9 @@ export class TablaCuentaService {
         return await axios(config)
             .then((response) => {
                 console.log('response table: '+response)
-                return response.data;
+                return response;
             })
             .catch((error) => {
-                
                 return setErrorTable(error);
             });
         

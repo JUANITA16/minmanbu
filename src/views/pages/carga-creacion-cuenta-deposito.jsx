@@ -157,9 +157,9 @@ export default function CreacionCuenta() {
     // await sleep(5000)
     const dataTable = await tableService.getDataTable(startDate, endDate, consecutivoCargue, isWeek)
     // console.log('terminó sleep')
-    console.log('dataTable: '+dataTable)
-    if (dataTable && dataTable.length!==0){
-      contentTable = dataTable; 
+    if (dataTable.status === 200){
+
+      contentTable = dataTable.data;
       // console.log('contentTable[0]: '+contentTable[0].date_upload)
       contentTable.sort((a, b) => new Date(a.date_upload).getTime() - new Date(b.date_upload).getTime())
       // console.log('contentTable[0]: '+contentTable[0].date_upload)
@@ -219,7 +219,7 @@ export default function CreacionCuenta() {
           )
         }
     }else{
-      toast.error("Falló al cargar registros.");
+      toast.error(dataTable.detail);
       setTableRender(null);
     }
   }
@@ -455,55 +455,61 @@ export default function CreacionCuenta() {
     setIsDisabledButtonFilter(true);
 
     const dataResultado = await tableService.getDataTable(startDate, endDate, id, isWeek)
-    console.log('dataResultado: '+dataResultado)
-    if(dataResultado && dataResultado[0].results_per_row && dataResultado[0].results_per_row.length !==0){
-      contentTableResultado = dataResultado[0].results_per_row;
-      console.log('ontentTableResultado.length: ' + contentTableResultado.length)
-  
-      const endOffsetResultado = itemOffsetResultado + parseInt(cantReg);
-      console.log('endOffsetResultado: '+endOffsetResultado);
-      console.log('itemOffsetResultado: '+itemOffsetResultado);
-      currentItemsResultado = contentTableResultado.slice(itemOffsetResultado, endOffsetResultado);
-      console.log('currentItemsResultado: '+currentItemsResultado);
-  
-      totalPaginasResultado = Math.ceil(contentTableResultado.length / cantReg);
-      setTableHeaderResultado(<thead>
-        <tr>
-          <th data-field="rowID " style={{ textAlign: "center" }}>Id</th>
-          <th data-field="codeStatus" style={{ textAlign: "center" }}>  Cod. Estado </th>
-          <th data-field="status" style={{ textAlign: "center" }}> Estado </th>
-          <th data-field="errorDetail" style={{ textAlign: "center" }}> Detalle </th>
-        </tr>
-      </thead>);
-      setTableResultadoRender(<tbody>
-        {currentItemsResultado.map((contenido, index) => {
-          return <TableBodyResultado rowID={contenido.rowID}
-          codeStatus={contenido.codeStatus} status={contenido.status} errorDetail={contenido.errorDetail}  />
-        })}
-      </tbody>);
-      setPaginationFooterResultado(
-        <TableFooterPaginationResultado />
-      );
-      setExportaResultado(
-        <Row>
-          <Col s={12} m={12} className="input-field m0">
-            <ExcelFile
-              element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
-              filename="Resultado de carga masiva">
-              <ExcelSheet data={contentTableResultado} name="Resultados">
-                <ExcelColumn label="Id" value="rowID" />
-                <ExcelColumn label="Cod.Estado" value="codeStatus" />
-                <ExcelColumn label="Estado" value="status" />
-                <ExcelColumn label="Detalle" value="errorDetail" />
-              </ExcelSheet>
-  
-            </ExcelFile>
-  
-          </Col>
-        </Row>
-      )
-    }else {
-      toast.error("No se encuentra en proceso ningún registro.");
+    // console.log('dataResultado: '+dataResultado)
+    if(dataResultado.status===200 ){
+      contentTableResultado = dataResultado.data[0].results_per_row;
+      if(contentTableResultado && contentTableResultado.length !==0){
+        
+        console.log('ontentTableResultado.length: ' + contentTableResultado.length)
+    
+        const endOffsetResultado = itemOffsetResultado + parseInt(cantReg);
+        console.log('endOffsetResultado: '+endOffsetResultado);
+        console.log('itemOffsetResultado: '+itemOffsetResultado);
+        currentItemsResultado = contentTableResultado.slice(itemOffsetResultado, endOffsetResultado);
+        console.log('currentItemsResultado: '+currentItemsResultado);
+    
+        totalPaginasResultado = Math.ceil(contentTableResultado.length / cantReg);
+        setTableHeaderResultado(<thead>
+          <tr>
+            <th data-field="rowID " style={{ textAlign: "center" }}>Id</th>
+            <th data-field="codeStatus" style={{ textAlign: "center" }}>  Cod. Estado </th>
+            <th data-field="status" style={{ textAlign: "center" }}> Estado </th>
+            <th data-field="errorDetail" style={{ textAlign: "center" }}> Detalle </th>
+          </tr>
+        </thead>);
+        setTableResultadoRender(<tbody>
+          {currentItemsResultado.map((contenido, index) => {
+            return <TableBodyResultado rowID={contenido.rowID}
+            codeStatus={contenido.codeStatus} status={contenido.status} errorDetail={contenido.errorDetail}  />
+          })}
+        </tbody>);
+        setPaginationFooterResultado(
+          <TableFooterPaginationResultado />
+        );
+        setExportaResultado(
+          <Row>
+            <Col s={12} m={12} className="input-field m0">
+              <ExcelFile
+                element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+                filename="Resultado de carga masiva">
+                <ExcelSheet data={contentTableResultado} name="Resultados">
+                  <ExcelColumn label="Id" value="rowID" />
+                  <ExcelColumn label="Cod.Estado" value="codeStatus" />
+                  <ExcelColumn label="Estado" value="status" />
+                  <ExcelColumn label="Detalle" value="errorDetail" />
+                </ExcelSheet>
+    
+              </ExcelFile>
+    
+            </Col>
+          </Row>
+        )
+      }else {
+        toast.error("No se encuentra en proceso ningún registro.");
+        setTableResultadoRender(null);
+      }
+    }else{
+      toast.error(dataResultado.detail);
       setTableResultadoRender(null);
     }
   }
