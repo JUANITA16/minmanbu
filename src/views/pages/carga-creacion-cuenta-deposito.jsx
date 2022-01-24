@@ -157,7 +157,7 @@ export default function CreacionCuenta() {
     // await sleep(5000)
     const dataTable = await tableService.getDataTable(startDate, endDate, consecutivoCargue, isWeek)
     // console.log('terminó sleep')
-
+    console.log('dataTable: '+dataTable)
     if (dataTable && dataTable.length!==0){
       contentTable = dataTable; 
       if(isWeek){
@@ -452,7 +452,7 @@ export default function CreacionCuenta() {
     setIsDisabledButtonFilter(true);
 
     const dataResultado = await tableService.getDataTable(startDate, endDate, id, isWeek)
-
+    console.log('dataResultado: '+dataResultado)
     if(dataResultado && dataResultado[0].results_per_row && dataResultado[0].results_per_row.length !==0){
       contentTableResultado = dataResultado[0].results_per_row;
       console.log('ontentTableResultado.length: ' + contentTableResultado.length)
