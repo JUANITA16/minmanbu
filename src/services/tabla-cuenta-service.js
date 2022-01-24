@@ -22,6 +22,15 @@ export class TablaCuentaService {
         parametros =  `?start_date=${formattedStartDate}&end_date=${formattedEndDate}`
         // jsonPrueba = [
         // {
+        //     "filename": "Carga masiva de Cuentas Deposito (1)-202201200926536.xlsx",
+        //     "results_per_row": [],
+        //     "file_id": "202201200926536",
+        //     "date_upload": "2022-01-20",
+        //     "user_upload": "",
+        //     "upload_type": "Cuentas Corrientes",
+        //     "original_filename": "Carga masiva de Cuentas Deposito (1).xlsx"
+        // },
+        // {
         //     "filename": "Resultado_de_carga_masiva_modificacion_nombre_0021-202201191531911.xlsx",
         //     "results_per_row": [],
         //     "file_id": "202201191531911",
@@ -73,15 +82,6 @@ export class TablaCuentaService {
         //     "user_upload": "",
         //     "upload_type": "Bonos",
         //     "original_filename": "Carga masiva de Cuentas Deposito.xlsx"
-        // },
-        // {
-        //     "filename": "Carga masiva de Cuentas Deposito (1)-202201200926536.xlsx",
-        //     "results_per_row": [],
-        //     "file_id": "202201200926536",
-        //     "date_upload": "2022-01-20",
-        //     "user_upload": "",
-        //     "upload_type": "Cuentas Corrientes",
-        //     "original_filename": "Carga masiva de Cuentas Deposito (1).xlsx"
         // },
         // {
         //     "filename": "Carga masiva de Cuentas Deposito (5)-202201201155930.xlsx",
