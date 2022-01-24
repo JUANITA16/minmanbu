@@ -20,7 +20,78 @@ export class TablaCuentaService {
         let formattedEndDate =endDate.getFullYear() +'-'+("0"+(endDate.getMonth()+1)).slice(-2) + "-"+ ("0" + endDate.getDate()).slice(-2)
 
         parametros =  `?start_date=${formattedStartDate}&end_date=${formattedEndDate}`
-        // jsonPrueba = [];
+        // jsonPrueba = [
+        // {
+        //     "filename": "Resultado_de_carga_masiva_modificacion_nombre_0021-202201191531911.xlsx",
+        //     "results_per_row": [],
+        //     "file_id": "202201191531911",
+        //     "date_upload": "2022-01-19",
+        //     "user_upload": "",
+        //     "upload_type": "Bonos",
+        //     "original_filename": "Resultado_de_carga_masiva_modificacion_nombre_0021.xlsx"
+        // },
+        // {
+        //     "filename": "Resultado_de_carga_masiva_modificacion_04-202201181943430.xlsx",
+        //     "results_per_row": [],
+        //     "file_id": "202201181943430",
+        //     "date_upload": "2022-01-18",
+        //     "user_upload": "",
+        //     "upload_type": "Bonos",
+        //     "original_filename": "Resultado_de_carga_masiva_mofsdfasfasfasfasfasdificacion_nombre_04.xlsx"
+        // },
+        // {
+        //     "filename": "Resultado_de_carga_masiva_modificacion_nombre_03-202201181930259.xlsx",
+        //     "file_id": "202201181930259",
+        //     "date_upload": "2022-01-18",
+        //     "user_upload": "",
+        //     "upload_type": "Bonos",
+        //     "original_filename": "Resultado_de_carga_masiva_modificacion_nombre_03.xlsx"
+        // },
+        // {
+        //     "filename": "Resultado_de_carga_masiva_modificacion_nombre_0020-202201191520670.xlsx",
+        //     "results_per_row": [],
+        //     "file_id": "202201191520670",
+        //     "date_upload": "2022-01-19",
+        //     "user_upload": "",
+        //     "upload_type": "Bonos",
+        //     "original_filename": "Resultado_de_carga_masiva_modificacion_nombre_0020.xlsx"
+        // },
+        // {
+        //     "filename": "Carga masiva de Cuentas Deposito (5)-202201200918188.xlsx",
+        //     "results_per_row": [],
+        //     "file_id": "202201200918188",
+        //     "date_upload": "2022-01-20",
+        //     "user_upload": "",
+        //     "upload_type": "CDT",
+        //     "original_filename": "Carga masiva de Cuentas Deposito (5).xlsx"
+        // },
+        // {
+        //     "filename": "Carga masiva de Cuentas Deposito-202201200929153.xlsx",
+        //     "results_per_row": [],
+        //     "file_id": "202201200929153",
+        //     "date_upload": "2022-01-20",
+        //     "user_upload": "",
+        //     "upload_type": "Bonos",
+        //     "original_filename": "Carga masiva de Cuentas Deposito.xlsx"
+        // },
+        // {
+        //     "filename": "Carga masiva de Cuentas Deposito (1)-202201200926536.xlsx",
+        //     "results_per_row": [],
+        //     "file_id": "202201200926536",
+        //     "date_upload": "2022-01-20",
+        //     "user_upload": "",
+        //     "upload_type": "Cuentas Corrientes",
+        //     "original_filename": "Carga masiva de Cuentas Deposito (1).xlsx"
+        // },
+        // {
+        //     "filename": "Carga masiva de Cuentas Deposito (5)-202201201155930.xlsx",
+        //     "results_per_row": [],
+        //     "file_id": "202201201155930",
+        //     "date_upload": "2022-01-20",
+        //     "user_upload": "",
+        //     "upload_type": "CDT",
+        //     "original_filename": "Carga masiva de Cuentas Deposito (5).xlsx"
+        // }];
 
         if(!isWeek && consecutivoCargue!==''){
             parametros = `/${consecutivoCargue}` 

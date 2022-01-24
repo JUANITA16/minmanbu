@@ -160,6 +160,8 @@ export default function CreacionCuenta() {
     console.log('dataTable: '+dataTable)
     if (dataTable && dataTable.length!==0){
       contentTable = dataTable; 
+      console.log(contentTable.sort((a, b) => a.date_upload > b.date_upload));
+
       if(isWeek){
         toast.info("Se muestra registros de los últimos 7 días.");
         }
@@ -336,10 +338,9 @@ export default function CreacionCuenta() {
     console.log('cantPaginasSelect: ' + cantPaginasSelect2)
     const newOffset = (event.selected * cantPaginasSelect2) % contentTable.length;
     
-
     itemOffset = newOffset;
     console.log('itemOffset: ' + itemOffset)
-    const endOffset = itemOffset + cantPaginasSelect2;
+    const endOffset = parseInt(itemOffset) + parseInt(cantPaginasSelect2);
     console.log('endOffset: ' + endOffset)
     currentItems = contentTable.slice(itemOffset, endOffset);
     console.log('currentItems: ' + currentItems)
