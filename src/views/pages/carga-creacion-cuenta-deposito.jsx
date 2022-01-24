@@ -160,8 +160,11 @@ export default function CreacionCuenta() {
     console.log('dataTable: '+dataTable)
     if (dataTable && dataTable.length!==0){
       contentTable = dataTable; 
+      // console.log('contentTable[0]: '+contentTable[0].date_upload)
       contentTable.sort((a, b) => new Date(a.date_upload).getTime() - new Date(b.date_upload).getTime())
-      
+      // console.log('contentTable[0]: '+contentTable[0].date_upload)
+      contentTable.reverse()
+      // console.log('contentTable[0]: '+contentTable[0].date_upload)
       if(isWeek){
         toast.info("Se muestra registros de los últimos 7 días.");
         }
