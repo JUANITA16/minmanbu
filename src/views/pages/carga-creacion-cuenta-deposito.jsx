@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { InputDate, CardHeader,Loading } from '../components/index'
-import { Table } from 'react-materialize'
-import { Row, Col, Button, Collapsible, CollapsibleItem, Icon } from 'react-materialize'
+import { Row, Col, Button, Collapsible, CollapsibleItem, Icon, Table } from 'react-materialize'
 import { TablaCuentaService } from "../../services/tabla-cuenta-service";
 import { MasivoService } from "../../services/masivo-service";
 import { toast } from 'react-toastify';
@@ -24,8 +23,8 @@ const ExcelColumn = ExportExcel.ExcelColumn;
 
 export default function CreacionCuenta() {
 
-  const title = 'Creacion de cuentas depósito';
-  const description = 'En esta sección podrá cargar archivos para creación de cuenta depósito.';
+  const title = 'Creacion de cuentas masiva';
+  const description = 'En esta sección podrá cargar archivos para la creación de cuenta en forma masiva.';
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
   const [nameFileSelected, setNameFileSelected] = useState("Ningún archivo seleccionado.");
@@ -88,12 +87,12 @@ export default function CreacionCuenta() {
     return (
       <thead>
         <tr>
-          <th data-field="Consecutivo" >Consecutivo</th>
-          <th data-field="nameOriginal"> Nombre original</th>
-          <th data-field="nameModified"> Nombre modificado</th>
-          <th data-field="fechaCarga"> Fecha de carga</th>
-          <th data-field="userModified"> Usuario</th>
-          <th data-field="action" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}> Acción  </th>
+          <th data-field="Consecutivo" style={{ textAlign: "center" }}>Consecutivo</th>
+          <th data-field="nameOriginal" style={{ textAlign: "center", minWidth: 50, maxWidth: 100 }} > Nombre original</th>
+          <th data-field="nameModified" style={{ textAlign: "center" }} > Nombre modificado</th>
+          <th data-field="fechaCarga" style={{ textAlign: "center" }}> Fecha de carga</th>
+          <th data-field="userModified" style={{ textAlign: "center"}}> Usuario</th>
+          <th data-field="action" style={{ textAlign: "center" }}> Resultados  </th>
         </tr>
       </thead>
     )
@@ -101,25 +100,25 @@ export default function CreacionCuenta() {
 
   const TableBody = (props) => {
     return (
-      <tr>
-        <td>
+      <tr style={{ fontSize: "small" }} >
+        <td style={{ textAlign: "center" }}>
           {props.consecutive}
         </td>
-        <td>
+        <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all"}}>
           {props.name_original}
         </td>
-        <td>
+        <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all"}}>
           {props.name_modified}
         </td>
-        <td>
+        <td style={{ textAlign: "center" }}>
           {props.fecha}
         </td>
-        <td>
+        <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all"}}>
           {props.user}
         </td>
         <td style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
           <Button value={props.consecutive} node="button" onClick={changePantallaResultado} small className="indigo darken-4">
-            Ver Resultado
+            Detalle
           </Button>
         </td>
       </tr>
@@ -143,54 +142,27 @@ export default function CreacionCuenta() {
     )
   };
   
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+  // function sleep(ms) {
+  //   return new Promise(resolve => setTimeout(resolve, ms));
+  // }
 
   async function reloadTableMain(nroPage, cantReg) {
     setTableRender(
       <Loading text={loaderText} aditional={aditional} />
     );
 
-    // setPaginationFooter(null);
     setExporta(null)
 
     
-    await sleep(5000)
-    // const dataTable = await tableService.getDataTable(nroPage, cantReg, startDate, endDate, consecutivoCargue, tipoConsulta, true, "")
-    console.log('terminó sleep')
+    // await sleep(5000)
+    const dataTable = await tableService.getDataTable(startDate, endDate, consecutivoCargue, isWeek)
+    // console.log('terminó sleep')
 
-    if(true){
-      // if (dataTable){ se descomenta cuando se tenga L3
-        // contentTable = dataTable; se descomenta cuando se tenga L3
-        if(isWeek){
-          toast.info("Se muestra registros de los últimos 7 días.");
+    if (dataTable && dataTable.length!==0){
+      contentTable = dataTable; 
+      if(isWeek){
+        toast.info("Se muestra registros de los últimos 7 días.");
         }
-        contentTable = [
-          { file_id: '1', original_filename: 'carguecuentasdepositocdt_V2 (1).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '2', original_filename: 'carguecuentasdepositocdt_V2 (2).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '3', original_filename: 'carguecuentasdepositocdt_V2 (3).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '4', original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '5', original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '6', original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '7', original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '8', original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '9', original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '10',original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '11',original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '12',original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '13',original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '14',original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '15',original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '16',original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '17',original_filename: 'carguecuentasdepositocdt_V2 (1).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '18',original_filename: 'carguecuentasdepositocdt_V2 (2).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '19',original_filename: 'carguecuentasdepositocdt_V2 (3).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '20',original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '21',original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' },
-          { file_id: '22',original_filename: 'carguecuentasdepositocdt_V2 (4).xlsx', filename: 'name_modificado_.xlsx', date_upload: '2022-04-05', user_upload: '' }
-        ];
-    
     
         console.log('cantPaginasSelect:' + cantReg);
     
@@ -428,7 +400,7 @@ export default function CreacionCuenta() {
     setPaginaActual(1);
     console.log('cantPaginasSelect: ' + cantPaginasSelect)
     console.log('cantPaginasSelect2: ' + cantPaginasSelect2)
-    isWeek=false;
+    isWeek=true;
     reloadTableMain(1, selectValue);
   }
 
@@ -471,60 +443,19 @@ export default function CreacionCuenta() {
       <Loading text={loaderText} aditional={aditional} />
     );
     
-    isWeek=true;
+    isWeek=false;
 
-    setConsecutivoCargue('');
+    
     setCantPaginasSelect('10')
-    // cantPaginasSelect2 = cantPaginasSelect;
     setStartDate(convertTZ(addDays(new Date(),-7)))
     setEndDate(convertTZ(new Date()));
     setIsDisabledButtonFilter(true);
 
+    const dataResultado = await tableService.getDataTable(startDate, endDate, id, isWeek)
 
-    await sleep(5000);
-    
-    // const dataResultado = await tableService.getDataTable(nroPage, cantReg, startDate, endDate, consecutivoCargue, false, id)
-
-    console.log('terminado sleeip resutlado')
-    // if(dataResultado){
-    if(true){
-      // contentTableResultado = dataResultado[0].results_per_row;
-      contentTableResultado = [
-        { rowID: '1', codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '2', codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '3', codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '4', codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '5', codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '6', codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '7', codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '8', codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '9', codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '10',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '11',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '12',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '13',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '14',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '15',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '16',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '17',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '18',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '19',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '20',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '21',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '22',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '23',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '24',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '25',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '26',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '27',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '28',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '29',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '30',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '31',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '32',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '33',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"},
-        { rowID: '34',codeStatus: 'ok', status: 'detalle', errorDetail:"observacion"}
-      ];
+    if(dataResultado && dataResultado[0].results_per_row && dataResultado[0].results_per_row.length !==0){
+      contentTableResultado = dataResultado[0].results_per_row;
+      console.log('ontentTableResultado.length: ' + contentTableResultado.length)
   
       const endOffsetResultado = itemOffsetResultado + parseInt(cantReg);
       console.log('endOffsetResultado: '+endOffsetResultado);
@@ -535,10 +466,10 @@ export default function CreacionCuenta() {
       totalPaginasResultado = Math.ceil(contentTableResultado.length / cantReg);
       setTableHeaderResultado(<thead>
         <tr>
-          <th data-field="rowID " style={{ width: "120px" }}>Id</th>
-          <th data-field="codeStatus" style={{ width: "130px" }}>  Cod. Estado </th>
-          <th data-field="status"> Estado </th>
-          <th data-field="errorDetail"> Detalle </th>
+          <th data-field="rowID " style={{ textAlign: "center" }}>Id</th>
+          <th data-field="codeStatus" style={{ textAlign: "center" }}>  Cod. Estado </th>
+          <th data-field="status" style={{ textAlign: "center" }}> Estado </th>
+          <th data-field="errorDetail" style={{ textAlign: "center" }}> Detalle </th>
         </tr>
       </thead>);
       setTableResultadoRender(<tbody>
@@ -568,6 +499,9 @@ export default function CreacionCuenta() {
           </Col>
         </Row>
       )
+    }else {
+      toast.error("No se encuentra en proceso ningún registro.");
+      setTableResultadoRender(null);
     }
   }
 
@@ -587,6 +521,8 @@ export default function CreacionCuenta() {
   async function changePantallaCargar (event) {
     console.log('cambia a principal')
     setIsPantallaPrincipal(true);
+    isWeek=true;
+    setConsecutivoCargue('');
     reloadTableMain(1, 10);
 
   };
@@ -594,16 +530,16 @@ export default function CreacionCuenta() {
   const TableBodyResultado = (props) => {
     return (
       <tr>
-        <td>
+        <td  style={{minWidth: 20, maxWidth: 100 , textAlign: "center" }}>
           {props.rowID}
-        </td>
-        <td>
+        </td >
+        <td style={{minWidth: 10, maxWidth: 50 ,  textAlign: "center" }}>
           {props.codeStatus}
         </td>
-        <td >
+        <td style={{ minWidth: 10, maxWidth: 150 , textAlign: "center" , wordBreak:"break-all" }}>
           {props.status}
         </td>
-        <td >
+        <td style={{ minWidth: 10, maxWidth: 250, wordBreak:"break-all"}}>
           {props.errorDetail}
         </td>
       </tr>
@@ -741,7 +677,7 @@ export default function CreacionCuenta() {
             <label className="active">Cantidad de registros</label>
             <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginas} />
           </Col>
-          <Table>
+          <Table >
             {tableHeader}
             {tableRender}
           </Table>

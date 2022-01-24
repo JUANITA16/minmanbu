@@ -15,7 +15,7 @@ export default function NavigationBar() {
             url: `${base}/ui-generate-sap`
         },
         {
-            name: "Creacion cuenta",
+            name: "Creación masiva",
             url: `${base}/ui-crea-cuenta-deposito`
         }
     ])
