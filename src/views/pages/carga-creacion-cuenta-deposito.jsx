@@ -401,7 +401,7 @@ export default function CreacionCuenta() {
     setPaginaActual(1);
     console.log('cantPaginasSelect: ' + cantPaginasSelect)
     console.log('cantPaginasSelect2: ' + cantPaginasSelect2)
-    // isWeek=false;
+    isWeek=false;
     reloadTableMain(1, selectValue);
   }
 
