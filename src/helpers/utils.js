@@ -14,17 +14,11 @@ export const setError = (error) => {
 }
 
 export const setErrorTable = (error) => {
-    if (error.request) {
-        console.error(error.request);
-        return {
-            status:  error.response.status,
-            detail: "No se pudo obtener los datos de la tabla"
-        }
+    console.log(error)
+    return {
+        status:  error.response.status,
+        detail: "No se pudo obtener los datos de la tabla"
     }
-    else if (error.response)
-        console.log(error.response);
-    else if (error.message)
-        console.log(error.message);
 }
 
 export const setFormatDate = (date) => {
