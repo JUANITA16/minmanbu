@@ -49,6 +49,7 @@ export class TablaCuentaService {
         };
         return await axios(config)
             .then((response) => {
+                console.log('response table: '+response)
                 return response.data;
             })
             .catch((error) => {
