@@ -163,10 +163,9 @@ export default function CreacionCuenta() {
       if(isWeek){
         toast.info("Se muestra registros de los últimos 7 días.");
         }
-    
         console.log('cantPaginasSelect:' + cantReg);
     
-        const endOffset = itemOffset + cantReg;
+        const endOffset = itemOffset +  parseInt(cantReg);
         // console.log(`Loading items from ${itemOffset} to ${endOffset}`);
     
         currentItems = contentTable.slice(itemOffset, endOffset);
