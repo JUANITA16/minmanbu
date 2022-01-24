@@ -15,8 +15,19 @@ export const setError = (error) => {
 
 export const setErrorTable = (error) => {
     console.log(error)
+    var statusCode = 400;
+    if (error.request) {
+        statusCode = error.request.status;
+        console.error(error.request);
+    }
+    else if (error.response){
+        statusCode = error.response.status;
+        console.log(error.response);
+    }else if (error.message)
+        console.log(error.message);
+    console.log("statusCode: "+statusCode);
     return {
-        status:  error.response.status,
+        status:  statusCode,
         detail: "No se pudo obtener los datos de la tabla"
     }
 }
