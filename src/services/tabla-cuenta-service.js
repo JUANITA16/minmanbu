@@ -11,6 +11,7 @@ export class TablaCuentaService {
     getDataTable = async (startDate, endDate, consecutivoCargue,isWeek) => {
         var parametros = ''
         // var jsonPrueba =[]
+        // var response = new Object();
         if(isWeek){
             startDate = convertTZ(addDays(new Date(),-7))
             endDate = convertTZ(new Date())
@@ -98,7 +99,44 @@ export class TablaCuentaService {
             // jsonPrueba = [
             //     {
             //         "filename": "Resultado_de_carga_masiva_modificacion_04-202201181943430.xlsx",
-            //         "results_per_row": [],
+            //         "results_per_row": [
+            //             {
+            //                 "detail": "{\"message\": \"Error no found product or invalid id P-ProductCDT- TF\"}",
+            //                 "rowId": "3",
+            //                 "status": "Error",
+            //                 "codeStatus": "400"
+            //             },
+            //             {
+            //                 "detail": "{\"message\": \"Invalid cod Isin\"}",
+            //                 "rowId": "1",
+            //                 "status": "Error",
+            //                 "codeStatus": "400"
+            //             },
+            //             {
+            //                 "detail": "{\"message\": \"Invalid cod Isin\"}",
+            //                 "rowId": "2",
+            //                 "status": "Error",
+            //                 "codeStatus": "400"
+            //             },
+            //             {
+            //                 "detail": "",
+            //                 "rowId": "4",
+            //                 "status": "OK",
+            //                 "codeStatus": "201"
+            //             },
+            //             {
+            //                 "detail": "",
+            //                 "rowId": "5",
+            //                 "status": "OK",
+            //                 "codeStatus": "201"
+            //             },
+            //             {
+            //                 "detail": "",
+            //                 "rowId": "0",
+            //                 "status": "OK",
+            //                 "codeStatus": "201"
+            //             }
+            //         ],
             //         "file_id": "202201181943430",
             //         "date_upload": "2022-01-18",
             //         "user_upload": "",
@@ -126,8 +164,9 @@ export class TablaCuentaService {
             .catch((error) => {
                 return setErrorTable(error);
             });
-        
-        // return jsonPrueba;
+        // response.data = jsonPrueba;
+        // response.status=200;
+        // return response;
         
     }
 }
