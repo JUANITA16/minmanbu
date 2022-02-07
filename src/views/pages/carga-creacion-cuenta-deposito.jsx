@@ -219,7 +219,8 @@ export default function CreacionCuenta() {
   async function handleSubmission(event) {
 
     if (isSelected) {
-
+      toast.info("Cargando archivo...");
+      setIsDisabledButton(true);
       const base64File = await toBase64(selectedFile).catch(e => Error(e));
 
       if (base64File instanceof Error) {
@@ -234,16 +235,12 @@ export default function CreacionCuenta() {
 
         //Se invoca al servicio S3
         const responseMasivoService = await masivoService.uploadFile(bodyUpload);
-
+       
         if (responseMasivoService && responseMasivoService.description === "ok") {
-        // if (true) {
+        // if (false) {
 
           toast.success("Archivo cargado corrrectamente.");
-          setNameFileSelected("Ningún archivo seleccionado.");
-          setSelectedFile(null);
-          setIsSelected(false);
-          setIsDisabledButton(true);
-
+        
           isWeek = true;
           setConsecutivoCargue('');
           cantPaginasSelect2 = cantPaginasSelect;
@@ -255,6 +252,9 @@ export default function CreacionCuenta() {
         } else {
           toast.error("Error al subir archivo.");
         }
+        setNameFileSelected("Ningún archivo seleccionado.");
+        setSelectedFile(null);
+        setIsSelected(false);
       }
     } else {
       toast.error("No se ha seleccionado ningun archivo.");
