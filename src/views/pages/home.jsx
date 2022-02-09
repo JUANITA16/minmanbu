@@ -17,7 +17,7 @@ export default function Home() {
       <CardHeader title={title} description={description} />
       <Row>
         <Col s={12}>
-          <Link to={base + '/generate-sap'} className="brand-logo indigo-text">Generar Archivo</Link>
+          <Link to={base + '/ui-generate-sap'} className="brand-logo indigo-text">Generar Archivo</Link>
         </Col>
       </Row>
     </React.Fragment>

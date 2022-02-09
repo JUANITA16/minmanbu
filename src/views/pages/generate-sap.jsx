@@ -15,6 +15,9 @@ export default function GenerateSap() {
   const [loaderText] = useState('Estamos generando el archivo, por favor espere...');
   const [inProgress, setInProgress] = useState(false);
   const [response, setResponse] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [contentFile, setContenFile] = useState('');
+
 
   useEffect(() => {
     document.title = title
@@ -25,48 +28,70 @@ export default function GenerateSap() {
   }, [startDate, endDate])
 
   useEffect(() => {
+
     if (response !== '') {
       setInProgress(() => false);
       showToast(() => response);
+
+      if(fileName !== '' && (typeof fileName !== 'undefined') && contentFile!=='' ) {
+        download();
+      }
+      
     }
   }, [response])
 
-  async function submit(event) {
-    event.preventDefault();
-    setResponse(() => '');
-    setInProgress(() => true);
-    await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
-      .then((response) => {
-        if (response && response.detail) {
-          setResponse(() => response.detail + "-" + response.filename);
-        }
-      });
+  function download() {
+    console.log('fileName download:' + fileName);
+    const element = document.createElement("a");
+    const file = new Blob([contentFile], { type: 'text/plain;charset-utf-8' });
+    element.href = URL.createObjectURL(file);
+    element.download = fileName;
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
   }
 
-  const renderElement = () => {
-    return !inProgress
-      ? (
-        <React.Fragment>
-          <CardHeader title={title} description={description} aditional={aditional} />
-          <form onSubmit={submit}>
-            <Row>
-              <Col s={12} m={6} className="input-field date text-left">
-                <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate} />
-              </Col>
-              <Col s={12} m={6} className="input-field date text-left">
-                <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate} />
-              </Col>
-              <Col s={12} className="input-field m0">
-                <Button node="button" type="submit" small className="indigo darken-4">
-                  Generar
+
+
+async function submit(event) {
+  event.preventDefault();
+  setResponse(() => '');
+  setFileName(() => '');
+  setContenFile(() => '');
+  setInProgress(() => true);
+  await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
+    .then((response) => {
+      if (response && response.detail) {
+        setFileName(() => response.filename);
+        setContenFile(() => response.information);
+        setResponse(() => response.detail + "-" + response.filename);
+      }
+    });
+}
+
+const renderElement = () => {
+  return !inProgress
+    ? (
+      <React.Fragment>
+        <CardHeader title={title} description={description} aditional={aditional} />
+        <form onSubmit={submit}>
+          <Row>
+            <Col s={12} m={6} className="input-field date text-left">
+              <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate}  dateInput={startDate}  />
+            </Col>
+            <Col s={12} m={6} className="input-field date text-left">
+              <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate}   dateInput={endDate} />
+            </Col>
+            <Col s={12} className="input-field m0">
+              <Button node="button" type="submit" small className="indigo darken-4">
+                Generar
                 </Button>
-              </Col>
-            </Row>
-          </form>
-        </React.Fragment>
-      )
-      : <Loading text={loaderText} aditional={aditional} />
-  }
+            </Col>
+          </Row>
+        </form>
+      </React.Fragment>
+    )
+    : <Loading text={loaderText} aditional={aditional} />
+}
 
-  return renderElement()
+return renderElement()
 }

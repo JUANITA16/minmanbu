@@ -14,16 +14,22 @@ export const setError = (error) => {
 }
 
 export const setErrorTable = (error) => {
+    console.log(error)
+    var statusCode = 400;
     if (error.request) {
+        statusCode = error.request.status;
         console.error(error.request);
-        return {
-            detail: "No se pudo obtener los datos de la tabla"
-        }
     }
-    else if (error.response)
+    else if (error.response){
+        statusCode = error.response.status;
         console.log(error.response);
-    else if (error.message)
+    }else if (error.message)
         console.log(error.message);
+    console.log("statusCode: "+statusCode);
+    return {
+        status:  statusCode,
+        detail: "No se pudo obtener los datos de la tabla"
+    }
 }
 
 export const setFormatDate = (date) => {
@@ -48,4 +54,10 @@ export function convertTZ(date) {
     return new Date((typeof date === "string"
         ? new Date(date)
         : date).toISOString("en-ES", { timeZone: 'America/Bogota' }));
+}
+
+//Si el parámetro days se envia en negativo se realiza una resta en los días
+export function addDays(date, days) {
+    date.setDate(date.getDate() + days)
+    return date;
 }

@@ -6,16 +6,19 @@ import "react-datepicker/dist/react-datepicker.css";
 
 export default function InputDate(props) {
   const [date, setCurrentDate] = useState(convertTZ(new Date()));
-  const { setDate, labelName, maxValue, minValue } = props;
+  const { setDate,dateInput, labelName, maxValue, minValue } = props;
 
   function handleDate(selectDate) {
     selectDate = selectDate ? selectDate : date;
     setCurrentDate(selectDate);
+    setDate(selectDate)
   }
 
   useEffect(() => {
-    setDate(date);
-  }, [setDate, date])
+    // setDate(date);
+    setCurrentDate(dateInput);
+  // }, [setDate, date])
+  }, [setCurrentDate, dateInput])
 
   return (
     <React.Fragment>

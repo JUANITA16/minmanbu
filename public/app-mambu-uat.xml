@@ -1,0 +1,11 @@
+<app>
+ <id>minmambu</id>
+ <name>minmambu pasivos</name>
+ <provider>BTG Pactual pasivos</provider>
+ <description>minmambu creado por la celula de pasivos</description>
+ <extensionpoint>
+    <location>EXTENSION_MENU</location>
+    <label>minmambu</label>
+    <url>https://minmambu-uat.btgpactual.com.co/</url>
+ </extensionpoint>
+</app>

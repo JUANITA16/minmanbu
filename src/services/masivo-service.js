@@ -6,16 +6,18 @@ export class MasivoService {
 
     url_api = process.env.REACT_APP_BASE_URL_API  
 
-    generateFile = async (startDate, endDate) => {
-        const path = `/minmambu/api/v1/sap/file/generate?from=${startDate}&to=${endDate}`;        
-        const endpoint = `${this.url_api}${path}`;
-        console.log(endpoint);
+    uploadFile = async (bodyUpload) => {
+        const path = `/minmambu/api/v1/massive-acount/upload`;        
+        const endpoint =  `${this.url_api}${path}`;
+        console.log('endpoint-masivo'+endpoint);
+        console.log('bodyUpload'+bodyUpload);
         var config = {
-            method: 'GET',
+            method: 'POST',
             url: endpoint,
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
+            data: bodyUpload
         };
         return await axios(config)
             .then((response) => {

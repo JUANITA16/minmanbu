@@ -25,6 +25,7 @@ export class MambuService {
                 return setError(error);
             });
     }
+
 }
 
 export default MambuService;
