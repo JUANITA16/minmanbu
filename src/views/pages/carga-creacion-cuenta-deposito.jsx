@@ -141,6 +141,10 @@ export default function CreacionCuenta() {
     )
   };
   
+  // function sleep(ms) {
+  //   return new Promise(resolve => setTimeout(resolve, ms));
+  // }
+
   async function reloadTableMain(nroPage, cantReg) {
     setTableRender(
       <Loading text={loaderText} aditional={aditional} />
@@ -149,7 +153,7 @@ export default function CreacionCuenta() {
     setExporta(null)
 
     const dataTable = await tableService.getDataTable(startDate, endDate, consecutivoCargue, isWeek)
-
+    // await sleep(5000)
     if (dataTable.status === 200){
 
       contentTable = dataTable.data;
@@ -157,10 +161,6 @@ export default function CreacionCuenta() {
       contentTable.sort((a, b) => new Date(a.date_upload).getTime() - new Date(b.date_upload).getTime())
 
       contentTable.reverse()
-
-      if(isWeek){
-        toast.info("Se muestra registros de los últimos 7 días.");
-      }
 
         
       const endOffset = itemOffset +  parseInt(cantReg);
@@ -170,6 +170,9 @@ export default function CreacionCuenta() {
       totalPaginas = Math.ceil(contentTable.length / cantReg);
 
       if (totalPaginas !== 0) {
+        if(isWeek){
+          toast.info("Se muestra registros de los últimos 7 días.");
+        }
         setTableHeader(
           <TableHeader />
         );
@@ -208,6 +211,9 @@ export default function CreacionCuenta() {
             </Col>
           </Row>
         )
+      }else{
+        toast.error("No se encuentra ningún registro cargado.");
+        setTableRender(null);
       }
     }else{
       toast.error(dataTable.detail);
