@@ -1,0 +1,149 @@
+trigger:
+  - development
+  - release 
+  - master 
+  
+pool: "BTG Colombia - Azure DepOPS"
+  
+variables:
+  - name: environment
+    ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+      value: DEV
+    ${{ elseif eq(variables['Build.SourceBranchName'], 'release') }}:
+      value: UAT
+    ${{ elseif eq(variables['Build.SourceBranchName'], 'master') }}:
+      value: PDN
+  - name: service
+    value: minmambu
+  - name: serviceName
+    value: process
+  - name: infra_variable_group
+    value: ${{ upper( variables.service ) }}_ECS_${{ variables.environment }}
+  - name: service_variable_group
+    value: ${{ upper( variables.service ) }}-${{ upper( variables.serviceName ) }}_${{ variables.environment }}
+  - name: aws_credentials
+    value: ${{ upper( variables.service ) }}-${{ variables.environment }}
+  - name: version
+    value: $(Build.BuildNumber)
+
+stages:
+- stage: ${{ variables.environment }}
+  jobs:
+    - job: create_repo
+      displayName: Create Image Repository
+      pool: "BTG Colombia - Azure DepOPS" # agent pool
+      variables:
+      - group: ${{ variables.infra_variable_group }}
+      - group: ${{ variables.service_variable_group }}
+      steps:
+        - task: replace-variables-in-file@1
+          displayName: Set parameters values
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
+            endWithNewLine: true
+            verbose: true
+        - task: replace-variables-in-file@1
+          displayName: Set parameters values proxy
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/proxy/src/main/resources/application.properties'
+            endWithNewLine: true
+            verbose: true
+        - task: file-to-variable@1
+          displayName: Load tags to variable
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/iac/image-repository-tags'
+            variableName: 'tags'
+            replaceVariables: true
+            verbose: true
+        - task: CloudFormationCreateOrUpdateStack@1
+          displayName: Create image repo stack
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            stackName: 'image-repo-$(project)-$(appName)-$(serviceName)-$(stage)'
+            templateSource: 'file'
+            templateFile: '$(System.DefaultWorkingDirectory)/iac/image-repository.yml'
+            s3BucketName: '$(cfBucketName)'
+            templateParametersFile: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
+            tags: '$(tags)'     
+    - job: build_docker_image
+      displayName: Build & Push Docker Image
+      pool: "BTG Colombia - Azure DepOPS" # agent pool
+      dependsOn: create_repo
+      variables:
+      - group: ${{ variables.infra_variable_group }}
+      - group: ${{ variables.service_variable_group }}
+      steps:
+        - task: AWSShellScript@1
+          displayName: Get Account Id
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            scriptType: 'inline'
+            inlineScript: |
+              ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
+              echo "Account ID: $ACCOUNT_ID"
+              echo "##vso[task.setvariable variable=accountId;]$ACCOUNT_ID"
+        - task: replace-variables-in-file@1
+          displayName: Set parameters values file .env
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/.env'
+            endWithNewLine: true
+            verbose: true
+        - task: replace-variables-in-file@1
+          displayName: Set parameters values file .properties
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/proxy/src/main/resources/application.properties'
+            endWithNewLine: true
+            verbose: true
+        - task: AWSShellScript@1
+          displayName: ECR Docker Login
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            scriptType: 'inline'
+            inlineScript: |
+              aws ecr get-login-password --region $(region) | docker login --username AWS --password-stdin $(accountId).dkr.ecr.$(region).amazonaws.com
+        - task: AWSShellScript@1
+          displayName: Docker build
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            scriptType: 'inline'
+            inlineScript: |
+              docker build -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):$(version) -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):latest .
+        - task: AWSShellScript@1
+          displayName: Docker push
+          inputs:
+            awsCredentials: ${{ variables.aws_credentials }}
+            regionName: '$(region)'
+            scriptType: 'inline'
+            inlineScript: |
+              docker push $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage) --all-tags
+        - task: AmazonWebServices.aws-vsts-tools.AWSShellScript.AWSShellScript@1 
+          displayName: 'AWS Shell Script' 
+          inputs: 
+            awsCredentials: ${{ variables.aws_credentials }} 
+            regionName: '$(region)' 
+            scriptType: inline 
+            inlineScript: 'aws ecs update-service --cluster ecs-$(project)-$(appName)-$(stage)-cluster --service ecs-$(project)-$(appName)-$(stage)-process-service --force-new-deployment' 
+            disableAutoCwd: true 
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+    # - job: set_image_version
+    #   displayName: Set image version
+    #   pool: "BTG Colombia - Azure DepOPS" # agent pool
+    #   dependsOn: build_docker_image
+    #   condition: succeeded('build_docker_image')
+    #   variables:
+    #   - group: ${{ variables.infra_variable_group }}
+    #   - group: ${{ variables.service_variable_group }}
+    #   steps:
+    #     - checkout: none
+    #     - task: SecretsManagerCreateOrUpdateSecret@1
+    #       displayName: Set version secret
+    #       inputs:
+    #         awsCredentials: ${{ variables.aws_credentials }}
+    #         regionName: '$(region)'
+    #         secretNameOrId: 'scm-$(project)-$(appName)-$(serviceName)-$(stage)-version'
+    #         secretValueSource: 'inline'
+    #         secretValue: '{"version": "$(version)"}'      
