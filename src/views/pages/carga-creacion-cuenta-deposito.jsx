@@ -158,7 +158,9 @@ export default function CreacionCuenta() {
 
       contentTable = dataTable.data;
 
-      contentTable.sort((a, b) => new Date(a.date_upload).getTime() - new Date(b.date_upload).getTime())
+      // contentTable.sort((a, b) => new Date(a.date_upload).getTime() - new Date(b.date_upload).getTime())
+
+      contentTable.sort((a, b) => a.file_id - b.file_id)
 
       contentTable.reverse()
 
