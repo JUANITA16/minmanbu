@@ -164,7 +164,6 @@ export default function CreacionCuenta() {
 
       contentTable.reverse()
 
-        
       const endOffset = itemOffset +  parseInt(cantReg);
     
       currentItems = contentTable.slice(itemOffset, endOffset);
@@ -184,7 +183,7 @@ export default function CreacionCuenta() {
             return <TableBody consecutive={contenido.file_id}
               name_original={contenido.original_filename}
               name_modified={contenido.filename}
-              fecha={contenido.date_upload}
+              fecha={contenido.date_upload.replace('T',' ').replace('Z','')}
               user={contenido.user_upload} />
           })}
         </tbody>);
