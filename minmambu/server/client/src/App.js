@@ -5,6 +5,8 @@ import { Home, GenerateSap, NavigationBar ,CreacionCuenta} from './views/index'
 
 import { PublicClientApplication, EventType } from '@azure/msal-browser';
 import { MsalProvider } from "@azure/msal-react";
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
 import { msalConfig, protectedResources } from './config/authConfig';
 
 
@@ -40,6 +42,8 @@ export const getToken = async () => {
 export default function App() {
 
   const base = process.env.PUBLIC_URL;
+  const sesion = useSelector(store => sa);
+
   console.log("Variable de entorno con prueba:",process.env.REACT_APP_BASE_URL_API);
   return (
     <Section className="blue-grey lighten-5 p0">
@@ -65,6 +69,13 @@ export default function App() {
           draggable={false}
           pauseOnHover />
       </Router>
+      <UnauthenticatedTemplate>
+          <Switch>
+            <Route exact path="/">
+              <Redirect to={process.env.REACT_APP_LOGIN}/>
+            </Route>
+          </Switch>
+      </UnauthenticatedTemplate>
     </Section>
   );
 }
