@@ -6,7 +6,7 @@ import { useMsal } from "@azure/msal-react";
 
 export default function Home() {
   const { instance } = useMsal();
-  const { name, roles } = instance.getActiveAccount().idTokenClaims;
+  const { name } = instance.getActiveAccount().idTokenClaims;
   const base = process.env.PUBLIC_URL;
   const title = 'Inicio';
   const description = 'Mini mambu página principal.';
@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <React.Fragment>
-      <CardHeader title={title} description={description + " " + name + " " + roles.includes("MINMAMBU_ROLE_ADMINISTRADOR_DEV") } />
+      <CardHeader title={title} description={description + " " + name } />
       <Row>
         <Col s={12}>
           <Link to={base + '/ui-generate-sap'} className="brand-logo indigo-text">Generar Archivo</Link>

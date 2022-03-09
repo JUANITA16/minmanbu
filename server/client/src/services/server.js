@@ -28,7 +28,7 @@ export class ServerAPI {
         try{
             const url = this.base_url + "/sap"
             const config = {
-                Authorization: await getToken(),
+                headers: { Authorization: await getToken() },
                 params: { from, to }
             }
 
@@ -67,7 +67,7 @@ export class ServerAPI {
         try{
             const url = this.base_url + "/massive" + (bodyUpload.product === "CDT" ? "/cdt" : "/cc");
             const config = {
-                Authorization: await getToken()
+                headers: { Authorization: await getToken() },
             }
             const body = bodyUpload;
 
@@ -117,7 +117,7 @@ export class ServerAPI {
         try{
             const url = this.base_url + "/table";
             const config = {
-                Authorization: await getToken(),
+                headers: { Authorization: await getToken() },
                 params: {
                     start_date,
                     end_date,

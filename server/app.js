@@ -57,17 +57,31 @@ const setUp = async() => {
     });
 
     // Import routes
-    const specificRoute = require('./routes/specific');
-    const specific = require('./routes/specific');
+    const sapRoute = require('./routes/sap');
+    const tableRoute = require('./routes/table');
+    const massiveCCRoute = require('./routes/massive-cc');
+    const massiveCDTRoute = require('./routes/massive-cdt');
 
     // - To call backapp.use( process.env.SERVER_BASE_PATH,
     app.use( process.env.SERVER_BASE_PATH,
-        specific
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        sapRoute
     );
     app.use( process.env.SERVER_BASE_PATH,
         passport.authenticate('oauth-bearer', { session: false }),
         routeGuard(authConfig.accessMatrix),
-        specificRoute
+        tableRoute
+    );
+    app.use( process.env.SERVER_BASE_PATH,
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        massiveCCRoute
+    );
+    app.use( process.env.SERVER_BASE_PATH,
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        massiveCDTRoute
     );
 
     /* CLIENT SIDE ################################################################## */

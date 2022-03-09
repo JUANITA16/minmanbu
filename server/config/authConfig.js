@@ -15,20 +15,25 @@ const authConfig = async() => {
             loggingLevel: "info"
         },
         accessMatrix: {
-            cargue:{
-                path: "/cargue",
+            massive_cc:{
+                path: "/massive/cc",
                 methods:[ "POST" ],
+                roles:[ "MINMAMBU_ROLE_ADMINISTRADOR_DEV", "MINMAMBU_ROLE_CUENTES_MASIVAS_CC_DEV" ]
+            },
+            massive_cdt:{
+                path: "/massive/cdt",
+                methods:[ "POST" ],
+                roles:[ "MINMAMBU_ROLE_ADMINISTRADOR_DEV", "MINMAMBU_ROLE_CUENTAS_MASIVAS_CDT_DEV" ]
+            },
+            table:{
+                path: "/table",
+                methods:[ "GET" ],
                 roles:[ "MINMAMBU_ROLE_ADMINISTRADOR_DEV", "MINMAMBU_ROLE_CUENTES_MASIVAS_CC_DEV", "MINMAMBU_ROLE_CUENTAS_MASIVAS_CDT_DEV" ]
             },
             sap: {
                 path: "/sap",
                 methods:[ "GET" ],
                 roles:[ "MINMAMBU_ROLE_ADMINISTRADOR_DEV", "MINMAMBU_ROLE_CONTABILIDAD_DEV"]
-            },
-            admin: {
-                path: "/logIn",
-                methods:[ "GET" ],
-                roles:[ "MINMAMBU_ROLE_ADMINISTRADOR_DEV",  "MINMAMBU_ROLE_CUENTES_MASIVAS_CC_DEV", "MINMAMBU_ROLE_CUENTAS_MASIVAS_CDT_DEV", "MINMAMBU_ROLE_CONTABILIDAD_DEV" ] 
             }
         }
     }

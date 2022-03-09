@@ -1,6 +1,8 @@
 # Build of React
 FROM node:14.17.0-alpine
 
+RUN apk add --no-cache git
+
 # Create working directory
 RUN mkdir -p /usr/src/app/node_modules  && chown -R node:node /usr/src/app
 WORKDIR /usr/src/app
