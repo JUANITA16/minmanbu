@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { InputDate, CardHeader,Loading } from '../components/index'
 import { Row, Col, Button, Collapsible, CollapsibleItem, Icon, Table } from 'react-materialize'
-//import { TablaCuentaService } from "../../services/tabla-cuenta-service";
-//import { MasivoService } from "../../services/masivo-service";
-import { ServerAPI } from "../../services/server";
+import { TablaCuentaService } from "../../services/tabla-cuenta-service";
+import { MasivoService } from "../../services/masivo-service";
 import { toast } from 'react-toastify';
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
@@ -13,9 +12,8 @@ import { convertTZ, addDays } from "../../helpers/utils";
 import ExportExcel from 'react-export-excel'
 
 
-//export const tableService = new TablaCuentaService();
-//export const masivoService = new MasivoService();
-const service = new ServerAPI();
+export const tableService = new TablaCuentaService();
+export const masivoService = new MasivoService();
 
 const ExcelFile = ExportExcel.ExcelFile;
 const ExcelSheet = ExportExcel.ExcelSheet;
@@ -154,7 +152,7 @@ export default function CreacionCuenta() {
 
     setExporta(null)
 
-    const dataTable = await service.getDataTable(startDate, endDate, consecutivoCargue, isWeek); //tableService.getDataTable(startDate, endDate, consecutivoCargue, isWeek)
+    const dataTable = await tableService.getDataTable(startDate, endDate, consecutivoCargue, isWeek)
     // await sleep(5000)
     if (dataTable.status === 200){
 
@@ -243,7 +241,7 @@ export default function CreacionCuenta() {
         }
 
         //Se invoca al servicio S3
-        const responseMasivoService = await service.uploadFile(bodyUpload); //masivoService.uploadFile(bodyUpload);
+        const responseMasivoService = await masivoService.uploadFile(bodyUpload);
        
         if (responseMasivoService && responseMasivoService.description === "ok") {
         // if (false) {
@@ -430,7 +428,7 @@ export default function CreacionCuenta() {
     setEndDate(convertTZ(new Date()));
     setIsDisabledButtonFilter(true);
 
-    const dataResultado = await service.getDataTable(startDate, endDate, id, isWeek); //tableService.getDataTable(startDate, endDate, id, isWeek)
+    const dataResultado = await tableService.getDataTable(startDate, endDate, id, isWeek)
     
     if(dataResultado.status===200 ){
       contentTableResultado = dataResultado.data[0].results_per_row;
