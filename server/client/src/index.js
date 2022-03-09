@@ -9,9 +9,45 @@ import 'material-icons/iconfont/filled.css';
 import 'material-icons/iconfont/outlined.css';
 import './styles/index.css';
 
+import { MsalProvider } from "@azure/msal-react";
+import { PublicClientApplication, EventType } from '@azure/msal-browser';
+import { msalConfig, protectedResources } from './config/authConfig';
+
+// Configuracion SSO
+export const msalInstance = new PublicClientApplication(msalConfig);
+
+const accounts = msalInstance.getAllAccounts();
+
+if(accounts.length > 0) msalInstance.setActiveAccount(accounts[0]);
+
+msalInstance.addEventCallback( event => {
+  if(event.eventType === EventType.LOGIN_SUCCESS && event.payload.account){
+    const account = event.payload.account;
+    msalInstance.setActiveAccount(account);
+  }
+
+  if(event.eventType === EventType.LOGIN_FAILURE) console.log(JSON.stringify(event));
+
+});
+
+export const getToken = async () => {
+  const account = msalInstance.getActiveAccount();
+
+  if(!account) throw Error("No active account");
+
+  const response = await msalInstance.acquireTokenSilent({
+    account: account,
+    scopes: protectedResources.data.scopes
+  })
+
+  return `Bearer ${response.accessToken}`;
+}
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <MsalProvider instance={msalInstance}>
+      <App />
+    </MsalProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
