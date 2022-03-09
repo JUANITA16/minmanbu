@@ -1,10 +1,10 @@
 import { LogLevel } from "@azure/msal-browser";
 
 const data = {
-    tenantID: "16e7cf3f-6af4-4e76-941e-aecafb9704e9",
-    clientID: "ec16fc97-7461-4579-bd41-0e7c3d592646",
-    scopes: "default",
-    resource: "api://ec16fc97-7461-4579-bd41-0e7c3d592646"
+    tenantID: process.env.REACT_APP_TENANTID,
+    clientID: process.env.REACT_APP_CLIENTID,
+    scopes: process.env.REACT_APP_SCOPE,
+    resource: process.env.REACT_APP_RESOURCE
 }
 export const msalConfig = {
     auth: {

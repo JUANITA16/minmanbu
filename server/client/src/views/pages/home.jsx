@@ -9,7 +9,7 @@ export default function Home() {
   const { name } = instance.getActiveAccount().idTokenClaims;
   const base = process.env.PUBLIC_URL;
   const title = 'Inicio';
-  const description = 'Mini mambu página principal.';
+  const description = 'Bienvenido ' +name+' a Mini mambu página principal.';
 
   useEffect(() => {
     document.title = title
@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <React.Fragment>
-      <CardHeader title={title} description={description + " " + name } />
+      <CardHeader title={title} description={description } />
       <Row>
         <Col s={12}>
           <Link to={base + '/ui-generate-sap'} className="brand-logo indigo-text">Generar Archivo</Link>

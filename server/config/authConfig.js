@@ -1,8 +1,8 @@
 const authConfig = async() => {
     return { 
         credentials: {
-            tenantID: process.env.tenant_id,
-            clientID: process.env.client_id
+            tenantID: process.env.REACT_APP_TENANTID,
+            clientID: process.env.REACT_APP_CLIENTID
         },
         metadata: {
             authority: "login.microsoftonline.com",
