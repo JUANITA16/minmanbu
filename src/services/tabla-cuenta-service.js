@@ -16,9 +16,9 @@ export class TablaCuentaService {
             startDate = convertTZ(addDays(new Date(),-7))
             endDate = convertTZ(new Date())
         }
-
-        let formattedStartDate =startDate.getFullYear() +'-'+ ("0"+(startDate.getMonth()+1)).slice(-2) + "-"+ ("0" + startDate.getDate()).slice(-2)
-        let formattedEndDate =endDate.getFullYear() +'-'+("0"+(endDate.getMonth()+1)).slice(-2) + "-"+ ("0" + endDate.getDate()).slice(-2)
+        console.log('startDate: '+startDate)
+        let formattedStartDate =startDate.getFullYear() +'-'+ ("0"+(startDate.getMonth()+1)).slice(-2) + "-"+ ("0" + startDate.getDate()).slice(-2)+"T00:00:00"
+        let formattedEndDate =endDate.getFullYear() +'-'+("0"+(endDate.getMonth()+1)).slice(-2) + "-"+ ("0" + endDate.getDate()).slice(-2)+"T24:00:00"
 
         parametros =  `?start_date=${formattedStartDate}&end_date=${formattedEndDate}`
         // jsonPrueba = [
