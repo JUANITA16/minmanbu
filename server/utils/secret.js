@@ -9,7 +9,7 @@ const getSecret = async (secretId) => {
     const response = await client.getSecretValue({ SecretId: secretId }).promise();
     
     if ("SecretString" in response) {
-        secret = JSON.parse(response.SecretString);
+        secret = response.SecretString;
     }
     
     return secret;
