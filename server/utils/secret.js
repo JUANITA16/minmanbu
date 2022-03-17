@@ -4,8 +4,6 @@ const getSecret = async (secretId) => {
     const client = new AWS.SecretsManager({
         region: process.env.REGION
     });
-    console.log("Region: ", process.env.REGION);
-    console.log("secretId: ", secretId);
 
     let secret = null;
     const response = await client.getSecretValue({ SecretId: secretId }).promise();
