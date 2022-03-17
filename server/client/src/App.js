@@ -11,8 +11,6 @@ export default function App() {
   const { instance } = useMsal();
   const user = instance.getActiveAccount()?.idTokenClaims
 
-  console.log("USER", user);
-
   return (
     <Section className="blue-grey lighten-5 p0">
       <Router>

@@ -1,20 +1,19 @@
 const router = require('express').Router();
 const axios = require('axios');
-//const { getToken } = require('../utils/tokenBack');
-//const { getSecret } = require('../utils/secret');
+const { getSecret } = require('../utils/secret');
 
 router.post('/massive/cdt', async (req, res) => {
     console.log("Route post /massive/cdt");
     try{
-        const URL = process.env.BACK_BASE + process.env.BACK_PATH + process.env.BACK_MASSIVE;
-        const config = {};
+        console.log("Getting secretApiKey");
+        const Authorization = await getSecret(process.env.SECRET_APIKEY); // ApiKey para consumir lambdas
+        
+        const URL = process.env.BACK_BASE + process.env.BACK_MASSIVE;
+        const config = {
+            headers: { Authorization }
+        };
         const body = req.body;
-        /*
-        console.log("Getting secretLambda");
-        const secret = await getSecret(process.env.SECRET_LAMBDA);
-        const Authorization = await getToken(secret); // Token para consumir lambdas
-        const config = { headers: { Authorization }}; // Headers a enviar
-        */
+
         const api = await axios.post(URL, body, config);
         const data = await api.data;
 

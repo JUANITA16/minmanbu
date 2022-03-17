@@ -1,4 +1,4 @@
-import { setError, setErrorTable, convertTZ, addDays } from '../helpers/utils';
+import { setError, convertTZ, addDays } from '../helpers/utils';
 import axios from 'axios';
 import { getToken } from '../index';
 
@@ -18,7 +18,8 @@ export class ServerAPI {
             return data;
         }
         catch(err){
-            return setError(err);
+            console.log("ERROR sap: ", err.response);
+            return setError("Error generando el archivo.", err.response);
         }
     }
 
@@ -35,7 +36,8 @@ export class ServerAPI {
             return data;
         }
         catch(err){
-            return setError(err);
+            console.log("ERROR massive: ", err.response);
+            return setError("Error cargando el archivo.", err.response);
         }
     }
 
@@ -67,7 +69,8 @@ export class ServerAPI {
             };
         }
         catch(err){
-            return setErrorTable(err);
+            console.log("ERROR Table: ", err.response)
+            return setError("Error obteniendo la tabla.", err.response);
         }
     }
 

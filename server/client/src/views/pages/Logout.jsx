@@ -13,10 +13,10 @@ export default function Logout() {
     instance.loginRedirect(loginRequest).catch( e => console.log("Error Login: ", e) );
   };
 
-  useEffect(async() => {
+  useEffect(() => {
     document.title = title
     onSSO();
-  }, [onSSO]);
+  });
 
   return (
     <React.Fragment>

@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { InputDate, CardHeader,Loading } from '../components/index'
 import { Row, Col, Button, Collapsible, CollapsibleItem, Icon, Table } from 'react-materialize'
-//import { TablaCuentaService } from "../../services/tabla-cuenta-service";
-//import { MasivoService } from "../../services/masivo-service";
 import { ServerAPI } from "../../services/server";
 import { toast } from 'react-toastify';
 import Select from 'react-select'
@@ -12,16 +10,11 @@ import { convertTZ, addDays } from "../../helpers/utils";
 
 import ExportExcel from 'react-export-excel'
 
-
-//export const tableService = new TablaCuentaService();
-//export const masivoService = new MasivoService();
 const service = new ServerAPI();
 
 const ExcelFile = ExportExcel.ExcelFile;
 const ExcelSheet = ExportExcel.ExcelSheet;
 const ExcelColumn = ExportExcel.ExcelColumn;
-
-
 
 export default function CreacionCuenta() {
 
@@ -50,7 +43,7 @@ export default function CreacionCuenta() {
   const [paginaActual, setPaginaActual] = useState(1);
 
   const [loaderText] = useState('');
-  const [aditional, setAditional] = useState('');
+  const [aditional] = useState('');
   //Principal
 
   //Resultados
@@ -154,22 +147,15 @@ export default function CreacionCuenta() {
 
     setExporta(null)
 
-    const dataTable = await service.getDataTable(startDate, endDate, consecutivoCargue, isWeek); //tableService.getDataTable(startDate, endDate, consecutivoCargue, isWeek)
+    const dataTable = await service.getDataTable(startDate, endDate, consecutivoCargue, isWeek);
     // await sleep(5000)
     if (dataTable.status === 200){
-
       contentTable = dataTable.data;
-
       // contentTable.sort((a, b) => new Date(a.date_upload).getTime() - new Date(b.date_upload).getTime())
-
       contentTable.sort((a, b) => a.file_id - b.file_id)
-
       contentTable.reverse()
-
       const endOffset = itemOffset +  parseInt(cantReg);
-    
       currentItems = contentTable.slice(itemOffset, endOffset);
-  
       totalPaginas = Math.ceil(contentTable.length / cantReg);
 
       if (totalPaginas !== 0) {
@@ -246,8 +232,6 @@ export default function CreacionCuenta() {
         const responseMasivoService = await service.uploadFile(bodyUpload); //masivoService.uploadFile(bodyUpload);
        
         if (responseMasivoService && responseMasivoService.description === "ok") {
-        // if (false) {
-
           toast.success("Archivo cargado corrrectamente.");
         
           isWeek = true;
@@ -259,8 +243,9 @@ export default function CreacionCuenta() {
           await reloadTableMain(1, cantPaginasSelect);
 
         } else {
-          toast.error("Error al subir archivo.");
+          toast.error(responseMasivoService.detail);
         }
+        
         setNameFileSelected("Ningún archivo seleccionado.");
         setSelectedFile(null);
         setIsSelected(false);
@@ -314,10 +299,6 @@ export default function CreacionCuenta() {
     reader.onerror = error => reject(error);
   });
 
-  
-
-
-
   // Invoke when user click to request another page.
   async function handlePageClick(event){
     const newOffset = (event.selected * cantPaginasSelect2) % contentTable.length;
@@ -341,11 +322,10 @@ export default function CreacionCuenta() {
 
 
   useEffect(() => {
-    isWeek=true;
     reloadTableMain(paginaActual, cantPaginasSelect);
 
     document.title = title
-  }, []);
+  }, [paginaActual, cantPaginasSelect]);
 
 
   const options = [

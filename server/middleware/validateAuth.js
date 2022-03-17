@@ -1,7 +1,7 @@
 const routeGuard = (accessMatrix) => {
     return (req, res, next) => {
         console.log("Validate auth")
-        if (req.authInfo.roles === undefined) return res.status(403).json({error: 'No roles found!'});
+        if (req.authInfo.roles === undefined) return res.status(403).json({error: 'No user roles found!'});
         else {
             const roles = req.authInfo.roles;
 

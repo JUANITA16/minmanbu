@@ -15,6 +15,11 @@ const setUp = async() => {
         optionsSuccessStatus: 200 
     }
     app.use(cors(corsOptions));
+    app.use(bodyparser.urlencoded({ extended: false }));
+    app.use(bodyparser.json());
+    
+    app.disable('x-powered-by');
+    app.disable('server');
 
     /* SSO ############################################################################ */
     const passport = require('passport');
@@ -43,9 +48,6 @@ const setUp = async() => {
     // Add SSO express
     app.use(passport.initialize());
     passport.use(bearerStrategy);
-
-    app.use(bodyparser.urlencoded({ extended: false }));
-    app.use(bodyparser.json());
 
     /* SERVER SIDE ####################################################################### */
     // - To health check endpoint
@@ -97,6 +99,7 @@ const setUp = async() => {
 
     // - To route no found
     app.use((req, res, next) => {
+        console.log("Ruta no encontrada: ", req.path);
         res.status(404).send("Sorry cant find that");
     });
 
