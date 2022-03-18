@@ -24,14 +24,14 @@ export default function App() {
                 <Error404 /> :
                 <Switch>
                   <Route path={base + '/'} exact component={Home} />
-                  {(user.roles.includes("MINMAMBU_ROLE_ADMINISTRADOR_DEV") || 
-                    user.roles.includes("MINMAMBU_ROLE_CUENTES_MASIVAS_CC_DEV") || 
-                    user.roles.includes("MINMAMBU_ROLE_CUENTAS_MASIVAS_CDT_DEV")) ? 
+                  {(user.roles.includes("MINMAMBU_ROLE_ADMINISTRADOR") || 
+                    user.roles.includes("MINMAMBU_ROLE_CUENTES_MASIVAS_CC") || 
+                    user.roles.includes("MINMAMBU_ROLE_CUENTAS_MASIVAS_CDT")) ? 
                     <Route path={base + '/ui-crea-cuenta-deposito'} exact component={CreacionCuenta} />:
                     <Route path={base + '/ui-crea-cuenta-deposito'} exact component={Error404} />
                   }
-                  {(user.roles.includes("MINMAMBU_ROLE_ADMINISTRADOR_DEV") || 
-                    user.roles.includes("MINMAMBU_ROLE_CONTABILIDAD_DEV")) ? 
+                  {(user.roles.includes("MINMAMBU_ROLE_ADMINISTRADOR") || 
+                    user.roles.includes("MINMAMBU_ROLE_CONTABILIDAD")) ? 
                     <Route path={base + '/ui-generate-sap'} exact component={GenerateSap} />:
                     <Route path={base + '/ui-generate-sap'} exact component={Error404} />
                   }
