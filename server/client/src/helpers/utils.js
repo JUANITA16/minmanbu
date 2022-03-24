@@ -1,34 +1,10 @@
 import { toast } from 'react-toastify';
 
-export const setError = (error) => {
-    if (error.request) {
-        console.error(error.request);
-        return {
-            detail: "No se pudo generar el archivo, por favor comuníquese con el administrador."
-        }
-    }
-    else if (error.response)
-        console.log(error.response);
-    else if (error.message)
-        console.log(error.message);
-}
-
-export const setErrorTable = (error) => {
-    console.log(error)
-    var statusCode = 400;
-    if (error.request) {
-        statusCode = error.request.status;
-        console.error(error.request);
-    }
-    else if (error.response){
-        statusCode = error.response.status;
-        console.log(error.response);
-    }else if (error.message)
-        console.log(error.message);
-    console.log("statusCode: "+statusCode);
+export const setError = (msg, error) => {
+    const motivo = error.data.message || error.data.error
     return {
-        status:  statusCode,
-        detail: "No se pudo obtener los datos de la tabla"
+        status:  error.status,
+        detail: msg + " \n Motivo: " + motivo
     }
 }
 

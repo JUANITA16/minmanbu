@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { InputDate, CardHeader, Loading } from '../components/index'
-import { MambuService } from "../../services/mambu-service";
 import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
 import { Row, Col, Button } from 'react-materialize'
+import { ServerAPI } from "../../services/server";
 
-export const service = new MambuService();
+const service = new ServerAPI();
 
 export default function GenerateSap() {
   const title = 'Archivo SAP';
@@ -28,6 +28,15 @@ export default function GenerateSap() {
   }, [startDate, endDate])
 
   useEffect(() => {
+    function download() {
+      console.log('fileName download:' + fileName);
+      const element = document.createElement("a");
+      const file = new Blob([contentFile], { type: 'text/plain;charset-utf-8' });
+      element.href = URL.createObjectURL(file);
+      element.download = fileName;
+      document.body.appendChild(element); // Required for this to work in FireFox
+      element.click();
+    }
 
     if (response !== '') {
       setInProgress(() => false);
@@ -38,19 +47,7 @@ export default function GenerateSap() {
       }
       
     }
-  }, [response])
-
-  function download() {
-    console.log('fileName download:' + fileName);
-    const element = document.createElement("a");
-    const file = new Blob([contentFile], { type: 'text/plain;charset-utf-8' });
-    element.href = URL.createObjectURL(file);
-    element.download = fileName;
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
-  }
-
-
+  }, [response, fileName, contentFile])
 
 async function submit(event) {
   event.preventDefault();
@@ -58,14 +55,14 @@ async function submit(event) {
   setFileName(() => '');
   setContenFile(() => '');
   setInProgress(() => true);
-  await service.generateFile(setFormatDate(startDate), setFormatDate(endDate))
-    .then((response) => {
-      if (response && response.detail) {
-        setFileName(() => response.filename);
-        setContenFile(() => response.information);
-        setResponse(() => response.detail + "-" + response.filename);
+  
+ service.generateFile(setFormatDate(startDate), setFormatDate(endDate)).then( (data) => {
+    if( data && data.detail){
+      setFileName(() => data.filename);
+      setContenFile(() => data.information);
+      setResponse(() => data.detail + "-" + data.filename);
       }
-    });
+  });
 }
 
 const renderElement = () => {

@@ -85,9 +85,15 @@ stages:
               echo "Account ID: $ACCOUNT_ID"
               echo "##vso[task.setvariable variable=accountId;]$ACCOUNT_ID"
         - task: replace-variables-in-file@1
-          displayName: Set parameters values file .env
+          displayName: Set parameters values file server/.env
           inputs:
-            filepath: '$(System.DefaultWorkingDirectory)/.env'
+            filepath: '$(System.DefaultWorkingDirectory)/server/.env'
+            endWithNewLine: true
+            verbose: true
+        - task: replace-variables-in-file@1
+          displayName: Set parameters values file server/client/.env
+          inputs:
+            filepath: '$(System.DefaultWorkingDirectory)/server/client/.env'
             endWithNewLine: true
             verbose: true
         - task: replace-variables-in-file@1
@@ -111,7 +117,7 @@ stages:
             regionName: '$(region)'
             scriptType: 'inline'
             inlineScript: |
-              docker build -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):$(version) -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):latest .
+              docker build -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):$(version) -t $(accountId).dkr.ecr.$(region).amazonaws.com/ecr-$(project)-$(appName)-$(serviceName)-$(stage):latest ./server
         - task: AWSShellScript@1
           displayName: Docker push
           inputs:
