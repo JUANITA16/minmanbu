@@ -232,7 +232,7 @@ export default function CreacionCuenta() {
         const responseMasivoService = await service.uploadFile(bodyUpload); //masivoService.uploadFile(bodyUpload);
        
         if (responseMasivoService && responseMasivoService.description === "ok") {
-          toast.success("Archivo cargado corrrectamente.");
+          toast.success("Archivo cargado correctamente, ver detalle.");
         
           isWeek = true;
           setConsecutivoCargue('');
