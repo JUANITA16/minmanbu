@@ -17,6 +17,10 @@ export default function NavigationBar() {
         {
             name: "Creación masiva",
             url: `${base}/ui-crea-cuenta-deposito`
+        },
+        {
+            name: "Configuración contable",
+            url: `${base}/ui-configuracion-contable`
         }
     ])
 

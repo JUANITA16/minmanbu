@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { Container, Card, Section } from 'react-materialize'
 import { ToastContainer } from 'react-toastify';
-import { Home, GenerateSap, NavigationBar ,CreacionCuenta, Error404, Logout } from './views/index'
+import { Home, GenerateSap, NavigationBar ,CreacionCuenta, Error404, Logout, ConfiguracionContable } from './views/index'
 
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import React from 'react';
@@ -35,6 +35,11 @@ export default function App() {
                     <Route path={base + '/ui-generate-sap'} exact component={GenerateSap} />:
                     <Route path={base + '/ui-generate-sap'} exact component={Error404} />
                   }
+                  {(user.roles.includes("MINMAMBU_ROLE_ADMIN") || 
+                    user.roles.includes("MINMAMBU_ROLE_ADMIN_FINANCE")) ? 
+                    <Route path={base + '/ui-configuracion-contable'} exact component={ConfiguracionContable} />:
+                    <Route path={base + '/ui-configuracion-contable'} exact component={Error404} />
+                  }
                 </Switch>
               )}
               </AuthenticatedTemplate>
@@ -57,7 +62,6 @@ export default function App() {
           pauseOnFocusLoss
           draggable={false}
           pauseOnHover />
-          
       </Router>
     </Section>
   );
