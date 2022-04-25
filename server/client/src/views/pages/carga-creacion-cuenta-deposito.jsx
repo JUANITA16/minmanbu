@@ -10,6 +10,8 @@ import { convertTZ, addDays } from "../../helpers/utils";
 
 import ExportExcel from 'react-export-excel'
 
+import { useMsal } from "@azure/msal-react";
+
 const service = new ServerAPI();
 
 const ExcelFile = ExportExcel.ExcelFile;
@@ -17,7 +19,8 @@ const ExcelSheet = ExportExcel.ExcelSheet;
 const ExcelColumn = ExportExcel.ExcelColumn;
 
 export default function CreacionCuenta() {
-
+  const { instance } = useMsal();
+  const { name } = instance.getActiveAccount().idTokenClaims;
   const title = 'Creacion de cuentas masiva';
   const description = 'En esta sección podrá cargar archivos para la creación de cuenta en forma masiva.';
   const [selectedFile, setSelectedFile] = useState();
@@ -225,14 +228,15 @@ export default function CreacionCuenta() {
         var bodyUpload = {
           "product": product,
           "file_name": nameFileSelected,
-          "file_content": base64File
+          "file_content": base64File,
+          "user_upload": name
         }
 
         //Se invoca al servicio S3
         const responseMasivoService = await service.uploadFile(bodyUpload); //masivoService.uploadFile(bodyUpload);
        
         if (responseMasivoService && responseMasivoService.description === "ok") {
-          toast.success("Archivo cargado corrrectamente.");
+          toast.success("Archivo cargado correctamente, ver detalle.");
         
           isWeek = true;
           setConsecutivoCargue('');
