@@ -1,26 +1,43 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CardHeader } from "../components/index";
-import { Button, Col } from "react-materialize";
-import { InputDate } from '../components/index'
-
-export default function configuracionContable() {
+import { Row, Col, Button, Collapsible, CollapsibleItem, Icon, Table } from 'react-materialize'
+import ConfiguracionContableGeneral from "./configuracion-contable-general";
+export default function ConfiguracionContable() {
   
     const title = "Configuración contable"
     const description = "En esta sección podrá realizar la configuración contable asociada a los moviminetos de CDTs desde Dominus"
+
+    const [pantallaVisible, setPantallaVisible] = useState();
+    async function goToConfiguracionGeneral (event) {
+        console.log('go to configuracion general');
+        setPantallaVisible(
+            <ConfiguracionContableGeneral/>
+        );
+    };
+
+    
+    useEffect(() => {
+        setPantallaVisible(
+            <div>
+                <CardHeader title={title} description={description } />
+                <Col s={12} m={6} className="input-field date text-left">
+                    <Button node="button" small className="indigo darken-4"  onClick={goToConfiguracionGeneral}>
+                        Configuración general
+                    </Button>
+                </Col>
+                <Col s={12} m={6} className="input-field date text-left">
+                    <Button node="button" small className="indigo darken-4" >
+                    Configuración homologacíon
+                    </Button>
+                </Col>
+            </div>
+            
+        );
+    }, []);
+
     return (
         <React.Fragment>
-            <CardHeader title={title} description={description } />
-
-            <Col s={12} m={6} className="input-field date text-left">
-                <Button node="button" small className="indigo darken-4" >
-                    Configuración general
-                </Button>
-            </Col>
-            <Col s={12} m={6} className="input-field date text-left">
-                <Button node="button" small className="indigo darken-4" >
-                Configuración homologacíon
-                </Button>
-            </Col>
+            {pantallaVisible}
         </React.Fragment>
     )
 }

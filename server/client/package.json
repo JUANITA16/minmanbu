@@ -9,7 +9,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "axios": "^0.21.1",
+    "axios": "^0.27.2",
     "axios-oauth-client": "^1.4.3",
     "material-icons": "^1.2.0",
     "materialize-css": "^1.0.0-rc.2",
