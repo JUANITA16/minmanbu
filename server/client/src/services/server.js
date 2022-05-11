@@ -75,14 +75,15 @@ export class ServerAPI {
     }
 
     getAllDataTableContable = async () => {
-        const url = ""
+        const url = this.base_url + "/tblCosifAccounting"
+        console.log(url)
         const config = {
-            headers: { Authorization: "" },
+            headers: { Authorization: await getToken() },
         }
-        const res = await axios.get(url, config)
+        console.log(config)
+        const res = await axios.get(url, {},config)
         
         return res;
-        
     }
 }
 
