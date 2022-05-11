@@ -74,6 +74,16 @@ export class ServerAPI {
         }
     }
 
+    getAllDataTableContable = async () => {
+        const url = "https://fjlijtivf4-vpce-072b7e61b5b294dd4.execute-api.us-east-1.amazonaws.com/dev/mambu-accounting/api/v1/taxaprodt/all"
+        const config = {
+            headers: { Authorization: "6fb707a3-f4cc-4f2d-8416-0cec0198c66d" },
+        }
+        const res = await axios.get(url, config)
+        
+        return res;
+        
+    }
 }
 
 export default ServerAPI;
