@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { Row, Col, Divider, Section } from 'react-materialize'
 
-export default function CardHeader(props) {
-
-    const [title] = useState(props.title);
-    const [description] = useState(props.description);
+export default function CardHeader({title, description}) {
 
     return (
         <Row>
