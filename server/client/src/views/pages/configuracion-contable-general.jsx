@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { CardHeader , Loading} from "../components/index";
+import EditarTabla from "../pages/editar-tabla";
+// import ModalHeader from "../components/Modal";
+// import ModalBody from "../components/Modal";
+// import ModalFooter from "../components/Modal";
 import { Row, Col, Button, Collapsible, CollapsibleItem, Icon, Table } from 'react-materialize'
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
 import ConfiguracionContable from "./configuracion-contable";
 import { toast } from 'react-toastify';
+import { ServerAPI } from "../../services/server";
 
 
+const service = new ServerAPI();
 
 export default function ConfiguracionContableGeneral() {
   
@@ -25,7 +31,9 @@ export default function ConfiguracionContableGeneral() {
     const [loaderText] = useState('');
     const [aditional] = useState('');
 
-    
+    const [showModal,setShowModal]=useState(false)
+    const [infoModal,setInfoModal]=useState()
+
     var contentTable = []
     var currentItems = [];
     var itemOffset = 0;
@@ -50,6 +58,15 @@ export default function ConfiguracionContableGeneral() {
     };
 
     const TableBody = (props) => {
+
+        async function goToEditarAux(event) {
+            console.log('Se habilita la función de editar')
+            console.log(showModal)
+            setInfoModal(props)
+            console.log(props)
+            setShowModal(true)
+        };
+
         return (
           <tr style={{ fontSize: "small" }} >
             <td style={{ textAlign: "center" }} hidden={true}>
@@ -74,7 +91,7 @@ export default function ConfiguracionContableGeneral() {
               {props.producttypemaestrosunicos}
             </td>
             <td style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <Button value={props.taxaccountid} node="button" onClick={goToEditar} small className="indigo darken-4">
+              <Button value={props.taxaccountid} node="button" onClick={goToEditarAux} small className="indigo darken-4">
                 Editar
               </Button>
             </td>
@@ -123,12 +140,6 @@ export default function ConfiguracionContableGeneral() {
         </tbody>);
     };
 
-
-    
-    async function goToEditar(event) {
-        console.log('Se habilita la función de editar')
-
-    };
 
     async function goToBack (event) {
         console.log('Regresa a la pantalla inicial');
@@ -189,81 +200,16 @@ export default function ConfiguracionContableGeneral() {
         setTableRender(
             <Loading text={loaderText} aditional={aditional} />
         );
-        const dataTable=[]/*{
-            "status":200,
-            "data":[
-                {
-                    "updatedate": "2022-04-19T09:21:05-05",
-                    "producttypemaestrosunicos": "2222",
-                    "credittaxaccount": "22222211",
-                    "credittaxaccountinterest": "2221",
-                    "debittaxaccountinterest": "111111",
-                    "debittaxaccount": "111111",
-                    "producttypedescription": "EMISIONES MENOS DE 7 MESES",
-                    "creationdate": "2022-04-19T09:18:19-05",
-                    "taxaccountid": "7"
-                },
-                {
-                    "producttypemaestrosunicos": "551",
-                    "credittaxaccountinterest": "210710",
-                    "credittaxaccount": "210710",
-                    "debittaxaccountinterest": "510225",
-                    "debittaxaccount": "111595999",
-                    "producttypedescription": "EMITIDOS IGUAL A 6 MESES Y MENOR DE 12 MESES",
-                    "taxaccountid": "3"
-                },
-                {
-                    "producttypemaestrosunicos": "550",
-                    "credittaxaccountinterest": "210705",
-                    "credittaxaccount": "210705",
-                    "debittaxaccountinterest": "510220",
-                    "debittaxaccount": "111595999",
-                    "producttypedescription": "EMISIONES MENOS DE 6 MESES",
-                    "taxaccountid": "2"
-                },
-                {
-                    "producttypemaestrosunicos": "552",
-                    "credittaxaccountinterest": "210715",
-                    "credittaxaccount": "210715",
-                    "debittaxaccountinterest": "510230",
-                    "debittaxaccount": "111595999",
-                    "producttypedescription": "EMITIDOS IGUAL A 12 MESES Y MENOR DE 18 MESES",
-                    "taxaccountid": "4"
-                },
-                {
-                    "producttypemaestrosunicos": "553",
-                    "credittaxaccountinterest": "210720",
-                    "credittaxaccount": "251905030",
-                    "debittaxaccountinterest": "213013",
-                    "debittaxaccount": "210720",
-                    "producttypedescription": "EMITIDOS IGUAL O SUPERIOR A 18 MESES",
-                    "creationdate": "2022-04-11T19:08:39-05",
-                    "taxaccountid": "6"
-                },
-                {
-                    "producttypemaestrosunicos": "549",
-                    "credittaxaccountinterest": "210705",
-                    "credittaxaccount": "251905030",
-                    "debittaxaccountinterest": "213013",
-                    "debittaxaccount": "210705",
-                    "producttypedescription": "NO APLICA",
-                    "taxaccountid": "1"
-                },
-                {
-                    "producttypemaestrosunicos": "553",
-                    "credittaxaccountinterest": "210720",
-                    "credittaxaccount": "210720",
-                    "debittaxaccountinterest": "510230",
-                    "debittaxaccount": "111595999",
-                    "producttypedescription": "EMITIDOS IGUAL O SUPERIOR A 18 MESES",
-                    "taxaccountid": "5"
-                }
-            ]
-        } ;*/
-        // const dataTable = await service.getDataTable(startDate, endDate, consecutivoCargue, isWeek); SE INVOCARÁ A API
+        
+        const dataTable =  await service.getAllDataTableContable().then(response => {
+            return response;
+            }
+          );
+
         if (dataTable.status === 200){
-            console.log('ingresa 200')
+            // console.log('ingresa 200')
             contentTable = dataTable.data;
+            // console.log(contentTable)
             const endOffset = itemOffset +  parseInt(cantReg);
             currentItems = contentTable.slice(itemOffset, endOffset);
             totalPaginas = Math.ceil(contentTable.length / cantReg);
@@ -295,11 +241,13 @@ export default function ConfiguracionContableGeneral() {
             toast.error(dataTable.detail);
             setTableRender(null);
         }
-        setEmisiones([
-            { value: '1', label: 'Emision 1' },
-            { value: '2', label: 'Emision 2' },
-            { value: '3', label: 'Emision 3' }
-        ])
+        var emi=[]
+        for (var i = 0; i < contentTable.length; i++) {
+            console.log(contentTable[i].producttypedescription)
+            const item ={ value: i, label: contentTable[i].producttypedescription}
+            emi.push(item)
+        }
+        setEmisiones(emi)
     }
 
     
@@ -312,57 +260,62 @@ export default function ConfiguracionContableGeneral() {
     const renderElement = () => {
         return isGeneral ? (
             <React.Fragment>
-                <Row>
-                    <Col s={2} m={2}>
-                        <Button node="button" small className="indigo darken-4" onClick={goToBack}>
-                            Retroceder
-                        </Button>
-                    </Col>
-                    <Col s={2} m={2}>
-                        <Button node="button" small className="indigo darken-4" onClick={createConfiguration}>
-                            Nuevo
-                        </Button>
-                    </Col>
-                </Row>
-                <CardHeader title={title} description={description} />
-                <Row>
-                    <Collapsible accordion={false}>
-                        <CollapsibleItem
-                        expanded={false}
-                        header="Filtros"
-                        icon={<Icon>filter_list</Icon>}
-                        node="div"
-                        >
-                            <Row>
-                                <Col s={8} m={3}>
-                                    <label className="active">Tipo de emisión</label>
-                                    <Select className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
-                                </Col>
-                                <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
-                                    <Button node="button" small className="indigo darken-4" onClick={applyFilters}>
-                                        Aplicar filtros
-                                    </Button>
-                                </Col>
-                                <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
-                                    <Button node="button" disabled={isDisabledButtonFilter} small className="indigo darken-4" onClick={deleteFilters}>
-                                        Borrar filtros
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </CollapsibleItem>
-                    </Collapsible>
-                </Row>
-                <Row>
-                    <Col s={2} m={2}>
-                        <label className="active">Cantidad de registros</label>
-                        <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginas} />
-                    </Col>
-                    <Table >
-                        {tableHeader}
-                        {tableRender}
-                    </Table>
-                    {paginationFooter}
-                </Row>
+                {showModal ? 
+                <EditarTabla info = {infoModal} show={setShowModal}/>:
+                <div>
+                    <Row>
+                        <Col s={2} m={2}>
+                            <Button node="button" small className="indigo darken-4" onClick={goToBack}>
+                                Retroceder
+                            </Button>
+                        </Col>
+                        <Col s={2} m={2}>
+                            <Button node="button" small className="indigo darken-4" onClick={createConfiguration}>
+                                Nuevo
+                            </Button>
+                        </Col>
+                    </Row>
+                    <CardHeader title={title} description={description} />
+                    <Row>
+                        <Collapsible accordion={false}>
+                            <CollapsibleItem
+                            expanded={false}
+                            header="Filtros"
+                            icon={<Icon>filter_list</Icon>}
+                            node="div"
+                            >
+                                <Row>
+                                    <Col s={8} m={3}>
+                                        <label className="active">Tipo de emisión</label>
+                                        <Select className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
+                                    </Col>
+                                    <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
+                                        <Button node="button" small className="indigo darken-4" onClick={applyFilters}>
+                                            Aplicar filtros
+                                        </Button>
+                                    </Col>
+                                    <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
+                                        <Button node="button" disabled={isDisabledButtonFilter} small className="indigo darken-4" onClick={deleteFilters}>
+                                            Borrar filtros
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </CollapsibleItem>
+                        </Collapsible>
+                    </Row>
+                    <Row>
+                        <Col s={2} m={2}>
+                            <label className="active">Cantidad de registros</label>
+                            <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginas} />
+                        </Col>
+                        <Table >
+                            {tableHeader}
+                            {tableRender}
+                        </Table>
+                        {paginationFooter}
+                    </Row>
+                </div>
+                }
             </React.Fragment>
         ):(<ConfiguracionContable/>);
     }

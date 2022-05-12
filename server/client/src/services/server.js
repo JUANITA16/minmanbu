@@ -74,6 +74,17 @@ export class ServerAPI {
         }
     }
 
+    getAllDataTableContable = async () => {
+        const url = this.base_url + "/tblCosifAccounting"
+        console.log(url)
+        const config = {
+            headers: { Authorization: await getToken() },
+        }
+        console.log(config)
+        const res = await axios.get(url, {},config)
+        
+        return res;
+    }
 }
 
 export default ServerAPI;
