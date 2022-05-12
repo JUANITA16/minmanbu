@@ -3,10 +3,11 @@ import { Button, Col, Collapsible, CollapsibleItem, Icon, Row, Select, TextInput
 import { CardHeader } from "../components";
 import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
-import testData from "./testData.json"
 
 const HomoloView = function ({goBack}) {
-  let rawData = testData.Items;
+  // Here goes the fetch expression
+  // let rawData = testData.Items;
+  let rawData = [];
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
   const [tableData, setTableData] = useState(rawData);
