@@ -26,7 +26,7 @@ function MyTable({tableData}) {
     settotalPages(Math.ceil(tableData.length/maxResults));
     setVisibleData(tableData.slice(0, maxResults));
 
-  }, [maxResults]);
+  }, [maxResults, tableData]);
 
   return (
   <Fragment>
