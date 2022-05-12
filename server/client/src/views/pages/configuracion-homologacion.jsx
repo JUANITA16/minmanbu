@@ -1,13 +1,17 @@
 import { Fragment, useEffect, useState } from "react"
 import { Button, Col, Collapsible, CollapsibleItem, Icon, Row, Select, TextInput } from "react-materialize";
 import { CardHeader } from "../components";
+import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
-
+import testData from "./testData.json"
 
 function ConfiguracionHomologacion (params) {
   
   const [isConfig, setIsConfig] = useState(true);
   const [view, setView] = useState(<></>);
+  let rawData = testData.Items;
+  const [tableData, setTableData] = useState(rawData);
+  const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
 
   const goBack = function (event) {
     setView(<ConfiguracionContable />);
@@ -15,9 +19,12 @@ function ConfiguracionHomologacion (params) {
 
   const createNew = function (event) {
     console.log("Crear nuevo registro")
-  }
-
+    console.log(rawData)
+  };
+  
+  
   useEffect(() => {
+
     setView(
       <Fragment>
         <Row>
@@ -64,10 +71,11 @@ function ConfiguracionHomologacion (params) {
           </CollapsibleItem>
           </Collapsible>
         </Row>
-      </Fragment>)
-
-
-  }, [])
+        <MyTable tableData={tableData} />
+      </Fragment>
+      )
+      console.log("loading table")
+  }, [tableData]);
   
 
 
