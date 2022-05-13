@@ -13,17 +13,19 @@ export default function ConfiguracionContableGeneral() {
     const title = "Configuración general"
     const description = "En esta sección podrá realizar la configuración general asociada a los moviminetos de CDTs desde Dominus"
     
-    const [emision, setEmision] = useState('CDT');
     const [isDisabledButtonFilter, setIsDisabledButtonFilter] = useState(true);
     const [tableHeader, setTableHeader] = useState();
     const [tableRender, setTableRender] = useState();
     const [paginationFooter, setPaginationFooter] = useState();
     const [cantPaginasSelect, setCantPaginasSelect] = useState('10');
     const [isGeneral, setIsGeneral] = useState(true);
-    const [emisiones, setEmisiones] = useState([]);
+    //const [emisiones, setEmisiones] = useState([{ value: 0, label: 'Seleccione una emisión' }]);
+    const [emision, setEmision] = useState('0');
     
     const [loaderText] = useState('');
     const [aditional] = useState('');
+
+    const [selecTipoEmisiones, setSelecTipoEmisiones] = useState();
 
     
     var contentTable = []
@@ -31,7 +33,17 @@ export default function ConfiguracionContableGeneral() {
     var itemOffset = 0;
     var totalPaginas = 0;
     var cantPaginasSelect2 = 10;
+    //var emisionVar = '0';
+    var emisiones = [{ value: 0, label: 'Seleccione una emisión' }]
 
+    const SelecTipoEmisiones = (props) => {
+        return(
+            <Col s={8} m={3}>
+                <label className="active">Tipo de emisión</label>
+                <Select className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
+            </Col>
+        )
+    }
 
     const TableHeader = (props) => {
         return (
@@ -55,22 +67,22 @@ export default function ConfiguracionContableGeneral() {
             <td style={{ textAlign: "center" }} hidden={true}>
               {props.taxaccountid}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all", textAlign: "center" }}>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.credittaxaccount}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all", textAlign: "center" }}>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.debittaxaccount}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all", textAlign: "center" }}>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.credittaxaccountinterest}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all", textAlign: "center" }}>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.debittaxaccountinterest}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all"}}>
+            <td style={{ minWidth: 10, maxWidth: 230, wordBreak:"break-all"}}>
               {props.producttypedescription}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all", textAlign: "center" }}>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.producttypemaestrosunicos}
             </td>
             <td style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -111,14 +123,17 @@ export default function ConfiguracionContableGeneral() {
 
         setTableRender(<tbody>
             {currentItems.map((contenido, index) => {
-                return <TableBody 
-                taxaccountid={contenido.taxaccountid}
-                credittaxaccount={contenido.credittaxaccount}
-                debittaxaccount={contenido.debittaxaccount}
-                credittaxaccountinterest={contenido.credittaxaccountinterest}
-                debittaxaccountinterest={contenido.debittaxaccountinterest} 
-                producttypedescription={contenido.producttypedescription} 
-                producttypemaestrosunicos={contenido.producttypemaestrosunicos} />
+                //if(emisionVar==contenido.producttypedescription || emisionVar=='0'){
+                if(emision==contenido.producttypedescription || emision=='0'){
+                    return <TableBody 
+                    taxaccountid={contenido.taxaccountid}
+                    credittaxaccount={contenido.credittaxaccount}
+                    debittaxaccount={contenido.debittaxaccount}
+                    credittaxaccountinterest={contenido.credittaxaccountinterest}
+                    debittaxaccountinterest={contenido.debittaxaccountinterest} 
+                    producttypedescription={contenido.producttypedescription} 
+                    producttypemaestrosunicos={contenido.producttypemaestrosunicos} />
+                }
             })}
         </tbody>);
     };
@@ -141,31 +156,26 @@ export default function ConfiguracionContableGeneral() {
 
 
     const onChangeEmision = (event) => {
-        const selectValue = event.value;
-        if (selectValue === '1') {
-            setEmision('Emsion 1');
-
-        } else if (selectValue === '2') {
-            setEmision('Emision 2');
-
-        } else if (selectValue === '3') {
-            setEmision('Emision 3');
-        }
+        //emisionVar = event.value;
+        setEmision(event.value);
+        console.log('Se cambia emision: '+ emision);
     }
 
     async function applyFilters() {
-        console.log('Aplicando filtros');
         cantPaginasSelect2 =cantPaginasSelect;
-        await reloadTableMain(cantPaginasSelect);
+        console.log('Se applyFilters emision: '+ emision);
+        await reloadTableMain(cantPaginasSelect,emision);
         setIsDisabledButtonFilter(false);
     }
 
     async function deleteFilters() {
         console.log('Borrando filtros');
-        setEmision('');
+        //emisionVar = '0';
+        setEmision('0')
         cantPaginasSelect2 =cantPaginasSelect;
-        await reloadTableMain(cantPaginasSelect);
+        await reloadTableMain(cantPaginasSelect,'0');
         setIsDisabledButtonFilter(true);
+        setSelecTipoEmisiones(<SelecTipoEmisiones/>)
     }
 
     const cantPaginas = [
@@ -180,16 +190,18 @@ export default function ConfiguracionContableGeneral() {
     
         setCantPaginasSelect(selectValue)
         cantPaginasSelect2 = selectValue;
-        reloadTableMain(selectValue);
+        console.log('emision change cant pag:'+emision)
+        reloadTableMain(selectValue,emision);
+        console.log('Termina change cant paginas')
     }
 
-    async function reloadTableMain(cantReg) {
+    async function reloadTableMain(cantReg, emisionReg) {
         console.log('Reload Table')
         //Invocará al servicio para que traiga los datos
         setTableRender(
             <Loading text={loaderText} aditional={aditional} />
         );
-        const dataTable=[]/*{
+        const dataTable={
             "status":200,
             "data":[
                 {
@@ -257,9 +269,45 @@ export default function ConfiguracionContableGeneral() {
                     "debittaxaccount": "111595999",
                     "producttypedescription": "EMITIDOS IGUAL O SUPERIOR A 18 MESES",
                     "taxaccountid": "5"
+                },
+                {
+                    "producttypemaestrosunicos": "553",
+                    "credittaxaccountinterest": "210720",
+                    "credittaxaccount": "210720",
+                    "debittaxaccountinterest": "510231",
+                    "debittaxaccount": "111595999",
+                    "producttypedescription": "EMITIDOS IGUAL O SUPERIOR A 18 MESES",
+                    "taxaccountid": "5"
+                },
+                {
+                    "producttypemaestrosunicos": "553",
+                    "credittaxaccountinterest": "210720",
+                    "credittaxaccount": "210720",
+                    "debittaxaccountinterest": "510232",
+                    "debittaxaccount": "111595999",
+                    "producttypedescription": "EMITIDOS IGUAL O SUPERIOR A 18 MESES",
+                    "taxaccountid": "5"
+                },
+                {
+                    "producttypemaestrosunicos": "553",
+                    "credittaxaccountinterest": "210720",
+                    "credittaxaccount": "210720",
+                    "debittaxaccountinterest": "510233",
+                    "debittaxaccount": "111595999",
+                    "producttypedescription": "EMITIDOS IGUAL O SUPERIOR A 18 MESES",
+                    "taxaccountid": "5"
+                },
+                {
+                    "producttypemaestrosunicos": "553",
+                    "credittaxaccountinterest": "210720",
+                    "credittaxaccount": "210720",
+                    "debittaxaccountinterest": "510234",
+                    "debittaxaccount": "111595999",
+                    "producttypedescription": "EMITIDOS IGUAL O SUPERIOR A 18 MESES",
+                    "taxaccountid": "5"
                 }
             ]
-        } ;*/
+        } ;//[]
         // const dataTable = await service.getDataTable(startDate, endDate, consecutivoCargue, isWeek); SE INVOCARÁ A API
         if (dataTable.status === 200){
             console.log('ingresa 200')
@@ -271,22 +319,49 @@ export default function ConfiguracionContableGeneral() {
                 setTableHeader(
                     <TableHeader />
                 );
+                var emisionObject;
+                var emisionArrayObj = new Array();
+                emisionObject = new Object();
+                emisionObject.value = 0;
+                emisionObject.label = "Seleccione una emisión";
+                emisionArrayObj.push(emisionObject);
+                console.log('emisionReg-reloadTable:'+emisionReg)
                 setTableRender(<tbody>
                     {currentItems.map((contenido, index) => {
-                        return <TableBody 
-                        taxaccountid={contenido.taxaccountid}
-                        credittaxaccount={contenido.credittaxaccount}
-                        debittaxaccount={contenido.debittaxaccount}
-                        credittaxaccountinterest={contenido.credittaxaccountinterest}
-                        debittaxaccountinterest={contenido.debittaxaccountinterest} 
-                        producttypedescription={contenido.producttypedescription} 
-                        producttypemaestrosunicos={contenido.producttypemaestrosunicos} />
+
+                        if (!emisionArrayObj.filter(function(e) { return e.label === contenido.producttypedescription; }).length > 0) {
+                            emisionObject = new Object();
+                            emisionObject.value = contenido.producttypedescription;
+                            emisionObject.label = contenido.producttypedescription;
+                            emisionArrayObj.push(emisionObject);
+                        }
+                        console.log('contenido-reloadTable:'+contenido)
+                        
+                        //console.log('emisionVar-reloadTable:'+emisionVar)
+                        //if(emisionVar==contenido.producttypedescription || emisionVar=='0'){
+                        if(emisionReg ==contenido.producttypedescription || emisionReg =='0'){
+                            console.log('contenido.producttypedescription-reloadTable:'+contenido.producttypedescription)
+                            return <TableBody 
+                            taxaccountid={contenido.taxaccountid}
+                            credittaxaccount={contenido.credittaxaccount}
+                            debittaxaccount={contenido.debittaxaccount}
+                            credittaxaccountinterest={contenido.credittaxaccountinterest}
+                            debittaxaccountinterest={contenido.debittaxaccountinterest} 
+                            producttypedescription={contenido.producttypedescription} 
+                            producttypemaestrosunicos={contenido.producttypemaestrosunicos} />
+                            
+                        }
                     })}
                 </tbody>);
 
                 setPaginationFooter(
                     <TableFooterPagination />
                   );
+                
+                var jsonEmision = JSON.parse(JSON.stringify(emisionArrayObj))
+                emisiones =jsonEmision
+                //setEmisiones(jsonEmision)
+                
             }else{
                 toast.error('No se encontraron registros.');
                 setTableRender(null);
@@ -295,17 +370,14 @@ export default function ConfiguracionContableGeneral() {
             toast.error(dataTable.detail);
             setTableRender(null);
         }
-        setEmisiones([
-            { value: '1', label: 'Emision 1' },
-            { value: '2', label: 'Emision 2' },
-            { value: '3', label: 'Emision 3' }
-        ])
+        
     }
 
     
     useEffect(() => {
-        reloadTableMain(cantPaginasSelect);
+        reloadTableMain(cantPaginasSelect,'0');
         document.title = title
+        setSelecTipoEmisiones(<SelecTipoEmisiones/>)
     }, [,cantPaginasSelect]);
 
 
@@ -334,10 +406,7 @@ export default function ConfiguracionContableGeneral() {
                         node="div"
                         >
                             <Row>
-                                <Col s={8} m={3}>
-                                    <label className="active">Tipo de emisión</label>
-                                    <Select className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
-                                </Col>
+                                {selecTipoEmisiones}
                                 <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
                                     <Button node="button" small className="indigo darken-4" onClick={applyFilters}>
                                         Aplicar filtros

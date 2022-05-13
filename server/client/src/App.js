@@ -18,7 +18,11 @@ export default function App() {
         <NavigationBar />
         <Container className='bg-white'>
           <Card className="z-depth-3">
-            {user &&
+            <Switch>
+            <Route path={base + '/ui-configuracion-contable'} exact component={ConfiguracionContable} />
+            </Switch>
+
+            {/* {user &&
               <AuthenticatedTemplate>
               {(user.roles === undefined ?
                 <Error404 /> :
@@ -43,13 +47,13 @@ export default function App() {
                 </Switch>
               )}
               </AuthenticatedTemplate>
-            }
+            } 
             <UnauthenticatedTemplate>
               <Route path={base + '/'} exact component={Logout} />
               <Route path="*">
                   <Redirect to={"/"} />
               </Route>
-            </UnauthenticatedTemplate>
+            </UnauthenticatedTemplate>*/}
           </Card>
         </Container>
         <ToastContainer
