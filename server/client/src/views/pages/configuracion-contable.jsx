@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { CardHeader } from "../components/index";
-import { Row, Col, Button, Collapsible, CollapsibleItem, Icon, Table } from 'react-materialize'
+import {  Col, Button} from 'react-materialize'
 import ConfiguracionContableGeneral from "./configuracion-contable-general";
+import ConfiguracionHomologacion from "./configuracion-homologacion";
 export default function ConfiguracionContable() {
   
     const title = "Configuración contable"
@@ -15,6 +16,12 @@ export default function ConfiguracionContable() {
         );
     };
 
+    async function goToHomologacion (event) {
+        console.log('Go to Homologación');
+        setPantallaVisible(
+            <ConfiguracionHomologacion />
+        );
+    };
     
     useEffect(() => {
         setPantallaVisible(
@@ -26,8 +33,8 @@ export default function ConfiguracionContable() {
                     </Button>
                 </Col>
                 <Col s={12} m={6} className="input-field date text-left">
-                    <Button node="button" small className="indigo darken-4" >
-                    Configuración homologacíon
+                    <Button node="button" small className="indigo darken-4" onClick={goToHomologacion} >
+                        Configuración homologacíon
                     </Button>
                 </Col>
             </div>
