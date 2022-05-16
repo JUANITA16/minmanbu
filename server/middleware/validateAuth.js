@@ -37,6 +37,14 @@ const routeGuard = (accessMatrix) => {
                 } 
                 else return res.status(403).json({error: 'Action not allowed'});
             }
+            else if (req.path.includes(accessMatrix.tax_a_prodt.path)) {
+                if (accessMatrix.tax_a_prodt.methods.includes(req.method)) {
+                    let intersection = accessMatrix.tax_a_prodt.roles.filter(role => roles.includes(role));
+
+                    if (intersection.length < 1) return res.status(403).json({error: 'User not allowed'});
+                } 
+                else return res.status(403).json({error: 'Action not allowed'});
+            }
             else return res.status(403).json({error: 'Unrecognized path'});
         }
     

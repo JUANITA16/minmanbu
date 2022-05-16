@@ -43,7 +43,7 @@ export default function App() {
                 </Switch>
               )}
               </AuthenticatedTemplate>
-            }
+            } 
             <UnauthenticatedTemplate>
               <Route path={base + '/'} exact component={Logout} />
               <Route path="*">
