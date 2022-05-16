@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CardHeader , Loading} from "../components/index";
 import EditarTabla from "../pages/editar-tabla";
-// import ModalHeader from "../components/Modal";
-// import ModalBody from "../components/Modal";
-// import ModalFooter from "../components/Modal";
 import { Row, Col, Button, Collapsible, CollapsibleItem, Icon, Table } from 'react-materialize'
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
@@ -19,19 +16,17 @@ export default function ConfiguracionContableGeneral() {
     const title = "Configuración general"
     const description = "En esta sección podrá realizar la configuración general asociada a los moviminetos de CDTs desde Dominus"
     
-    const [emision, setEmision] = useState('CDT');
     const [isDisabledButtonFilter, setIsDisabledButtonFilter] = useState(true);
     const [tableHeader, setTableHeader] = useState();
     const [tableRender, setTableRender] = useState();
     const [paginationFooter, setPaginationFooter] = useState();
     const [cantPaginasSelect, setCantPaginasSelect] = useState('10');
     const [isGeneral, setIsGeneral] = useState(true);
-    const [emisiones, setEmisiones] = useState([]);
-    
+    const [emision, setEmision] = useState('0');
     const [loaderText] = useState('');
     const [aditional] = useState('');
-
-    const [showModal,setShowModal]=useState(false)
+    const [selecTipoEmisiones, setSelecTipoEmisiones] = useState();
+    const [showEditComponent,setShowEditComponent]=useState(false)
     const [infoModal,setInfoModal]=useState()
 
 
@@ -40,7 +35,16 @@ export default function ConfiguracionContableGeneral() {
     var itemOffset = 0;
     var totalPaginas = 0;
     var cantPaginasSelect2 = 10;
+    var emisiones = [{ value: 0, label: 'Seleccione una emisión' }]
 
+    const SelecTipoEmisiones = (props) => {
+        return(
+            <Col s={8} m={3}>
+                <label className="active">Tipo de emisión</label>
+                <Select className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
+            </Col>
+        )
+    }
 
     const TableHeader = (props) => {
         return (
@@ -63,7 +67,7 @@ export default function ConfiguracionContableGeneral() {
         async function goToEditarAux(event) {
             console.log('Se habilita la función de editar')
             setInfoModal(props)
-            setShowModal(true)
+            setShowEditComponent(true)
         };
 
         return (
@@ -71,22 +75,22 @@ export default function ConfiguracionContableGeneral() {
             <td style={{ textAlign: "center" }} hidden={true}>
               {props.taxaccountid}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all", textAlign: "center" }}>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.credittaxaccount}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all", textAlign: "center" }}>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.debittaxaccount}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all", textAlign: "center" }}>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.credittaxaccountinterest}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all", textAlign: "center" }}>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.debittaxaccountinterest}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all"}}>
+            <td style={{ minWidth: 10, maxWidth: 230, wordBreak:"break-all"}}>
               {props.producttypedescription}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 200, wordBreak:"break-all", textAlign: "center" }}>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.producttypemaestrosunicos}
             </td>
             <td style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -115,7 +119,6 @@ export default function ConfiguracionContableGeneral() {
         )
     };
 
-    // Invoke when user click to request another page.
     async function handlePageClick(event){
         const newOffset = (event.selected * cantPaginasSelect2) % contentTable.length;
         
@@ -141,7 +144,6 @@ export default function ConfiguracionContableGeneral() {
 
 
     async function goToBack (event) {
-        console.log('Regresa a la pantalla inicial');
         setIsGeneral(false);
     };
 
@@ -151,30 +153,19 @@ export default function ConfiguracionContableGeneral() {
 
 
     const onChangeEmision = (event) => {
-        const selectValue = event.value;
-        if (selectValue === '1') {
-            setEmision('Emsion 1');
-
-        } else if (selectValue === '2') {
-            setEmision('Emision 2');
-
-        } else if (selectValue === '3') {
-            setEmision('Emision 3');
-        }
+        setEmision(event.value);
     }
 
     async function applyFilters() {
-        console.log('Aplicando filtros');
         cantPaginasSelect2 =cantPaginasSelect;
-        await reloadTableMain(cantPaginasSelect);
+        await reloadTableMain(cantPaginasSelect,emision);
         setIsDisabledButtonFilter(false);
     }
 
     async function deleteFilters() {
-        console.log('Borrando filtros');
-        setEmision('');
+        setEmision('0')
         cantPaginasSelect2 =cantPaginasSelect;
-        await reloadTableMain(cantPaginasSelect);
+        await reloadTableMain(cantPaginasSelect,'0');
         setIsDisabledButtonFilter(true);
     }
 
@@ -185,34 +176,49 @@ export default function ConfiguracionContableGeneral() {
     ]
 
     
-    const onChangeCantPaginas = (event) => {
+    const onChangeCantPaginasGeneral = (event) => {
         const selectValue = event.value;
     
         setCantPaginasSelect(selectValue)
         cantPaginasSelect2 = selectValue;
-        reloadTableMain(selectValue);
     }
 
-    async function reloadTableMain(cantReg) {
-        console.log('Reload Table')
-        //Invocará al servicio para que traiga los datos
+    async function reloadTableMain(cantReg, emisionReg) {
         setTableRender(
             <Loading text={loaderText} aditional={aditional} />
         );
-        
-        const dataTable =  await service.getAllDataTableContable().then(response => {
+        if(emisionReg ==='0'){
+            setSelecTipoEmisiones(<SelecTipoEmisiones/>)
+        }
+        const dataTable =  await service.getAllTaxAProdT().then(response => {
             return response;
             }
           );
 
         if (dataTable.status === 200){
-            // console.log('ingresa 200')
-            contentTable = dataTable.data;
-            // console.log(contentTable)
-            const endOffset = itemOffset +  parseInt(cantReg);
-            currentItems = contentTable.slice(itemOffset, endOffset);
-            totalPaginas = Math.ceil(contentTable.length / cantReg);
-            if (totalPaginas !== 0) {
+            var contentAll =dataTable.data;
+            if (contentAll.length > 0) {
+
+                contentAll.forEach(element =>{
+                    if (!emisiones.filter(function(e) { return e.label === element.producttypedescription; }).length > 0) {
+                        const item ={ value: element.producttypedescription, label: element.producttypedescription}
+                        emisiones.push(item)
+                    }
+                } );
+                
+                if(emisionReg ==='0'){
+                    contentTable = contentAll;
+                }else{
+                    contentTable = contentAll.filter(function (el) {
+                        return el.producttypedescription === emisionReg 
+                    });
+                }
+                
+                const endOffset = itemOffset +  parseInt(cantReg);
+                currentItems = contentTable.slice(itemOffset, endOffset);
+                totalPaginas = Math.ceil(contentTable.length / cantReg);
+
+
                 setTableHeader(
                     <TableHeader />
                 );
@@ -226,12 +232,19 @@ export default function ConfiguracionContableGeneral() {
                         debittaxaccountinterest={contenido.debittaxaccountinterest} 
                         producttypedescription={contenido.producttypedescription} 
                         producttypemaestrosunicos={contenido.producttypemaestrosunicos} />
+                        
                     })}
                 </tbody>);
 
                 setPaginationFooter(
                     <TableFooterPagination />
                   );
+                
+                if(emisionReg ==='0'){
+                    setSelecTipoEmisiones(<SelecTipoEmisiones/>)
+                }
+
+                
             }else{
                 toast.error('No se encontraron registros.');
                 setTableRender(null);
@@ -240,18 +253,11 @@ export default function ConfiguracionContableGeneral() {
             toast.error(dataTable.detail);
             setTableRender(null);
         }
-        var emi=[]
-        for (var i = 0; i < contentTable.length; i++) {
-            console.log(contentTable[i].producttypedescription)
-            const item ={ value: i, label: contentTable[i].producttypedescription}
-            emi.push(item)
-        }
-        setEmisiones(emi)
     }
 
     
     useEffect(() => {
-        reloadTableMain(cantPaginasSelect);
+        reloadTableMain(cantPaginasSelect,emision);
         document.title = title
     }, [,cantPaginasSelect]);
 
@@ -259,8 +265,8 @@ export default function ConfiguracionContableGeneral() {
     const renderElement = () => {
         return isGeneral ? (
             <React.Fragment>
-                {showModal ? 
-                <EditarTabla info = {infoModal} show={setShowModal}/>:
+                {showEditComponent ? 
+                <EditarTabla info = {infoModal} show={setShowEditComponent}/>:
                 <div>
                     <Row>
                         <Col s={2} m={2}>
@@ -284,10 +290,7 @@ export default function ConfiguracionContableGeneral() {
                             node="div"
                             >
                                 <Row>
-                                    <Col s={8} m={3}>
-                                        <label className="active">Tipo de emisión</label>
-                                        <Select className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
-                                    </Col>
+                                    {selecTipoEmisiones}
                                     <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
                                         <Button node="button" small className="indigo darken-4" onClick={applyFilters}>
                                             Aplicar filtros
@@ -305,7 +308,7 @@ export default function ConfiguracionContableGeneral() {
                     <Row>
                         <Col s={2} m={2}>
                             <label className="active">Cantidad de registros</label>
-                            <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginas} />
+                            <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginasGeneral} />
                         </Col>
                         <Table >
                             {tableHeader}

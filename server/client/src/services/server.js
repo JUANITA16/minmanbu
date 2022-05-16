@@ -74,12 +74,16 @@ export class ServerAPI {
         }
     }
 
-    getAllDataTableContable = async () => {
-        const url = "https://qc0e66ovdc-vpce-05a7cccd28148f43d.execute-api.us-east-1.amazonaws.com/dev/minmambu/api/v1/taxaprodt"
-        // const url = this.base_url + "/datacontable";
-        // console.log(url)
+
+
+    //  const url = "https://qc0e66ovdc-vpce-05a7cccd28148f43d.execute-api.us-east-1.amazonaws.com/dev/minmambu/api/v1/taxaprodt"
+
+
+    getAllTaxAProdT = async () => {
+        
+        const url = this.base_url + "/tax-a-prodt"
         const config = {
-            headers: { Authorization: "minmambu" },
+            headers: { Authorization: await getToken() },
         }
         const res = await axios.get(url,config)
         
@@ -87,12 +91,16 @@ export class ServerAPI {
     }
 
     updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
-        const url = "https://qc0e66ovdc-vpce-05a7cccd28148f43d.execute-api.us-east-1.amazonaws.com/dev/minmambu/api/v1/taxaprodt/"+idRow
+        const url = this.base_url + "/tax-a-prodt"
+
         const config = {
-            headers: { Authorization: "minmambu" },
+            headers: { Authorization:await getToken() },
+            params: {
+                idRow,
+            }
         }
         const res = await axios.put(url,dataToUpdate,config)
-        
+      
         return res;
     }
 }

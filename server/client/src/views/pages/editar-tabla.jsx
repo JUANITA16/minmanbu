@@ -4,6 +4,7 @@ import { Button } from 'react-materialize'
 import TextField from '@mui/material/TextField';
 import { ServerAPI } from "../../services/server";
 import Stack from '@mui/material/Stack';
+import ConfiguracionContableGeneral from "./configuracion-contable-general";
 
 const service = new ServerAPI();
 
@@ -12,36 +13,49 @@ export default function EditarTabla(props) {
     const title = "Edicion de CONFIGURACION GENERAL"
     const description = "En esta sección podrá realizar la edicion de los registros CONFIGURACION GENERAL"
 
-    const [taxaccountid, setTaxaccountid] = useState();
-    const [credittaxaccount, setCredittaxaccount] = useState();
-    const [debittaxaccount, setDebittaxaccount] = useState();
-    const [credittaxaccountinterest, setCredittaxaccountinterest] = useState();
-    const [debittaxaccountinterest, setDebittaxaccountinterest] = useState();
-    const [producttypedescription, setProducttypedescription] = useState();
-    const [producttypemaestrosunicos, setProducttypemaestrosunicos] = useState();
+    // const [taxaccountid, setTaxaccountid] = useState();
+    // const [credittaxaccount, setCredittaxaccount] = useState();
+    // const [debittaxaccount, setDebittaxaccount] = useState();
+    // const [credittaxaccountinterest, setCredittaxaccountinterest] = useState();
+    // const [debittaxaccountinterest, setDebittaxaccountinterest] = useState();
+    // const [producttypedescription, setProducttypedescription] = useState();
+    // const [producttypemaestrosunicos, setProducttypemaestrosunicos] = useState();
 
+    var taxaccountid=""
+    var credittaxaccount=""
+    var debittaxaccount=""
+    var credittaxaccountinterest=""
+    var debittaxaccountinterest=""
+    var producttypedescription=""
+    var producttypemaestrosunicos=""
 
     async function goToConfiguracionGeneral (event) {
         props.show(false)
     };
 
     const handleChangeCredittaxaccount = (event) =>{
-        setCredittaxaccount(event.target.value);
+        credittaxaccount=event.target.value
+        // setCredittaxaccount(event.target.value);
     }
     const handleChangeDebittaxaccount= (event) =>{
-        setDebittaxaccount(event.target.value);
+        debittaxaccount=event.target.value
+        // setDebittaxaccount(event.target.value);
     }
     const handleChangeCredittaxaccountinterest = (event) =>{
-        setCredittaxaccountinterest(event.target.value);
+        credittaxaccountinterest=event.target.value
+        // setCredittaxaccountinterest(event.target.value);
     }
     const handleChangeDebittaxaccountinterest = (event) =>{
-        setDebittaxaccountinterest(event.target.value);
+        debittaxaccountinterest=event.target.value
+        // setDebittaxaccountinterest(event.target.value);
     }
     const handleChangeProducttypedescription = (event) =>{
-        setProducttypedescription(event.target.value);
+        producttypedescription=event.target.value
+        // setProducttypedescription(event.target.value);
     }
     const handleChangeProducttypemaestrosunicos = (event) =>{
-        setProducttypemaestrosunicos(event.target.value);
+        producttypemaestrosunicos=event.target.value
+        // setProducttypemaestrosunicos(event.target.value);
     }
 
     const handleSubmit = (event) => {
@@ -54,21 +68,31 @@ export default function EditarTabla(props) {
             "producttypedescription": producttypedescription,
         }
         service.updateItemConfiguracionGeneral(dataToUpdate,taxaccountid)
-        props.show(false)
+        // props.show(false)
+        goToConfiguracionGeneral()
         event.preventDefault();
     }
 
-    useEffect(() => {
-        setTaxaccountid(props.info.taxaccountid)
-        setCredittaxaccount(props.info.credittaxaccount)
-        setDebittaxaccount(props.info.debittaxaccount)
-        setCredittaxaccountinterest(props.info.credittaxaccountinterest)
-        setDebittaxaccountinterest(props.info.debittaxaccountinterest)
-        setProducttypedescription(props.info.producttypedescription)
-        setProducttypemaestrosunicos(props.info.producttypemaestrosunicos)
-    }, [,props]);
+    const [pantallaVisibleEditar, setPantallaVisibleEditar] = useState();
+    async function goToConfiguracionGeneral () {
+        console.log('go to configuracion general');
+        setPantallaVisibleEditar(
+            <ConfiguracionContableGeneral/>
+        );
+    };
 
-    return (
+    useEffect(() => {
+        console.log(props)
+
+        taxaccountid=props.info.taxaccountid
+        credittaxaccount=props.info.credittaxaccount
+        debittaxaccount=props.info.debittaxaccount
+        credittaxaccountinterest=props.info.credittaxaccountinterest
+        debittaxaccountinterest=props.info.debittaxaccountinterest
+        producttypedescription=props.info.producttypedescription
+        producttypemaestrosunicos=props.info.producttypemaestrosunicos
+
+        setPantallaVisibleEditar(
         <div>
             <CardHeader title={title} description={description } />
             <form onSubmit={handleSubmit}>
@@ -78,7 +102,7 @@ export default function EditarTabla(props) {
                         label="Cuenta crédito"
                         multiline
                         maxRows={4}
-                        value={credittaxaccount}
+                        value={props.info.credittaxaccount}
                         variant="standard"
                         onChange={handleChangeCredittaxaccount}
                     />
@@ -87,7 +111,7 @@ export default function EditarTabla(props) {
                         label="Cuenta débito"
                         multiline
                         maxRows={4}
-                        value={debittaxaccount}
+                        value={props.info.debittaxaccount}
                         variant="standard"
                         onChange={handleChangeDebittaxaccount}
                     />
@@ -96,7 +120,7 @@ export default function EditarTabla(props) {
                         label="Cuenta crédito interés"
                         multiline
                         maxRows={4}
-                        value={credittaxaccountinterest}
+                        value={props.info.credittaxaccountinterest}
                         variant="standard"
                         onChange={handleChangeCredittaxaccountinterest}
                     />
@@ -105,7 +129,7 @@ export default function EditarTabla(props) {
                         label="Cuenta débito interés"
                         multiline
                         maxRows={4}
-                        value={debittaxaccountinterest}
+                        value={props.info.debittaxaccountinterest}
                         variant="standard"
                         onChange={handleChangeDebittaxaccountinterest}
                     />
@@ -114,7 +138,7 @@ export default function EditarTabla(props) {
                         label="Tipo emision"
                         multiline
                         rows={4}
-                        defaultValue={producttypedescription}
+                        defaultValue={props.info.producttypedescription}
                         onChange={handleChangeProducttypedescription}
                         variant="standard"
                     />
@@ -123,7 +147,7 @@ export default function EditarTabla(props) {
                         label="Código tipo emisión Maestros Únicos"
                         multiline
                         maxRows={4}
-                        value={producttypemaestrosunicos}
+                        value={props.info.producttypemaestrosunicos}
                         variant="standard"
                         onChange={handleChangeProducttypemaestrosunicos}
                     />
@@ -138,6 +162,12 @@ export default function EditarTabla(props) {
                     </Button>
                 </Stack>
             </form>
-        </div>
+        </div>)
+    }, [,props]);
+
+    return (
+        <React.Fragment>
+            {pantallaVisibleEditar}
+        </React.Fragment>
     )
 }
