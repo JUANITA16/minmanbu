@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { CardHeader , Loading} from "../components/index";
 import EditarTabla from "../pages/editar-tabla";
 // import ModalHeader from "../components/Modal";
@@ -34,6 +34,7 @@ export default function ConfiguracionContableGeneral() {
     const [showModal,setShowModal]=useState(false)
     const [infoModal,setInfoModal]=useState()
 
+
     var contentTable = []
     var currentItems = [];
     var itemOffset = 0;
@@ -61,9 +62,7 @@ export default function ConfiguracionContableGeneral() {
 
         async function goToEditarAux(event) {
             console.log('Se habilita la función de editar')
-            console.log(showModal)
             setInfoModal(props)
-            console.log(props)
             setShowModal(true)
         };
 

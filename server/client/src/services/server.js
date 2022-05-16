@@ -75,13 +75,23 @@ export class ServerAPI {
     }
 
     getAllDataTableContable = async () => {
-        const url = this.base_url + "/tblCosifAccounting"
-        console.log(url)
+        const url = "https://qc0e66ovdc-vpce-05a7cccd28148f43d.execute-api.us-east-1.amazonaws.com/dev/minmambu/api/v1/taxaprodt"
+        // const url = this.base_url + "/datacontable";
+        // console.log(url)
         const config = {
-            headers: { Authorization: await getToken() },
+            headers: { Authorization: "minmambu" },
         }
-        console.log(config)
-        const res = await axios.get(url, {},config)
+        const res = await axios.get(url,config)
+        
+        return res;
+    }
+
+    updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
+        const url = "https://qc0e66ovdc-vpce-05a7cccd28148f43d.execute-api.us-east-1.amazonaws.com/dev/minmambu/api/v1/taxaprodt/"+idRow
+        const config = {
+            headers: { Authorization: "minmambu" },
+        }
+        const res = await axios.put(url,dataToUpdate,config)
         
         return res;
     }

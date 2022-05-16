@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react"
-import { Button, Col, Collapsible, CollapsibleItem, Icon, Row, Select, TextInput } from "react-materialize";
+import { Button, Col, Collapsible, CollapsibleItem, Icon, Row, TextInput } from "react-materialize";
 import { CardHeader } from "../components";
 import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
