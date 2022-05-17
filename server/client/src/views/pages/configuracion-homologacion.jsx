@@ -152,6 +152,7 @@ function ConfiguracionHomologacion (params) {
 
   useEffect(() => {
     const resp = getdbData();
+    console.log(resp)
     if (resp.status === 200) {
       setdbData(resp.data);
     }
@@ -159,6 +160,7 @@ function ConfiguracionHomologacion (params) {
   }, []);
 
   useEffect(() => {
+    console.log(dbData)
     setView(<HomoloView  goBack={goBack} dbData={dbData}/>);
     console.log("loading table")
   }, [dbData])
