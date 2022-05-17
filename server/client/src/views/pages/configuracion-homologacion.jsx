@@ -118,8 +118,10 @@ const getRawData = function () {
   const service = new ServerAPI();
   try {
     resp = service.getAllCosif().then((resp) => {return resp});
+    console.log(resp)
   } catch (error) {
     console.error(error);
+    console.log(resp)
     return resp;
   }
 }
