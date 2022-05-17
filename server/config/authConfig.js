@@ -39,6 +39,11 @@ const authConfig = async() => {
                 path: "/tax-a-prodt",
                 methods:[ "GET","PUT" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
+            cosif: {
+                path: "/tblCosifAccounting",
+                methods:[ "GET" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             }
         }
     }

@@ -126,7 +126,7 @@ const getRawData = function () {
 
 function ConfiguracionHomologacion (params) {
   
-  const rawData = useState(getRawData())
+  const rawData = getRawData()
   const [view, setView] = useState(<></>);
 
   const goBack = function (event) {

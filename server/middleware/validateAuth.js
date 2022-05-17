@@ -44,6 +44,13 @@ const routeGuard = (accessMatrix) => {
                     if (intersection.length < 1) return res.status(403).json({error: 'User not allowed'});
                 } 
                 else return res.status(403).json({error: 'Action not allowed'});
+            } else if (req.path.includes(accessMatrix.cosif.path)) {
+                if (accessMatrix.cosif.methods.includes(req.method)) {
+                    let intersection = accessMatrix.cosif.roles.filter(role => roles.includes(role));
+
+                    if (intersection.length < 1) return res.status(403).json({error: 'User not allowed'});
+                } 
+                else return res.status(403).json({error: 'Action not allowed'});
             }
             else return res.status(403).json({error: 'Unrecognized path'});
         }

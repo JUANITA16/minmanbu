@@ -2,13 +2,13 @@ const router = require('express').Router();
 const axios = require('axios');
 const { getSecret } = require('../utils/secret');
 
-router.get('/tax-a-prodt', async (req, res) => {
-    console.log("Route get /tax-a-prodt");
+router.get('/tblCosifAccounting', async (req, res) => {
+    console.log("Route get /tblCosifAccounting");
     try{
         console.log("Getting secretApiKey");
         const Authorization = await getSecret(process.env.SECRET_APIKEY); // ApiKey para consumir lambdas
         
-        const URL = process.env.BACK_BASE + process.env.BACK_TAXAPRODT;
+        const URL = process.env.BACK_BASE + process.env.BACK_COSIF;
         const config = {
             headers: { Authorization }
         }; // Headers a enviar
