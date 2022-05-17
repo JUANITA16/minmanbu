@@ -5,11 +5,8 @@ import { CardHeader } from "../components";
 import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
 
-const HomoloView = function ({goBack}) {
-  // Here goes the fetch expression
-  const service = new ServerAPI();
-  const rawData = service.getAllCosif().then( (resp) => {return resp})
-  .catch((res) => {return []});
+const HomoloView = function ({goBack, rawData}) {
+  
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
   const [tableData, setTableData] = useState(rawData);
@@ -55,7 +52,6 @@ const HomoloView = function ({goBack}) {
     ));
   };
 
-  
 
   useEffect(function () {
     setTable(<MyTable tableData={tableData} />)
@@ -117,18 +113,32 @@ const HomoloView = function ({goBack}) {
   )
 };
 
+const getRawData = function () {
+  let resp = [];
+  const service = new ServerAPI();
+  try {
+    resp = service.getAllCosif().then((resp) => {return resp});
+  } catch (error) {
+    console.error(error);
+    return resp;
+  }
+}
+
 function ConfiguracionHomologacion (params) {
   
+  const rawData = useState(getRawData())
   const [view, setView] = useState(<></>);
 
   const goBack = function (event) {
     setView(<ConfiguracionContable />);
   };
   
+
+
   useEffect(() => {
-    setView(<HomoloView  goBack={goBack}/>)
+    setView(<HomoloView  goBack={goBack} rawData={rawData}/>)
     console.log("loading table")
-  }, []);
+  }, [rawData]);
 
   return view
 
