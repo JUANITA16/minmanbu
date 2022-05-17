@@ -93,7 +93,7 @@ export class ServerAPI {
 
     getAllCosif = async () => {
         
-        const url = this.base_url + "/cosifaccounting"
+        const url = this.base_url + "/tblCosifAccounting"
         const config = {
             headers: { Authorization: await getToken() },
         }

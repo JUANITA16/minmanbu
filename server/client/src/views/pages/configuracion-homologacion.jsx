@@ -8,7 +8,8 @@ import ConfiguracionContable from "./configuracion-contable";
 const HomoloView = function ({goBack}) {
   // Here goes the fetch expression
   const service = new ServerAPI();
-  const rawData = service.getAllCosif().then( (resp) => {return resp});
+  const rawData = service.getAllCosif().then( (resp) => {return resp})
+  .catch((res) => {return []});
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
   const [tableData, setTableData] = useState(rawData);
