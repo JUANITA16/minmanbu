@@ -11,7 +11,8 @@ const HomoloView = function ({goBack, dbData}) {
   const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
   const [tableData, setTableData] = useState(dbData);
   const [table, setTable] = useState(<></>);
-  
+  const [filtenable, setfiltEnable] = useState(false)
+
   function applyFilters(record, filters) {
     let isValid = true
     if (filters.numeroCuenta) {
@@ -29,12 +30,14 @@ const HomoloView = function ({goBack, dbData}) {
     setTableData(
       tableData.filter((value) => applyFilters(value, filters))
     );
+    setfiltEnable(true);
   };
 
   const handleDeleteFilters = function (event) {
     setFilterHeader(<p>Filtros</p>);
     setFilters({numeroCuenta: "", numeroCosif: ""});
-    setTableData(dbData)
+    setTableData(dbData);
+    setfiltEnable(false);
   };
 
 
@@ -51,6 +54,9 @@ const HomoloView = function ({goBack, dbData}) {
     ));
   };
 
+  useEffect(function () {
+    setTableData(dbData)
+  }, [dbData])
 
   useEffect(function () {
     setTable(<MyTable tableData={tableData} />)
@@ -94,12 +100,14 @@ const HomoloView = function ({goBack, dbData}) {
                   onChange={onTextChange} value={filters.numeroCosif}/>
               </Col>
               <Col s={12} m={2} className="input-field" style={{ float: 'right' }} >
-                <Button node="button" small className="indigo darken-4" onClick={handleApplyFilters} >
+                <Button node="button" small className="indigo darken-4" 
+                  onClick={handleApplyFilters} disabled={filtenable} >
                   Aplicar filtros
                 </Button>
               </Col>
               <Col s={12} m={2} className="input-field" style={{ float: 'right' }} >
-                <Button node="button"  small className="indigo darken-4" onClick={handleDeleteFilters}>
+                <Button node="button"  small className="indigo darken-4"
+                  onClick={handleDeleteFilters} disabled={!filtenable}>
                   Borrar filtros
                 </Button>
               </Col>
@@ -112,30 +120,29 @@ const HomoloView = function ({goBack, dbData}) {
   )
 };
 
-const getdbData = function () {
-  let resp = [];
-  const service = new ServerAPI();
-  try {
-    resp = service.getAllCosif().then((resp) => {return resp});
-    console.log(resp)
-  } catch (error) {
-    console.error(error);
-    console.log(resp)
-    return resp;
-  }
-}
+
 
 function ConfiguracionHomologacion (params) {
   
-  const dbData = []
+  const [dbData, setdbData] = useState([]);
   const [view, setView] = useState(<></>);
 
-  const resp = getdbData()
-
-  if (resp.status === 200) {
-    dbData = resp.data
+  
+  const getdbData = async function () {
+    let resp = [];
+    const service = new ServerAPI();
+    try {
+      resp = await service.getAllCosif().then((resp) => {return resp});
+      setdbData(resp.data)
+      if (resp.status === 200) {
+        setdbData(resp.data);
+      }
+    } catch (error) {
+      console.error(error);
+      
+      return resp;
+    }
   }
-
 
   const goBack = function (event) {
     setView(<ConfiguracionContable />);
@@ -144,9 +151,17 @@ function ConfiguracionHomologacion (params) {
 
 
   useEffect(() => {
-    setView(<HomoloView  goBack={goBack} dbData={dbData}/>)
-    console.log("loading table")
+    const resp = getdbData();
+    if (resp.status === 200) {
+      setdbData(resp.data);
+    }
+    
   }, []);
+
+  useEffect(() => {
+    setView(<HomoloView  goBack={goBack} dbData={dbData}/>);
+    console.log("loading table")
+  }, [dbData])
 
   return view
 
