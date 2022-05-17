@@ -64,6 +64,8 @@ const setUp = async() => {
     const massiveCCRoute = require('./routes/massive-cc');
     const massiveCDTRoute = require('./routes/massive-cdt');
     const taxAprodTRoute = require('./routes/tax-a-prodt');
+    const taxAprodTPutRoute = require('./routes/tax-a-prodt-put');
+
 
     // - To call backapp.use( process.env.SERVER_BASE_PATH,
     app.use( process.env.SERVER_BASE_PATH,
@@ -91,6 +93,12 @@ const setUp = async() => {
         passport.authenticate('oauth-bearer', { session: false }),
         routeGuard(authConfig.accessMatrix),
         taxAprodTRoute
+    );
+
+    app.use( process.env.SERVER_BASE_PATH,
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        taxAprodTPutRoute
     );
 
     /* CLIENT SIDE ################################################################## */

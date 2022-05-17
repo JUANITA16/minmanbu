@@ -37,7 +37,7 @@ const authConfig = async() => {
             },
             tax_a_prodt: {
                 path: "/tax-a-prodt",
-                methods:[ "GET" ],
+                methods:[ "GET","PUT" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             }
         }

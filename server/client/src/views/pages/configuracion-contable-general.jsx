@@ -26,8 +26,9 @@ export default function ConfiguracionContableGeneral() {
     const [loaderText] = useState('');
     const [aditional] = useState('');
     const [selecTipoEmisiones, setSelecTipoEmisiones] = useState();
-    const [showModal,setShowModal]=useState(false)
+    const [showEditComponent,setShowEditComponent]=useState(false)
     const [infoModal,setInfoModal]=useState()
+
 
     var contentTable = []
     var currentItems = [];
@@ -65,10 +66,8 @@ export default function ConfiguracionContableGeneral() {
 
         async function goToEditarAux(event) {
             console.log('Se habilita la función de editar')
-            console.log(showModal)
             setInfoModal(props)
-            console.log(props)
-            setShowModal(true)
+            setShowEditComponent(true)
         };
 
         return (
@@ -266,8 +265,8 @@ export default function ConfiguracionContableGeneral() {
     const renderElement = () => {
         return isGeneral ? (
             <React.Fragment>
-                {showModal ? 
-                <EditarTabla info = {infoModal} show={setShowModal}/>:
+                {showEditComponent ? 
+                <EditarTabla info = {infoModal} show={setShowEditComponent}/>:
                 <div>
                     <Row>
                         <Col s={2} m={2}>

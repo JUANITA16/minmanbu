@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CardHeader } from "../components/index";
-import {  Col, Button} from 'react-materialize'
+import { Col, Button } from 'react-materialize'
 import ConfiguracionContableGeneral from "./configuracion-contable-general";
 import ConfiguracionHomologacion from "./configuracion-homologacion";
 export default function ConfiguracionContable() {
