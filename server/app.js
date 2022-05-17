@@ -65,6 +65,7 @@ const setUp = async() => {
     const massiveCDTRoute = require('./routes/massive-cdt');
     const taxAprodTRoute = require('./routes/tax-a-prodt');
     const taxAprodTPutRoute = require('./routes/tax-a-prodt-put');
+    const cosifRoute = require('./routes/cosif');
 
 
     // - To call backapp.use( process.env.SERVER_BASE_PATH,
