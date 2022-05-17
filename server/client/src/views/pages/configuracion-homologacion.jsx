@@ -5,7 +5,7 @@ import { CardHeader } from "../components";
 import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
 
-const HomoloView = function ({goBack, rawData}) {
+const HomoloView = function ({goBack, dbData}) {
   
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
@@ -128,7 +128,7 @@ const getRawData = function () {
 
 function ConfiguracionHomologacion (params) {
   
-  const rawData = getRawData()
+  const dbData = getRawData()
   const [view, setView] = useState(<></>);
 
   const goBack = function (event) {
@@ -138,9 +138,9 @@ function ConfiguracionHomologacion (params) {
 
 
   useEffect(() => {
-    setView(<HomoloView  goBack={goBack} rawData={rawData}/>)
+    setView(<HomoloView  goBack={goBack} dbData={dbData}/>)
     console.log("loading table")
-  }, [rawData]);
+  }, []);
 
   return view
 
