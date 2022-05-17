@@ -11,7 +11,7 @@ const HomoloView = function ({goBack, dbData}) {
   const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
   const [tableData, setTableData] = useState(rawData);
   const [table, setTable] = useState(<></>);
-  let rawData = rawData ? rawData : [];
+  let rawData = dbData ? dbData : [];
   
   function applyFilters(record, filters) {
     let isValid = true
