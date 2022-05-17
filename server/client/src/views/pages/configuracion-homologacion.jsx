@@ -9,9 +9,8 @@ const HomoloView = function ({goBack, dbData}) {
   
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
-  const [tableData, setTableData] = useState(rawData);
+  const [tableData, setTableData] = useState(dbData);
   const [table, setTable] = useState(<></>);
-  let rawData = dbData ? dbData : [];
   
   function applyFilters(record, filters) {
     let isValid = true
@@ -35,7 +34,7 @@ const HomoloView = function ({goBack, dbData}) {
   const handleDeleteFilters = function (event) {
     setFilterHeader(<p>Filtros</p>);
     setFilters({numeroCuenta: "", numeroCosif: ""});
-    setTableData(rawData)
+    setTableData(dbData)
   };
 
 
@@ -113,7 +112,7 @@ const HomoloView = function ({goBack, dbData}) {
   )
 };
 
-const getRawData = function () {
+const getdbData = function () {
   let resp = [];
   const service = new ServerAPI();
   try {
@@ -128,8 +127,15 @@ const getRawData = function () {
 
 function ConfiguracionHomologacion (params) {
   
-  const dbData = getRawData()
+  const dbData = []
   const [view, setView] = useState(<></>);
+
+  const resp = getdbData()
+
+  if (resp.status === 200) {
+    dbData = resp.data
+  }
+
 
   const goBack = function (event) {
     setView(<ConfiguracionContable />);
