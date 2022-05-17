@@ -95,6 +95,12 @@ const setUp = async() => {
         routeGuard(authConfig.accessMatrix),
         taxAprodTRoute
     );
+    
+    app.use( process.env.SERVER_BASE_PATH,
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        cosifRoute
+    );
 
     app.use( process.env.SERVER_BASE_PATH,
         passport.authenticate('oauth-bearer', { session: false }),
