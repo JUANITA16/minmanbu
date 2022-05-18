@@ -6,7 +6,7 @@ import ConfiguracionHomologacion from "./configuracion-homologacion";
 export default function ConfiguracionContable() {
   
     const title = "Configuración contable"
-    const description = "En esta sección podrá realizar la configuración contable asociada a los moviminetos de CDTs desde Dominus"
+    const description = "En esta sección podrá realizar la configuración contable asociada a los movimientos de CDTs desde Dominus"
 
     const [pantallaVisible, setPantallaVisible] = useState();
     async function goToConfiguracionGeneral (event) {
