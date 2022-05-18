@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { Col, Icon, Row, Table } from "react-materialize";
+import { Button, Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
 import Select from 'react-select'
 
@@ -21,6 +21,10 @@ function MyTable({tableData}) {
     setVisibleData(tableData.slice(page*maxResults, maxResults*(page + 1)))
   };
   
+  const handleEdit = function (event){
+    console.log("Edit element")
+  }
+
   useEffect(function () {
     //Calculate the total of pages using ceil method
     settotalPages(Math.ceil(tableData.length/maxResults));
@@ -55,6 +59,9 @@ function MyTable({tableData}) {
                 <td>{data.accounting_account}</td>
                 <td>{data.cosif}</td>
                 <td>{data.costcenteraccounting}</td>
+                <td><Button small onClick={handleEdit} className="indigo darken-4">
+                  Editar</Button>
+                </td>
              </tr>)
           }
           )]

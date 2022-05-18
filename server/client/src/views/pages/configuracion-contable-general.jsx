@@ -14,7 +14,7 @@ const service = new ServerAPI();
 export default function ConfiguracionContableGeneral() {
   
     const title = "Configuración general"
-    const description = "En esta sección podrá realizar la configuración general asociada a los moviminetos de CDTs desde Dominus"
+    const description = "En esta sección podrá realizar la configuración general asociada a los movimientos de CDTs desde Dominus"
     
     const [isDisabledButtonFilter, setIsDisabledButtonFilter] = useState(true);
     const [tableHeader, setTableHeader] = useState();
