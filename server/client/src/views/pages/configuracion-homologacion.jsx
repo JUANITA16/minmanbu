@@ -6,7 +6,6 @@ import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
 
 const HomoloView = function ({goBack, dbData}) {
-  
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
   const [tableData, setTableData] = useState(dbData);
