@@ -4,9 +4,12 @@ import { Button } from 'react-materialize'
 import TextField from '@mui/material/TextField';
 import { ServerAPI } from "../../services/server";
 import Stack from '@mui/material/Stack';
+import { Col } from 'react-materialize'
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import ConfiguracionContableGeneral from "./configuracion-contable-general";
+import Select from 'react-select'
+
 
 const service = new ServerAPI();
 
@@ -15,10 +18,11 @@ export default function EditarTabla(props) {
     const title = "Edicion de CONFIGURACION GENERAL"
     const description = "En esta sección podrá realizar la edicion de los registros CONFIGURACION GENERAL"
 
-    const [open, setOpen] = React.useState(true);
-    const [mensajeWarning, setMensajeWarning] = React.useState('test');
+    const [open, setOpen] = React.useState(false);
+    const [mensajeWarning, setMensajeWarning] = React.useState('');
     const [severity, setSeverity] = React.useState('info');
-    
+
+    var emisionesDefault = []
     var emisiones = [{ value: 0, label: 'Seleccione una emisión' }]
     var taxaccountid=""
     var credittaxaccount=""
@@ -43,10 +47,6 @@ export default function EditarTabla(props) {
 
     const handleChangeDebittaxaccountinterest = (event) =>{
         debittaxaccountinterest=event.target.value
-    }
-
-    const handleChangeProducttypedescription = (event) =>{
-        producttypedescription=event.target.value
     }
 
     const handleChangeProducttypemaestrosunicos = (event) =>{
@@ -85,17 +85,21 @@ export default function EditarTabla(props) {
             setOpen(true)
             setSeverity('warning')
           }else {
-              const dataToUpdate ={
-                  "producttypemaestrosunicos": producttypemaestrosunicos,
-                  "credittaxaccountinterest": credittaxaccountinterest,
-                  "credittaxaccount": credittaxaccount,
-                  "debittaxaccountinterest": debittaxaccountinterest,
-                  "debittaxaccount": debittaxaccount,
-                  "producttypedescription": producttypedescription,
-              }
-              service.updateItemConfiguracionGeneral(dataToUpdate,taxaccountid)
-              goToConfiguracionGeneral()
-              event.preventDefault();
+
+            const dataToUpdate ={
+                "producttypemaestrosunicos": producttypemaestrosunicos,
+                "credittaxaccountinterest": credittaxaccountinterest,
+                "credittaxaccount": credittaxaccount,
+                "debittaxaccountinterest": debittaxaccountinterest,
+                "debittaxaccount": debittaxaccount,
+                "producttypedescription": producttypedescription,
+            }
+            service.updateItemConfiguracionGeneral(dataToUpdate,taxaccountid)
+            setMensajeWarning('Datos actualziados')
+            setOpen(true)
+            setSeverity('info')
+            goToConfiguracionGeneral()
+            event.preventDefault();
         }
     }
 
@@ -115,9 +119,14 @@ export default function EditarTabla(props) {
         setOpen(false);
       };
 
-    useEffect(() => {
-        console.log(props)
+    const onChangeEmision = (event) => {
+        producttypedescription=event.value
+    }
 
+    useEffect(() => {
+        emisiones=props.emisiones
+        console.log(emisiones)
+        emisionesDefault=[{ value: 0, label: props.info.producttypedescription }]
         taxaccountid=props.info.taxaccountid
         credittaxaccount=props.info.credittaxaccount
         debittaxaccount=props.info.debittaxaccount
@@ -162,21 +171,15 @@ export default function EditarTabla(props) {
                         variant="standard"
                         onChange={handleChangeDebittaxaccountinterest}
                     />
-                    <Select 
-                        className="basic-single" 
-                        defaultValue={emisiones[0]} 
-                        options={emisiones} 
-                        onChange={onChangeEmision} 
-                    />
-                    {/* <TextField
-                        id="outlined-multiline-static"
-                        label="Tipo emision"
-                        multiline
-                        rows={6}
-                        defaultValue={props.info.producttypedescription}
-                        onChange={handleChangeProducttypedescription}
-                        variant="standard"
-                    /> */}
+                    <Col s={8} m={3}>
+                        <label className="active">Tipo de emisión</label>
+                        <Select 
+                            className="basic-single" 
+                            defaultValue={emisionesDefault} 
+                            options={emisiones} 
+                            onChange={onChangeEmision} 
+                        />
+                    </Col>
                     <TextField
                         id="outlined-multiline-flexible"
                         label="Código tipo emisión Maestros Únicos"
