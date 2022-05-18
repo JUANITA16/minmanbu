@@ -88,7 +88,20 @@ export class ServerAPI {
         const res = await axios.get(url,config)
         
         return res;
-    }
+    };
+
+
+    getAllCosif = async () => {
+        
+        const url = this.base_url + "/tblCosifAccounting"
+        const config = {
+            headers: { Authorization: await getToken() }
+        }
+        const res = await axios.get(url,config)
+        
+        return res;
+    };
+
 
     updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
         const url = this.base_url + "/tax-a-prodt"
