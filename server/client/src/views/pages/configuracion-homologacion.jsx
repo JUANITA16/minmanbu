@@ -17,7 +17,7 @@ const HomoloView = function ({goBack, dbData}) {
     if (filters.numeroCuenta) {
       isValid = (record.accounting_account === filters.numeroCuenta)
     };
-    if (filters.numeroCosif) {
+    if (filters.numeroCosif && isValid) {
       isValid = (record.cosif === filters.numeroCosif)
     };
 
