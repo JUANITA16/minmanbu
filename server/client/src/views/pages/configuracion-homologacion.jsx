@@ -1,3 +1,4 @@
+import { TextField } from "@mui/material";
 import { Fragment, useEffect, useState } from "react"
 import { Button, Col, Collapsible, CollapsibleItem, Icon, Row, TextInput } from "react-materialize";
 import ServerAPI from "../../services/server";
@@ -68,19 +69,19 @@ const HomoloView = function ({goBack, dbData}) {
   return (
   <Fragment>
       <Row>
-        <Col s={2} m={2}>
-          <Button node="button" small className="indigo darken-4" onClick={goBack}>
+        <Col s={12} m={2} >
+          <Button node="button" small className="indigo darken-4" onClick={goBack} >
             Retroceder
           </Button>
         </Col>
-        <Col s={2} m={2}>
+        <Col s={12} m={2} >
           <Button node="button" small className="indigo darken-4" onClick={createNew} >
             Nuevo
           </Button>
         </Col>
       </Row>
       <CardHeader title={"Configuración Homologaciones"} 
-        description={"En esta sección podrá realizar la configuración general asociada a los moviminetos de CDTs desde Dominus"}/>
+        description={"En esta sección podrá realizar la configuración de Homologaciones asociada a los movimientos de CDTs desde Dominus"}/>
       <Row>
         <Collapsible accordion={false}>
           <CollapsibleItem
@@ -90,21 +91,29 @@ const HomoloView = function ({goBack, dbData}) {
           node="div"
           >
             <Row>
-              <Col s={12} m={3} >
-                <TextInput id="numeroCuenta" label="Número de Cuenta" 
-                  onChange={onTextChange} value={filters.numeroCuenta} />
+              <Col s={12} m={6} l={3} xl={3}>
+                <div className="input-field">
+                  <input type="text" className="valid" onChange={onTextChange}
+                    id="numeroCuenta" value={filters.numeroCuenta}/>
+                  <label htmlFor="numeroCuenta">Número de Cuenta</label>
+                </div>
               </Col>
-              <Col s={12} m={3}>
-                <TextInput id="numeroCosif" label="Número de Cuenta cosif" 
-                  onChange={onTextChange} value={filters.numeroCosif}/>
+              <Col s={12} m={6} l={3} xl={3}  >
+                <div className="input-field">
+                  <input type="text" className="valid" onChange={onTextChange}
+                    id="numeroCosif" value={filters.numeroCosif}/>
+                  <label htmlFor="numeroCosif">Número de Cuenta cosif</label>
+                </div>
               </Col>
-              <Col s={12} m={2} className="input-field" style={{ float: 'right' }} >
+              <Col s={12} m={6} l={3} xl={3} 
+                 style={{ float: 'right', marginTop: 30}} >
                 <Button node="button" small className="indigo darken-4" 
                   onClick={handleApplyFilters} disabled={filtenable} >
                   Aplicar filtros
                 </Button>
               </Col>
-              <Col s={12} m={2} className="input-field" style={{ float: 'right' }} >
+              <Col s={12} m={6} l={3} xl={3}
+                style={{ float: 'right', marginTop: 30, }} >
                 <Button node="button"  small className="indigo darken-4"
                   onClick={handleDeleteFilters} disabled={!filtenable}>
                   Borrar filtros
@@ -132,7 +141,6 @@ function ConfiguracionHomologacion (params) {
     const service = new ServerAPI();
     try {
       resp = await service.getAllCosif().then((resp) => {return resp});
-      setdbData(resp.data)
       if (resp.status === 200) {
         setdbData(resp.data);
       }
