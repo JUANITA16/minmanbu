@@ -631,7 +631,7 @@ export default function CreacionCuenta() {
         </Row>
 
         <Row>
-          <Col s={2} m={2}>
+          <Col s={12} m={2}>
             <label className="active">Cantidad de registros</label>
             <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginas} />
           </Col>

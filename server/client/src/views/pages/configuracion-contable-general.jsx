@@ -7,6 +7,7 @@ import ReactPaginate from 'react-paginate';
 import ConfiguracionContable from "./configuracion-contable";
 import { toast } from 'react-toastify';
 import { ServerAPI } from "../../services/server";
+import ModalConfiguracionContableGeneral from './modal-configuracion-contable-general'
 
 
 const service = new ServerAPI();
@@ -29,6 +30,10 @@ export default function ConfiguracionContableGeneral() {
     const [showEditComponent,setShowEditComponent]=useState(false)
     const [infoModal,setInfoModal]=useState()
 
+    const [botonNuevo,setBotonNuevo]=useState()
+    const [saveModal,setSaveModal]=useState()
+
+
 
     var contentTable = []
     var currentItems = [];
@@ -39,7 +44,7 @@ export default function ConfiguracionContableGeneral() {
 
     const SelecTipoEmisiones = (props) => {
         return(
-            <Col s={8} m={3}>
+            <Col s={12} m={3}>
                 <label className="active">Tipo de emisión</label>
                 <Select className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
             </Col>
@@ -147,10 +152,6 @@ export default function ConfiguracionContableGeneral() {
         setIsGeneral(false);
     };
 
-    async function createConfiguration (event) {
-        console.log('Se habilita la función para crear una nueva configuración');
-    };
-
 
     const onChangeEmision = (event) => {
         setEmision(event.value);
@@ -183,7 +184,25 @@ export default function ConfiguracionContableGeneral() {
         cantPaginasSelect2 = selectValue;
     }
 
+    async function actualizarBotonNuevo(){
+        setBotonNuevo(
+            <ModalConfiguracionContableGeneral
+                tipoBoton={"Registrar"}
+                emisiones={emisiones} 
+                title = {"Nuevo - Configuración general"}
+                taxaccountid={""}
+                credittaxaccount={""}
+                debittaxaccount = {""}
+                credittaxaccountinterest = {""}
+                setDebittaxaccountinterest = {""}
+                producttypedescription = {"0"}
+                producttypemaestrosunicos = {""}
+                setSave={setSaveModal}
+            />);
+    
+    }
     async function reloadTableMain(cantReg, emisionReg) {
+        actualizarBotonNuevo();
         setTableRender(
             <Loading text={loaderText} aditional={aditional} />
         );
@@ -243,7 +262,8 @@ export default function ConfiguracionContableGeneral() {
                 if(emisionReg ==='0'){
                     setSelecTipoEmisiones(<SelecTipoEmisiones/>)
                 }
-
+                actualizarBotonNuevo();
+                
                 
             }else{
                 toast.error('No se encontraron registros.');
@@ -259,7 +279,7 @@ export default function ConfiguracionContableGeneral() {
     useEffect(() => {
         reloadTableMain(cantPaginasSelect,emision);
         document.title = title
-    }, [,cantPaginasSelect]);
+    }, [saveModal,cantPaginasSelect]);
 
 
     const renderElement = () => {
@@ -269,15 +289,13 @@ export default function ConfiguracionContableGeneral() {
                 <EditarTabla info = {infoModal} show={setShowEditComponent}/>:
                 <div>
                     <Row>
-                        <Col s={2} m={2}>
+                        <Col s={6} m={2}>
                             <Button node="button" small className="indigo darken-4" onClick={goToBack}>
                                 Retroceder
                             </Button>
                         </Col>
-                        <Col s={2} m={2}>
-                            <Button node="button" small className="indigo darken-4" onClick={createConfiguration}>
-                                Nuevo
-                            </Button>
+                        <Col s={6} m={2}>
+                            {botonNuevo}
                         </Col>
                     </Row>
                     <CardHeader title={title} description={description} />
@@ -306,15 +324,18 @@ export default function ConfiguracionContableGeneral() {
                         </Collapsible>
                     </Row>
                     <Row>
-                        <Col s={2} m={2}>
+                        <Col s={12} m={2}>
                             <label className="active">Cantidad de registros</label>
                             <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginasGeneral} />
                         </Col>
-                        <Table >
-                            {tableHeader}
-                            {tableRender}
-                        </Table>
-                        {paginationFooter}
+                        <Col s={6} m={12}>
+                            <Table>
+                                {tableHeader}
+                                {tableRender}
+                            </Table>
+                            {paginationFooter}
+                        </Col>
+                        
                     </Row>
                 </div>
                 }
