@@ -30,6 +30,10 @@ a {
 }
 
 /* Logo styles */
+.center-div {
+  display: flex;
+  justify-content: center;
+}
 
 .brand-logo-img {
   height: 64px;
@@ -52,7 +56,32 @@ a {
   margin: 0;
 }
 
-/* Padding Zero */
+.input-field {
+  width: 80%;
+}
+
+.input-field label:focus {
+  color: black;
+}
+
+/* valid color */
+.input-field input[type=text].valid {
+  border-bottom: 1px solid black;
+  box-shadow: 0 0px 0 0 #000;
+}
+
+.input-field input[type=text].valid:focus +label {
+  color: #1a237e;
+}
+
+.input-field input[type=text].valid:focus  {
+  border-bottom: 1px solid #1a237e;
+  box-shadow: 0 1px 0 0 black;
+}
+
+.input-field .prefix.active {
+  color: yellow;
+}
 
 .m0 {
   margin: 0 !important;

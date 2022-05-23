@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { Button, Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
@@ -8,7 +9,9 @@ function MyTable({tableData}) {
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
-  
+  const [isloading, setIsloading] = useState(true);
+  const [tableBody, setTableBody] = useState([])
+
   const totalResults = [
     { value: 5, label: '5' },
     { value: 10, label: '10' },
@@ -23,14 +26,42 @@ function MyTable({tableData}) {
   
   const handleEdit = function (event){
     console.log("Edit element")
+  };
+
+  const renderLoading = function (isloading){
+    if (isloading) {
+      return <div className="center-div"><CircularProgress /></div>
+    } else {
+      return <p></p>
+    }
   }
 
   useEffect(function () {
     //Calculate the total of pages using ceil method
     settotalPages(Math.ceil(tableData.length/maxResults));
     setVisibleData(tableData.slice(0, maxResults));
-
+    if (tableData.length >0 ) {
+      setIsloading(false);
+    } else {
+      setIsloading(true)
+    }
   }, [maxResults, tableData]);
+
+  useEffect(function () {
+    setTableBody(visibleData.map( (data) => {
+      return (
+        <tr key={data.accounting_account}>
+          <td>{data.accounting_account}</td>
+          <td>{data.cosif}</td>
+          <td>{data.costcenteraccounting}</td>
+          <td><Button small onClick={handleEdit} className="indigo darken-4">
+            Editar</Button>
+          </td>
+      </tr>)})
+    );
+
+  }, [visibleData]);
+
 
   return (
   <Fragment>
@@ -43,31 +74,21 @@ function MyTable({tableData}) {
        </Col>
      </Row>
     {/* Table generation */}
-    <Table>
-      <thead>
-        <tr>
-          <th>Número de Cuenta</th>
-          <th>Número de Cuenta cosif</th>
-          <th>Centro de Costos</th>
-        </tr>
-      </thead>
-      <tbody>
-        {[
-          visibleData.map( (data) => {
-            return (
-              <tr key={data.accountid}>
-                <td>{data.accounting_account}</td>
-                <td>{data.cosif}</td>
-                <td>{data.costcenteraccounting}</td>
-                <td><Button small onClick={handleEdit} className="indigo darken-4">
-                  Editar</Button>
-                </td>
-             </tr>)
-          }
-          )]
-        }
-      </tbody>
-    </Table> 
+    <div>
+      <Table>
+        <thead>
+          <tr>
+            <th>Número de Cuenta</th>
+            <th>Número de Cuenta cosif</th>
+            <th>Centro de Costos</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tableBody}     
+        </tbody>
+      </Table> 
+    </div>
+      {renderLoading(isloading)}
       <div style={{display: "flex", alignItems: "center", alignContent: "center", justifyContent: "center"}}>
         <ReactPaginate
           previousLabel={<Icon>chevron_left</Icon>}
