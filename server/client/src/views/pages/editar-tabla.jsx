@@ -22,6 +22,14 @@ export default function EditarTabla(props) {
     const [mensajeWarning, setMensajeWarning] = React.useState('');
     const [severity, setSeverity] = React.useState('info');
 
+    const [errorCuentaCrédito, setErrorCuentaCrédito] = React.useState(false);
+    const [errorCuentaDebito, setErrorCuentaDebito] = React.useState(false);
+    const [errorCuentaCreditoInteres, setErrorCuentaCreditoInteres] = React.useState(false);
+    const [errorCuentaDebitoInteres, setErrorCuentaDebitoInteres] = React.useState(false);
+    // const [open, setOpen] = React.useState(false);
+    const [errorTipoEmisionMaestrosUnicos, setErrorTipoEmisionMaestrosUnicos] = React.useState(false);
+
+
     var emisionesDefault = []
     var emisiones = [{ value: 0, label: 'Seleccione una emisión' }]
     var taxaccountid=""
@@ -54,34 +62,40 @@ export default function EditarTabla(props) {
     }
 
     const handleSubmit = (event) => {
-        console.log(credittaxaccount)
+        
         if (credittaxaccount==="") {
-            console.log("paso")
-            setMensajeWarning('La Cuenta crédito no puede estar vacia.')
+            console.log("entro")
+            setErrorCuentaCrédito(true)
+            console.log(errorCuentaCrédito)
+            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setSeverity('warning')
             setOpen(true)
           } else if (debittaxaccount==="") {
-            setMensajeWarning('La Cuenta débito no puede estar vacia.')
+            setErrorCuentaDebito(true)
+            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
             setSeverity('warning')
           }
           else if (credittaxaccountinterest==="") {
-            setMensajeWarning('La Cuenta crédito interés no puede estar vacia.')
+            setErrorCuentaCreditoInteres(true)
+            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
             setSeverity('warning')
           }
           else if (debittaxaccountinterest==="") {
-            setMensajeWarning('La Cuenta débito interés no puede estar vacia.')
+            setErrorCuentaDebitoInteres(true)
+            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
             setSeverity('warning')
           }
           else if (producttypedescription==="") {
-            setMensajeWarning('El Tipo emision no puede estar vacio.')
+            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
             setSeverity('warning')
           }
           else if (producttypemaestrosunicos==="") {
-            setMensajeWarning('El Código tipo emisión Maestros Únicos no puede estar vacio.')
+            setErrorTipoEmisionMaestrosUnicos(true)
+            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
             setSeverity('warning')
           }else {
@@ -95,7 +109,7 @@ export default function EditarTabla(props) {
                 "producttypedescription": producttypedescription,
             }
             service.updateItemConfiguracionGeneral(dataToUpdate,taxaccountid)
-            setMensajeWarning('Datos actualziados')
+            setMensajeWarning('Datos actualizados')
             setOpen(true)
             setSeverity('info')
             goToConfiguracionGeneral()
@@ -107,9 +121,7 @@ export default function EditarTabla(props) {
 
     async function goToConfiguracionGeneral () {
         console.log('go to configuracion general');
-        setPantallaVisibleEditar(
-            <ConfiguracionContableGeneral/>
-        );
+        props.setOpenModal(false)
     };
 
     const handleClose = (event, reason) => {
@@ -140,6 +152,7 @@ export default function EditarTabla(props) {
             <CardHeader title={title} description={description } />
                 <Stack direction="row" spacing={0.5} >
                     <TextField
+                        error={errorCuentaCrédito}
                         id="outlined-multiline-flexible"
                         label="Cuenta crédito"
                         type="number"
@@ -148,6 +161,7 @@ export default function EditarTabla(props) {
                         onChange={handleChangeCredittaxaccount}
                     />
                     <TextField
+                        error={errorCuentaDebito}
                         id="outlined-multiline-flexible"
                         label="Cuenta débito"
                         type="number"
@@ -156,6 +170,7 @@ export default function EditarTabla(props) {
                         onChange={handleChangeDebittaxaccount}
                     />
                     <TextField
+                        error={errorCuentaCreditoInteres}
                         id="outlined-multiline-flexible"
                         label="Cuenta crédito interés"
                         type="number"
@@ -164,6 +179,7 @@ export default function EditarTabla(props) {
                         onChange={handleChangeCredittaxaccountinterest}
                     />
                     <TextField
+                        error={errorCuentaDebitoInteres}
                         id="outlined-multiline-flexible"
                         label="Cuenta débito interés"
                         type="number"
@@ -181,6 +197,7 @@ export default function EditarTabla(props) {
                         />
                     </Col>
                     <TextField
+                        error={errorTipoEmisionMaestrosUnicos}
                         id="outlined-multiline-flexible"
                         label="Código tipo emisión Maestros Únicos"
                         type="number"
