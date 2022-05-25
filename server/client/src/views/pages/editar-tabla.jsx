@@ -113,6 +113,7 @@ export default function EditarTabla(props) {
             setOpen(true)
             setSeverity('info')
             goToConfiguracionGeneral()
+            props.reloadTableMain("10","0")
             event.preventDefault();
         }
     }
@@ -137,7 +138,6 @@ export default function EditarTabla(props) {
 
     useEffect(() => {
         emisiones=props.emisiones
-        console.log(emisiones)
         emisionesDefault=[{ value: 0, label: props.info.producttypedescription }]
         taxaccountid=props.info.taxaccountid
         credittaxaccount=props.info.credittaxaccount

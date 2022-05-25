@@ -216,7 +216,7 @@ export default function ConfiguracionContableGeneral() {
             return response;
             }
           );
-
+        
         if (dataTable.status === 200){
             var contentAll =dataTable.data;
             if (contentAll.length > 0) {
@@ -291,7 +291,6 @@ export default function ConfiguracionContableGeneral() {
         transform: 'translate(-50%, -50%)',
         width: 1000,
         bgcolor: 'background.paper',
-        border: '2px solid #000',
         boxShadow: 24,
         p: 4,
       };
@@ -306,7 +305,7 @@ export default function ConfiguracionContableGeneral() {
                 aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
-                        <EditarTabla setOpenModal ={setOpenModal} emisiones ={emisionEditComponent} info = {infoModal} />
+                        <EditarTabla reloadTableMain={reloadTableMain} setOpenModal ={setOpenModal} emisiones ={emisionEditComponent} info = {infoModal} />
                     </Box>
                 </Modal>
                 <div>
