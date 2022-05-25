@@ -77,9 +77,9 @@ export class ServerAPI {
 
     getAllTaxAProdT = async () => {
         
-        const url ="https://qc0e66ovdc-vpce-05a7cccd28148f43d.execute-api.us-east-1.amazonaws.com/dev/minmambu/api/v1/tax-a-prodt"; //this.base_url + "/tax-a-prodt"
+        const url = this.base_url + "/tax-a-prodt"
         const config = {
-            headers: { Authorization: "minmambu"/*await getToken()*/  },
+            headers: { Authorization: await getToken()  },
         }
         const res = await axios.get(url,config)
         
