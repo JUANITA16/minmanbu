@@ -116,28 +116,42 @@ export default function ModalConfiguracionContableGeneral(props) {
                                 <Select className="basic-single" defaultValue={props.producttypedescription} options={props.emisiones} onChange={onChangeEmision} />
                             </Col>
                             <Col s={12} m={3} >
-                                <label className="active">Código tipo emisión Maestros Únicos</label>
-                                <input type="number" onChange={handleChangeProducttypemaestrosunicos} value={producttypemaestrosunicos} />
+                            <div className="input-field">
+                                <input type="number" className="valid" onChange={handleChangeProducttypemaestrosunicos}
+                                id="producttypemaestrosunicosId" value={producttypemaestrosunicos}/>
+                                <label htmlFor="producttypemaestrosunicosId">Número de Cuenta</label>
+                            </div>
                             </Col>
                     </Row>
                     <Row>
 
                             <Col s={12} m={3} >
-                                <label className="active">Cuenta crédito</label>
-                                <input type="number" onChange={handleChangeCredittaxaccount} value={credittaxaccount} />
+                                <div className="input-field">
+                                    <input type="number" className="valid" onChange={handleChangeCredittaxaccount}
+                                    id="credittaxaccountId" value={credittaxaccount}/>
+                                    <label htmlFor="credittaxaccountId">Cuenta crédito</label>
+                                </div>
                             </Col>
                             <Col s={12} m={3} >
-                                <label className="active">Cuenta débito</label>
-                                <input type="number" onChange={handleChangeDebittaxaccount} value={debittaxaccount} />
+                                <div className="input-field">
+                                    <input type="number" className="valid" onChange={handleChangeDebittaxaccount}
+                                    id="debittaxaccountId" value={debittaxaccount}/>
+                                    <label htmlFor="debittaxaccountId">Cuenta débito</label>
+                                </div>
                             </Col>
                             <Col s={12} m={3} >
-                                <label className="active">Cuenta crédito interés</label>
-                                <input type="number" onChange={handleChangeCredittaxaccountinterest} value={credittaxaccountinterest} />
-
+                                <div className="input-field">
+                                    <input type="number" className="valid" onChange={handleChangeCredittaxaccountinterest}
+                                    id="credittaxaccountinterestId" value={credittaxaccountinterest}/>
+                                    <label htmlFor="credittaxaccountinterestId">Cuenta crédito interés</label>
+                                </div>
                             </Col>
                             <Col s={12} m={3} >
-                                <label className="active">Cuenta débito interés</label>
-                                <input type="number" onChange={handleChangeDebittaxaccountinterest} value={debittaxaccountinterest} />
+                                <div className="input-field">
+                                    <input type="number" className="valid" onChange={handleChangeDebittaxaccountinterest}
+                                    id="debittaxaccountinterestId" value={debittaxaccountinterest}/>
+                                    <label htmlFor="debittaxaccountinterestId">Cuenta débito interés</label>
+                                </div>
                             </Col>
                     </Row>
                     
