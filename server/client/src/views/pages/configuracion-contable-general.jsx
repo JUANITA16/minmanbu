@@ -216,7 +216,6 @@ export default function ConfiguracionContableGeneral() {
             return response;
             }
           );
-        
         if (dataTable.status === 200){
             var contentAll =dataTable.data;
             if (contentAll.length > 0) {

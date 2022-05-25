@@ -9,7 +9,7 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import ConfiguracionContableGeneral from "./configuracion-contable-general";
 import Select from 'react-select'
-
+import { toast } from 'react-toastify';
 
 const service = new ServerAPI();
 
@@ -26,7 +26,7 @@ export default function EditarTabla(props) {
     const [errorCuentaDebito, setErrorCuentaDebito] = React.useState(false);
     const [errorCuentaCreditoInteres, setErrorCuentaCreditoInteres] = React.useState(false);
     const [errorCuentaDebitoInteres, setErrorCuentaDebitoInteres] = React.useState(false);
-    // const [open, setOpen] = React.useState(false);
+
     const [errorTipoEmisionMaestrosUnicos, setErrorTipoEmisionMaestrosUnicos] = React.useState(false);
 
 
@@ -61,43 +61,41 @@ export default function EditarTabla(props) {
         producttypemaestrosunicos=event.target.value
     }
 
-    const handleSubmit = (event) => {
+    async function handleSubmit() {
         
         if (credittaxaccount==="") {
-            console.log("entro")
             setErrorCuentaCrédito(true)
-            console.log(errorCuentaCrédito)
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
-            setSeverity('warning')
+            setSeverity('error')
             setOpen(true)
           } else if (debittaxaccount==="") {
             setErrorCuentaDebito(true)
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
-            setSeverity('warning')
+            setSeverity('error')
           }
           else if (credittaxaccountinterest==="") {
             setErrorCuentaCreditoInteres(true)
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
-            setSeverity('warning')
+            setSeverity('error')
           }
           else if (debittaxaccountinterest==="") {
             setErrorCuentaDebitoInteres(true)
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
-            setSeverity('warning')
+            setSeverity('error')
           }
           else if (producttypedescription==="") {
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
-            setSeverity('warning')
+            setSeverity('error')
           }
           else if (producttypemaestrosunicos==="") {
             setErrorTipoEmisionMaestrosUnicos(true)
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
-            setSeverity('warning')
+            setSeverity('error')
           }else {
 
             const dataToUpdate ={
@@ -108,20 +106,25 @@ export default function EditarTabla(props) {
                 "debittaxaccount": debittaxaccount,
                 "producttypedescription": producttypedescription,
             }
-            service.updateItemConfiguracionGeneral(dataToUpdate,taxaccountid)
-            setMensajeWarning('Datos actualizados')
-            setOpen(true)
-            setSeverity('info')
-            goToConfiguracionGeneral()
+            const mensajeRespuesta =  await service.updateItemConfiguracionGeneral(dataToUpdate,taxaccountid).then(response => {
+                return response;
+                }
+            );
+            if (mensajeRespuesta.status === 200){
+                toast.success("Datos actualizados");
+            }else{
+                toast.error("Datos no actualizados");
+            }
+
             props.reloadTableMain("10","0")
-            event.preventDefault();
+            goToConfiguracionGeneral()
+
         }
     }
 
     const [pantallaVisibleEditar, setPantallaVisibleEditar] = useState();
 
     async function goToConfiguracionGeneral () {
-        console.log('go to configuracion general');
         props.setOpenModal(false)
     };
 
@@ -150,71 +153,71 @@ export default function EditarTabla(props) {
         setPantallaVisibleEditar(
         <div>
             <CardHeader title={title} description={description } />
-                <Stack direction="row" spacing={0.5} >
-                    <TextField
-                        error={errorCuentaCrédito}
-                        id="outlined-multiline-flexible"
-                        label="Cuenta crédito"
-                        type="number"
-                        defaultValue={credittaxaccount}
-                        variant="standard"
-                        onChange={handleChangeCredittaxaccount}
+            <Stack direction="row" spacing={0.5} >
+                <TextField
+                    error={errorCuentaCrédito}
+                    id="outlined-multiline-flexible"
+                    label="Cuenta crédito"
+                    type="number"
+                    defaultValue={credittaxaccount}
+                    variant="standard"
+                    onChange={handleChangeCredittaxaccount}
+                />
+                <TextField
+                    error={errorCuentaDebito}
+                    id="outlined-multiline-flexible"
+                    label="Cuenta débito"
+                    type="number"
+                    defaultValue={props.info.debittaxaccount}
+                    variant="standard"
+                    onChange={handleChangeDebittaxaccount}
+                />
+                <TextField
+                    error={errorCuentaCreditoInteres}
+                    id="outlined-multiline-flexible"
+                    label="Cuenta crédito interés"
+                    type="number"
+                    defaultValue={props.info.credittaxaccountinterest}
+                    variant="standard"
+                    onChange={handleChangeCredittaxaccountinterest}
+                />
+                <TextField
+                    error={errorCuentaDebitoInteres}
+                    id="outlined-multiline-flexible"
+                    label="Cuenta débito interés"
+                    type="number"
+                    defaultValue={props.info.debittaxaccountinterest}
+                    variant="standard"
+                    onChange={handleChangeDebittaxaccountinterest}
+                />
+                <Col s={8} m={3}>
+                    <label className="active">Tipo de emisión</label>
+                    <Select 
+                        className="basic-single" 
+                        defaultValue={emisionesDefault} 
+                        options={emisiones} 
+                        onChange={onChangeEmision} 
                     />
-                    <TextField
-                        error={errorCuentaDebito}
-                        id="outlined-multiline-flexible"
-                        label="Cuenta débito"
-                        type="number"
-                        defaultValue={props.info.debittaxaccount}
-                        variant="standard"
-                        onChange={handleChangeDebittaxaccount}
-                    />
-                    <TextField
-                        error={errorCuentaCreditoInteres}
-                        id="outlined-multiline-flexible"
-                        label="Cuenta crédito interés"
-                        type="number"
-                        defaultValue={props.info.credittaxaccountinterest}
-                        variant="standard"
-                        onChange={handleChangeCredittaxaccountinterest}
-                    />
-                    <TextField
-                        error={errorCuentaDebitoInteres}
-                        id="outlined-multiline-flexible"
-                        label="Cuenta débito interés"
-                        type="number"
-                        defaultValue={props.info.debittaxaccountinterest}
-                        variant="standard"
-                        onChange={handleChangeDebittaxaccountinterest}
-                    />
-                    <Col s={8} m={3}>
-                        <label className="active">Tipo de emisión</label>
-                        <Select 
-                            className="basic-single" 
-                            defaultValue={emisionesDefault} 
-                            options={emisiones} 
-                            onChange={onChangeEmision} 
-                        />
-                    </Col>
-                    <TextField
-                        error={errorTipoEmisionMaestrosUnicos}
-                        id="outlined-multiline-flexible"
-                        label="Código tipo emisión Maestros Únicos"
-                        type="number"
-                        defaultValue={props.info.producttypemaestrosunicos}
-                        variant="standard"
-                        onChange={handleChangeProducttypemaestrosunicos}
-                    />
-                </Stack>
-                <Stack direction="row" spacing={0.5} >
-                    <Button node="button" small className="indigo darken-4" onClick={handleSubmit}>
-                        Guardar cambios
-                    </Button> 
-                    <br />
-                    <Button node="button" small className="indigo darken-4" onClick={goToConfiguracionGeneral} >
-                        cancelar actualizacion
-                    </Button>
-                </Stack>
+                </Col>
+                <TextField
+                    error={errorTipoEmisionMaestrosUnicos}
+                    id="outlined-multiline-flexible"
+                    label="Código tipo emisión Maestros Únicos"
+                    type="number"
+                    defaultValue={props.info.producttypemaestrosunicos}
+                    variant="standard"
+                    onChange={handleChangeProducttypemaestrosunicos}
+                />
+            </Stack>
+            <Stack direction="row" spacing={0.5} >
+                <Button node="button" small className="indigo darken-4" onClick={handleSubmit}>
+                    Guardar cambios
+                </Button> 
+                <br />
+                <Button node="button" small className="indigo darken-4" onClick={goToConfiguracionGeneral} >
+                    cancelar actualizacion
+                </Button>
+            </Stack>
         </div>)
     }, [,props]);
 
