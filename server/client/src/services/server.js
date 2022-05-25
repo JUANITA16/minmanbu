@@ -77,9 +77,9 @@ export class ServerAPI {
 
     getAllTaxAProdT = async () => {
         
-        const url = this.base_url + "/tax-a-prodt"
+        const url ="https://qc0e66ovdc-vpce-05a7cccd28148f43d.execute-api.us-east-1.amazonaws.com/dev/minmambu/api/v1/tax-a-prodt"; //this.base_url + "/tax-a-prodt"
         const config = {
-            headers: { Authorization: await getToken() },
+            headers: { Authorization: "minmambu"/*await getToken()*/  },
         }
         const res = await axios.get(url,config)
         
@@ -109,6 +109,18 @@ export class ServerAPI {
             }
         }
         const res = await axios.put(url,dataToUpdate,config)
+      
+        return res;
+    }
+
+
+    createItemConfiguracionGeneral = async (dataCreate) => {
+        const url = this.base_url + "/tax-a-prodt"
+
+        const config = {
+            headers: { Authorization:await getToken() }
+        }
+        const res = await axios.post(url,dataCreate,config)
       
         return res;
     }
