@@ -95,14 +95,14 @@ const HomoloView = function ({goBack, dbData}) {
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
                     id="numeroCuenta" value={filters.numeroCuenta}/>
-                  <label htmlFor="numeroCuenta">Número de Cuenta</label>
+                  <label htmlFor="numeroCuenta">N° de Cuenta</label>
                 </div>
               </Col>
               <Col s={12} m={6} l={4} xl={3}  >
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
                     id="numeroCosif" value={filters.numeroCosif}/>
-                  <label htmlFor="numeroCosif">Número de Cuenta cosif</label>
+                  <label htmlFor="numeroCosif" >N° de Cuenta cosif</label>
                 </div>
               </Col>
               <Col s={12} m={6} l={4} xl={3} 

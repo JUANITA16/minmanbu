@@ -91,7 +91,7 @@ function MyTable({tableData}) {
       onClose={(event) => setOpen(false)}
       >
         <div style={modalStyle}>
-          <ConfiguracionContable />
+          Editar
         </div>
     </Modal>
       <Table>

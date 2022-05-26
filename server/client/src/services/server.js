@@ -89,11 +89,9 @@ export class ServerAPI {
 
     getAllCosif = async () => {
         
-        // const url = this.base_url + "/tblCosifAccounting"
-        const url = "https://qc0e66ovdc-vpce-05a7cccd28148f43d.execute-api.us-east-1.amazonaws.com/dev/minmambu/api/v1" + "/tblCosifAccounting"
+        const url = this.base_url + "/tblCosifAccounting"
         const config = {
-            // headers: { Authorization: await getToken() }
-            headers: { Authorization: "minmambu" }
+            headers: { Authorization: await getToken() }
         }
         const res = await axios.get(url,config)
         
