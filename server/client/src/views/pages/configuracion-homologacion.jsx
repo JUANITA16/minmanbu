@@ -91,28 +91,28 @@ const HomoloView = function ({goBack, dbData}) {
           node="div"
           >
             <Row>
-              <Col s={12} m={6} l={3} xl={3}>
+              <Col s={12} m={6} l={4} xl={3}>
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
                     id="numeroCuenta" value={filters.numeroCuenta}/>
-                  <label htmlFor="numeroCuenta">Número de Cuenta</label>
+                  <label htmlFor="numeroCuenta">N° de Cuenta</label>
                 </div>
               </Col>
-              <Col s={12} m={6} l={3} xl={3}  >
+              <Col s={12} m={6} l={4} xl={3}  >
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
                     id="numeroCosif" value={filters.numeroCosif}/>
-                  <label htmlFor="numeroCosif">Número de Cuenta cosif</label>
+                  <label htmlFor="numeroCosif" >N° de Cuenta cosif</label>
                 </div>
               </Col>
-              <Col s={12} m={6} l={3} xl={3} 
+              <Col s={12} m={6} l={4} xl={3} 
                  style={{ float: 'right', marginTop: 30}} >
                 <Button node="button" small className="indigo darken-4" 
                   onClick={handleApplyFilters} disabled={filtenable} >
                   Aplicar filtros
                 </Button>
               </Col>
-              <Col s={12} m={6} l={3} xl={3}
+              <Col s={12} m={6} l={4} xl={3}
                 style={{ float: 'right', marginTop: 30, }} >
                 <Button node="button"  small className="indigo darken-4"
                   onClick={handleDeleteFilters} disabled={!filtenable}>
