@@ -11,7 +11,7 @@ const setUp = async() => {
 
     // cors
     const corsOptions = {
-        origin: '*', // Reemplazar con dominio
+        origin: process.env.URLORIGIN,
         optionsSuccessStatus: 200 
     }
     app.use(cors(corsOptions));

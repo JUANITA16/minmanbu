@@ -11,3 +11,4 @@ Proyecto=$(project)
 Rol=Compute
 Tecnologia=ECS
 UnidadNegocio=$(unidadNegocio)
+Aplicativo=$(Aplicativo)

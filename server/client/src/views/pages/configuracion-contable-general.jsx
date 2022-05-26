@@ -8,7 +8,8 @@ import ConfiguracionContable from "./configuracion-contable";
 import { toast } from 'react-toastify';
 import { ServerAPI } from "../../services/server";
 import ModalConfiguracionContableGeneral from './modal-configuracion-contable-general'
-
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
 
 const service = new ServerAPI();
 
@@ -27,14 +28,13 @@ export default function ConfiguracionContableGeneral() {
     const [loaderText] = useState('');
     const [aditional] = useState('');
     const [selecTipoEmisiones, setSelecTipoEmisiones] = useState();
-    const [showEditComponent,setShowEditComponent]=useState(false)
 
     const [infoModal,setInfoModal]=useState()
     const [emisionEditComponent,setEmisionEditComponent]=useState()
 
     const [botonNuevo,setBotonNuevo]=useState()
     const [saveModal,setSaveModal]=useState()
-
+    const [openModal, setOpenModal] = React.useState(false);
 
 
     var contentTable = []
@@ -75,7 +75,7 @@ export default function ConfiguracionContableGeneral() {
             console.log('Se habilita la función de editar')
             setInfoModal(props)
             setEmisionEditComponent(emisiones)
-            setShowEditComponent(true)
+            setOpenModal(true)
         };
 
         return (
@@ -216,7 +216,6 @@ export default function ConfiguracionContableGeneral() {
             return response;
             }
           );
-
         if (dataTable.status === 200){
             var contentAll =dataTable.data;
             if (contentAll.length > 0) {
@@ -284,12 +283,30 @@ export default function ConfiguracionContableGeneral() {
         document.title = title
     }, [saveModal,cantPaginasSelect]);
 
-
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 1000,
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        p: 4,
+      };
+    
     const renderElement = () => {
         return isGeneral ? (
             <React.Fragment>
-                {showEditComponent ? 
-                <EditarTabla emisiones ={emisionEditComponent} info = {infoModal} show={setShowEditComponent}/>:
+                <Modal
+                open={openModal}
+                onClose={() => setOpenModal(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <EditarTabla reloadTableMain={reloadTableMain} setOpenModal ={setOpenModal} emisiones ={emisionEditComponent} info = {infoModal} />
+                    </Box>
+                </Modal>
                 <div>
                     <Row>
                         <Col s={6} m={2}>
@@ -341,7 +358,6 @@ export default function ConfiguracionContableGeneral() {
                         
                     </Row>
                 </div>
-                }
             </React.Fragment>
         ):(<ConfiguracionContable/>);
     }
