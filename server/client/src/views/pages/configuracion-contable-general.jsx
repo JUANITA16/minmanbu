@@ -190,16 +190,7 @@ export default function ConfiguracionContableGeneral() {
     async function actualizarBotonNuevo(){
         setBotonNuevo(
             <ModalConfiguracionContableGeneral
-                tipoBoton={"Registrar"}
-                emisiones={emisiones} 
-                title = {"Nuevo - Configuración general"}
-                taxaccountid={""}
-                credittaxaccount={""}
-                debittaxaccount = {""}
-                credittaxaccountinterest = {""}
-                setDebittaxaccountinterest = {""}
-                producttypedescription = {"0"}
-                producttypemaestrosunicos = {""}
+                emisiones={emisiones}
                 setSave={setSaveModal}
             />);
     

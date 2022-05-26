@@ -12,16 +12,14 @@ const service = new ServerAPI();
 
 export default function ModalConfiguracionContableGeneral(props) {
 
-    const [taxaccountid, setTaxaccountid] = useState();
-    const [credittaxaccount, setCredittaxaccount] = useState();
-    const [debittaxaccount, setDebittaxaccount] = useState();
-    const [credittaxaccountinterest, setCredittaxaccountinterest] = useState();
-    const [debittaxaccountinterest, setDebittaxaccountinterest] = useState();
+    const title = "Nuevo - Configuración general"
+    const [credittaxaccount, setCredittaxaccount] = useState("");
+    const [debittaxaccount, setDebittaxaccount] = useState("");
+    const [credittaxaccountinterest, setCredittaxaccountinterest] = useState("");
+    const [debittaxaccountinterest, setDebittaxaccountinterest] = useState("");
     const [producttypedescription, setProducttypedescription] = useState('0');
-    const [producttypemaestrosunicos, setProducttypemaestrosunicos] = useState();
+    const [producttypemaestrosunicos, setProducttypemaestrosunicos] = useState("");
     
-    const [tipoBoton, setTipoBoton] = useState();
-
     const handleChangeCredittaxaccount = (event) => {
         setCredittaxaccount(event.target.value);
     }
@@ -45,7 +43,7 @@ export default function ModalConfiguracionContableGeneral(props) {
     }
     
     
-    const handleSubmit = (event) => {
+    async function handleSubmit (){
         const dataSubmit ={
             "producttypemaestrosunicos": producttypemaestrosunicos,
             "credittaxaccountinterest": credittaxaccountinterest,
@@ -54,34 +52,32 @@ export default function ModalConfiguracionContableGeneral(props) {
             "debittaxaccount": debittaxaccount,
             "producttypedescription": producttypedescription,
         }
-        if(tipoBoton==='Registrar'){
-            //Se invoca a servicio para registrar
-            const responseCreate = service.createItemConfiguracionGeneral(dataSubmit)
-            if(responseCreate.status===200){
-                toast.success("Configuración registrada correctamente.");
-            }else{
-                toast.error("Error al registrar configuración.");
+        const responseCreate = await service.createItemConfiguracionGeneral(dataSubmit).then(response => {
+            return response;
             }
+        );
+        if(responseCreate.status===200){
+            toast.success("Configuración registrada correctamente.");
         }else{
-            //Se invoca a servicio para editar
-            service.updateItemConfiguracionGeneral(dataSubmit,taxaccountid)
+            toast.error("Error al registrar configuración.");
         }
+
+        
+        setCredittaxaccount("")
+        setDebittaxaccount("")
+        setCredittaxaccountinterest("")
+        setDebittaxaccountinterest("")
+        setProducttypedescription("0")
+        setProducttypemaestrosunicos("")
         
         props.setSave(new Date());
 
     }
 
 
-    useEffect(() => {  
-        setTaxaccountid(props.taxaccountid)
-        setTipoBoton(props.tipoBoton)
-        setCredittaxaccount(props.credittaxaccount)
-        setDebittaxaccount(props.debittaxaccount)
-        setCredittaxaccountinterest(props.credittaxaccountinterest)
-        setDebittaxaccountinterest(props.setDebittaxaccountinterest)
-        setProducttypedescription(props.producttypedescription)
-        setProducttypemaestrosunicos(props.producttypemaestrosunicos)
-    }, []);
+    useEffect(() => { 
+        document.title = title
+    }, [producttypedescription]);
 
     return(
             <Modal
@@ -91,7 +87,7 @@ export default function ModalConfiguracionContableGeneral(props) {
                 ]}
                 bottomSheet={false}
                 fixedFooter={false}
-                header={props.title}
+                header={title}
                 id="Modal-1"
                 open={false}
                 options={{
@@ -113,7 +109,7 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <Row>
                             <Col s={12} m={9} >
                                 <label className="active">Tipo de emisión</label>
-                                <Select className="basic-single" defaultValue={props.producttypedescription} options={props.emisiones} onChange={onChangeEmision} />
+                                <Select className="basic-single" defaultValue={props.emisiones[0]} options={props.emisiones} onChange={onChangeEmision} />
                             </Col>
                             <Col s={12} m={3} >
                             <div className="input-field">
