@@ -7,7 +7,9 @@ import ReactPaginate from 'react-paginate';
 import ConfiguracionContable from "./configuracion-contable";
 import { toast } from 'react-toastify';
 import { ServerAPI } from "../../services/server";
-
+import ModalConfiguracionContableGeneral from './modal-configuracion-contable-general'
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
 
 const service = new ServerAPI();
 
@@ -26,10 +28,13 @@ export default function ConfiguracionContableGeneral() {
     const [loaderText] = useState('');
     const [aditional] = useState('');
     const [selecTipoEmisiones, setSelecTipoEmisiones] = useState();
-    const [showEditComponent,setShowEditComponent]=useState(false)
 
     const [infoModal,setInfoModal]=useState()
     const [emisionEditComponent,setEmisionEditComponent]=useState()
+
+    const [botonNuevo,setBotonNuevo]=useState()
+    const [saveModal,setSaveModal]=useState()
+    const [openModal, setOpenModal] = React.useState(false);
 
 
     var contentTable = []
@@ -41,7 +46,7 @@ export default function ConfiguracionContableGeneral() {
 
     const SelecTipoEmisiones = (props) => {
         return(
-            <Col s={8} m={3}>
+            <Col s={12} m={3}>
                 <label className="active">Tipo de emisión</label>
                 <Select className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
             </Col>
@@ -70,7 +75,7 @@ export default function ConfiguracionContableGeneral() {
             console.log('Se habilita la función de editar')
             setInfoModal(props)
             setEmisionEditComponent(emisiones)
-            setShowEditComponent(true)
+            setOpenModal(true)
         };
 
         return (
@@ -150,10 +155,6 @@ export default function ConfiguracionContableGeneral() {
         setIsGeneral(false);
     };
 
-    async function createConfiguration (event) {
-        console.log('Se habilita la función para crear una nueva configuración');
-    };
-
 
     const onChangeEmision = (event) => {
         setEmision(event.value);
@@ -186,7 +187,16 @@ export default function ConfiguracionContableGeneral() {
         cantPaginasSelect2 = selectValue;
     }
 
+    async function actualizarBotonNuevo(){
+        setBotonNuevo(
+            <ModalConfiguracionContableGeneral
+                emisiones={emisiones}
+                setSave={setSaveModal}
+            />);
+    
+    }
     async function reloadTableMain(cantReg, emisionReg) {
+        actualizarBotonNuevo();
         setTableRender(
             <Loading text={loaderText} aditional={aditional} />
         );
@@ -197,7 +207,6 @@ export default function ConfiguracionContableGeneral() {
             return response;
             }
           );
-
         if (dataTable.status === 200){
             var contentAll =dataTable.data;
             if (contentAll.length > 0) {
@@ -246,7 +255,8 @@ export default function ConfiguracionContableGeneral() {
                 if(emisionReg ==='0'){
                     setSelecTipoEmisiones(<SelecTipoEmisiones/>)
                 }
-
+                actualizarBotonNuevo();
+                
                 
             }else{
                 toast.error('No se encontraron registros.');
@@ -262,25 +272,41 @@ export default function ConfiguracionContableGeneral() {
     useEffect(() => {
         reloadTableMain(cantPaginasSelect,emision);
         document.title = title
-    }, [,cantPaginasSelect]);
+    }, [saveModal,cantPaginasSelect]);
 
-
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 1000,
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        p: 4,
+      };
+    
     const renderElement = () => {
         return isGeneral ? (
             <React.Fragment>
-                {showEditComponent ? 
-                <EditarTabla emisiones ={emisionEditComponent} info = {infoModal} show={setShowEditComponent}/>:
+                <Modal
+                open={openModal}
+                onClose={() => setOpenModal(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <EditarTabla reloadTableMain={reloadTableMain} setOpenModal ={setOpenModal} emisiones ={emisionEditComponent} info = {infoModal} />
+                    </Box>
+                </Modal>
                 <div>
                     <Row>
-                        <Col s={2} m={2}>
+                        <Col s={6} m={2}>
                             <Button node="button" small className="indigo darken-4" onClick={goToBack}>
                                 Retroceder
                             </Button>
                         </Col>
-                        <Col s={2} m={2}>
-                            <Button node="button" small className="indigo darken-4" onClick={createConfiguration}>
-                                Nuevo
-                            </Button>
+                        <Col s={6} m={2}>
+                            {botonNuevo}
                         </Col>
                     </Row>
                     <CardHeader title={title} description={description} />
@@ -309,18 +335,20 @@ export default function ConfiguracionContableGeneral() {
                         </Collapsible>
                     </Row>
                     <Row>
-                        <Col s={2} m={2}>
+                        <Col s={12} m={2}>
                             <label className="active">Cantidad de registros</label>
                             <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginasGeneral} />
                         </Col>
-                        <Table >
-                            {tableHeader}
-                            {tableRender}
-                        </Table>
-                        {paginationFooter}
+                        <Col s={6} m={12}>
+                            <Table>
+                                {tableHeader}
+                                {tableRender}
+                            </Table>
+                            {paginationFooter}
+                        </Col>
+                        
                     </Row>
                 </div>
-                }
             </React.Fragment>
         ):(<ConfiguracionContable/>);
     }

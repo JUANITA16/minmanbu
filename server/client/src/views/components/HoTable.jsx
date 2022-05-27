@@ -1,8 +1,9 @@
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Modal } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { Button, Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
 import Select from 'react-select'
+import ConfiguracionContable from "../pages/configuracion-contable";
 
 function MyTable({tableData}) {
   
@@ -11,6 +12,8 @@ function MyTable({tableData}) {
   const [totalPages, settotalPages] = useState(1);
   const [isloading, setIsloading] = useState(true);
   const [tableBody, setTableBody] = useState([])
+  const [open, setOpen] = useState(false)
+
 
   const totalResults = [
     { value: 5, label: '5' },
@@ -25,6 +28,7 @@ function MyTable({tableData}) {
   };
   
   const handleEdit = function (event){
+    setOpen(true)
     console.log("Edit element")
   };
 
@@ -34,6 +38,14 @@ function MyTable({tableData}) {
     } else {
       return <p></p>
     }
+  };
+
+  const modalStyle = {
+    backgroundColor: 'white',
+    border: '2px solid #000',
+    boxShadow: 24,
+    top: '50%',
+    left: '50%'
   }
 
   useEffect(function () {
@@ -75,6 +87,13 @@ function MyTable({tableData}) {
      </Row>
     {/* Table generation */}
     <div>
+    <Modal open={open}
+      onClose={(event) => setOpen(false)}
+      >
+        <div style={modalStyle}>
+          Editar
+        </div>
+    </Modal>
       <Table>
         <thead>
           <tr>

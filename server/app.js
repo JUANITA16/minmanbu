@@ -11,7 +11,7 @@ const setUp = async() => {
 
     // cors
     const corsOptions = {
-        origin: '*', // Reemplazar con dominio
+        origin: process.env.URLORIGIN,
         optionsSuccessStatus: 200 
     }
     app.use(cors(corsOptions));
@@ -66,6 +66,8 @@ const setUp = async() => {
     const taxAprodTRoute = require('./routes/tax-a-prodt');
     const taxAprodTPutRoute = require('./routes/tax-a-prodt-put');
     const cosifRoute = require('./routes/cosif');
+    const taxAprodTPostRoute = require('./routes/tax-a-prodt-post');
+
 
 
     // - To call backapp.use( process.env.SERVER_BASE_PATH,
@@ -108,6 +110,12 @@ const setUp = async() => {
         taxAprodTPutRoute
     );
 
+    app.use( process.env.SERVER_BASE_PATH,
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        taxAprodTPostRoute
+    );
+    
     /* CLIENT SIDE ################################################################## */
     // Pick up static files of React
     app.use( process.env.CLIENT_BASE_PATH, express.static(path.join(__dirname, "./client/build")));
