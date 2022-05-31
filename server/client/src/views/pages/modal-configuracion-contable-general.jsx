@@ -190,7 +190,6 @@ export default function ModalConfiguracionContableGeneral(props) {
 
     
     useEffect(() => {
-        console.log('useEffect-modal-nuevo')
         setSelecTipoEmisiones2(<Select className="basic-single" styles={styleTipoEmision} defaultValue={props.emisiones[0]} options={props.emisiones} onChange={onChangeEmision} />)
         document.title = title
     }, [submitSucess,styleTipoEmision]);
@@ -211,18 +210,13 @@ export default function ModalConfiguracionContableGeneral(props) {
                     endingTop: '20%',
                     inDuration: 250,
                     onCloseEnd: function onCloseEnd(){
-                        
-                        console.log('se cambia styleTipoEmision')
                         setStyleTipoEmision('');
                     },
                     onCloseStart: function onCloseStart(){
-                        console.log('funcion on close start')
                         setSelecTipoEmisiones2('');
                         if(submitSucess==true){
-                            console.log('submitSucess true cambiado a false')
                             setSubmitSucess(false);
                         }else{
-                            console.log('submitSucess false cambiado a true')
                             setSubmitSucess(true);
                         }
                         setStyleTipoEmision('close');
