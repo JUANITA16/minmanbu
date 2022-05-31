@@ -80,27 +80,27 @@ export default function EditarTabla(props) {
 
     async function handleSubmit() {
 
-        if (credittaxaccount==="") {
+        if (credittaxaccount===""&&!errorCuentaCrédito) {
             setOpenModalNotificacion(true)
             setErrorCuentaCrédito(true)
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setSeverity('error')
             setOpen(true)
-          } else if (debittaxaccount==="") {
+          } else if (debittaxaccount===""&&!errorCuentaDebito) {
             setOpenModalNotificacion(true)
             setErrorCuentaDebito(true)
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
             setSeverity('error')
           }
-          else if (credittaxaccountinterest==="") {
+          else if (credittaxaccountinterest===""&&!errorCuentaCreditoInteres) {
             setOpenModalNotificacion(true)
             setErrorCuentaCreditoInteres(true)
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
             setOpen(true)
             setSeverity('error')
           }
-          else if (debittaxaccountinterest==="") {
+          else if (debittaxaccountinterest===""&&!errorCuentaDebitoInteres) {
             setOpenModalNotificacion(true)
             setErrorCuentaDebitoInteres(true)
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
@@ -113,7 +113,7 @@ export default function EditarTabla(props) {
             setOpen(true)
             setSeverity('error')
           }
-          else if (producttypemaestrosunicos==="") {
+          else if (producttypemaestrosunicos===""&&!errorCuentaDebitoInteres) {
             setOpenModalNotificacion(true)
             setErrorTipoEmisionMaestrosUnicos(true)
             setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
