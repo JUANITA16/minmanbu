@@ -193,8 +193,8 @@ export default function ConfiguracionContableGeneral() {
                 emisiones={emisiones}
                 setSave={setSaveModal}
             />);
-    
     }
+
     async function reloadTableMain(cantReg, emisionReg) {
         actualizarBotonNuevo();
         setTableRender(
