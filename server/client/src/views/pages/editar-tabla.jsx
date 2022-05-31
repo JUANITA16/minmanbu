@@ -33,9 +33,6 @@ export default function EditarTabla(props) {
 
     const [emisiones, setEmisiones] = React.useState();
 
-
-    
-    var taxaccountid=""
     const [credittaxaccount, setCredittaxaccount] = React.useState("");
     const [debittaxaccount, setDebittaxaccount] = React.useState("");
     const [credittaxaccountinterest, setCredittaxaccountinterest] = React.useState("");
@@ -129,8 +126,7 @@ export default function EditarTabla(props) {
                 "debittaxaccount": debittaxaccount,
                 "producttypedescription": producttypedescription,
             }
-            console.log(dataToUpdate)
-            const mensajeRespuesta =  await service.updateItemConfiguracionGeneral(dataToUpdate,taxaccountid).then(response => {
+            const mensajeRespuesta =  await service.updateItemConfiguracionGeneral(dataToUpdate,props.info.taxaccountid).then(response => {
                 return response;
                 }
             );
@@ -160,7 +156,6 @@ export default function EditarTabla(props) {
 
 
     useEffect(() => {
-        taxaccountid=props.info.taxaccountid
         props.emisiones.shift()
         setEmisiones(props.emisiones)
     }, [,props]);
