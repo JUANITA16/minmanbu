@@ -160,6 +160,7 @@ export default function EditarTabla(props) {
 
 
     useEffect(() => {
+        taxaccountid=props.info.taxaccountid
         props.emisiones.shift()
         setEmisiones(props.emisiones)
     }, [,props]);
