@@ -36,12 +36,13 @@ export default function EditarTabla(props) {
 
     
     var taxaccountid=""
-    var credittaxaccount=""
-    var debittaxaccount=""
-    var credittaxaccountinterest=""
-    var debittaxaccountinterest=""
-    var producttypedescription=""
-    var producttypemaestrosunicos=""
+    const [credittaxaccount, setCredittaxaccount] = React.useState("");
+    const [debittaxaccount, setDebittaxaccount] = React.useState("");
+    const [credittaxaccountinterest, setCredittaxaccountinterest] = React.useState("");
+    const [debittaxaccountinterest, setDebittaxaccountinterest] = React.useState("");
+    const [producttypedescription, setProducttypedescription] = React.useState("");
+    const [producttypemaestrosunicos, setProducttypemaestrosunicos] = React.useState("");
+
 
     function validateNumber(e) {
         const pattern = /^[0-9]{1,}$/;
@@ -49,40 +50,36 @@ export default function EditarTabla(props) {
     }
 
     const handleChangeCredittaxaccount = (event) =>{
-        console.log(event.target.value)
-        credittaxaccount=event.target.value
-        console.log(credittaxaccount)
+        setCredittaxaccount(event.target.value)
         setErrorCuentaCrédito(!validateNumber(credittaxaccount));
     }
 
     const handleChangeDebittaxaccount= (event) =>{
-        debittaxaccount=event.target.value
+        setDebittaxaccount(event.target.value)
         setErrorCuentaDebito(!validateNumber(debittaxaccount));
     }
 
     const handleChangeCredittaxaccountinterest = (event) =>{
-        credittaxaccountinterest=event.target.value
+        setCredittaxaccountinterest(event.target.value)
         setErrorCuentaCreditoInteres(!validateNumber(credittaxaccountinterest));
     }
 
     const handleChangeDebittaxaccountinterest = (event) =>{
-        debittaxaccountinterest=event.target.value
+        setDebittaxaccountinterest(event.target.value)
         setErrorCuentaDebitoInteres(!validateNumber(debittaxaccountinterest));
     }
 
     const handleChangeProducttypemaestrosunicos = (event) =>{
-        producttypemaestrosunicos=event.target.value
+        setProducttypemaestrosunicos(event.target.value)
         setErrorTipoEmisionMaestrosUnicos(!validateNumber(producttypemaestrosunicos));
+    }
+
+    const onChangeEmision = (event) => {
+        setProducttypedescription(event.target.value)
     }
 
     async function handleSubmit() {
 
-        console.log(credittaxaccount)
-        console.log(debittaxaccount)
-        console.log(credittaxaccountinterest)
-        console.log(debittaxaccountinterest)
-        console.log(producttypedescription)
-        console.log(producttypemaestrosunicos)
         if (credittaxaccount==="") {
             setOpenModalNotificacion(true)
             setErrorCuentaCrédito(true)
@@ -161,9 +158,6 @@ export default function EditarTabla(props) {
         setOpenModalNotificacion(false)
       };
 
-    const onChangeEmision = (event) => {
-        producttypedescription=event.target.value
-    }
 
     useEffect(() => {
         props.emisiones.shift()
@@ -187,6 +181,7 @@ export default function EditarTabla(props) {
                     <input className={`${errorCuentaCrédito? 'invalid':''}`}
                     onChange={handleChangeCredittaxaccount}
                     placeholder={props.info.credittaxaccount}
+                    type="number"
                     />
                 </div>
                 <div className="input-field-2">
@@ -194,6 +189,7 @@ export default function EditarTabla(props) {
                     <input className={`${errorCuentaDebito? 'invalid':''}`}
                     onChange={handleChangeDebittaxaccount}
                     placeholder={props.info.debittaxaccount}
+                    type="number"
                     />
                 </div>
                 <div className="input-field-2">
@@ -201,6 +197,7 @@ export default function EditarTabla(props) {
                     <input className={`${errorCuentaCreditoInteres? 'invalid':''}`}
                     onChange={handleChangeCredittaxaccountinterest}
                     placeholder={props.info.credittaxaccountinterest}
+                    type="number"
                     />
                 </div>
                 <div className="input-field-2">
@@ -208,6 +205,7 @@ export default function EditarTabla(props) {
                     <input className={`${errorCuentaDebitoInteres? 'invalid':''}`}
                     onChange={handleChangeDebittaxaccountinterest}
                     placeholder={props.info.debittaxaccountinterest}
+                    type="number"
                     />
                 </div>
                 <Col s={10} m={3}>
@@ -230,6 +228,7 @@ export default function EditarTabla(props) {
                     <input className={`${errorTipoEmisionMaestrosUnicos? 'invalid':''}`}
                     onChange={handleChangeProducttypemaestrosunicos}
                     placeholder={props.info.producttypemaestrosunicos}
+                    type="number"
                     />
                 </div>
             </Stack>
