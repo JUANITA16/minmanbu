@@ -54,12 +54,18 @@ export default function ModalConfiguracionContableGeneral(props) {
         }
         })
     };
+
+    function validateNumber(e) {
+        const pattern = /^[0-9]{1,}$/;
+    
+        return pattern.test(e)
+    }
     
     const handleChangeCredittaxaccount = (event) => {
         setIsOpenModal(true);
         const creditAccount = event.target.value;
         setCredittaxaccount(creditAccount);
-        if(creditAccount==''){
+        if(!validateNumber(creditAccount)){
             setCredittaxaccountValid(false);
         }else{
             setCredittaxaccountValid(true);
@@ -69,7 +75,7 @@ export default function ModalConfiguracionContableGeneral(props) {
     const handleChangeDebittaxaccount = (event) => {
         const debitAccount = event.target.value; 
         setDebittaxaccount(debitAccount);
-        if(debitAccount==''){
+        if(!validateNumber(debitAccount)){
             setDebittaxaccountValid(false);
         }else{
             setDebittaxaccountValid(true);
@@ -78,7 +84,7 @@ export default function ModalConfiguracionContableGeneral(props) {
     const handleChangeCredittaxaccountinterest = (event) => {
         const creditInterest = event.target.value;
         setCredittaxaccountinterest(creditInterest);
-        if(creditInterest==''){
+        if(!validateNumber(creditInterest)){
             setCredittaxaccountinterestValid(false);
         }else{
             setCredittaxaccountinterestValid(true);
@@ -87,7 +93,7 @@ export default function ModalConfiguracionContableGeneral(props) {
     const handleChangeDebittaxaccountinterest = (event) => {
         const debitInterest = event.target.value;
         setDebittaxaccountinterest(debitInterest);
-        if(debitInterest==''){
+        if(!validateNumber(debitInterest)){
             setDebittaxaccountinterestValid(false);
         }else{
             setDebittaxaccountinterestValid(true);
@@ -97,7 +103,7 @@ export default function ModalConfiguracionContableGeneral(props) {
     const handleChangeProducttypemaestrosunicos = (event) => {
         const productMaestrosUnicos = event.target.value; 
         setProducttypemaestrosunicos(productMaestrosUnicos);
-        if(productMaestrosUnicos==''){
+        if(!validateNumber(productMaestrosUnicos)){
             setProducttypemaestrosunicosValid(false);
         }else{
             setProducttypemaestrosunicosValid(true); 
@@ -125,30 +131,29 @@ export default function ModalConfiguracionContableGeneral(props) {
       };
 
     function msjError(){
-        setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
+        setMensajeWarning('Ingresar los datos correctamente.')
         setSeverity('error')
         setOpen(true)
     }
     
     async function handleSubmit (){
-
         if(producttypedescription == '0'){
             setProducttypedescriptionValid(false);
             setStyleTipoEmision(styletipoEmisionError);
             msjError();
-        }else if(producttypemaestrosunicos==''){
+        }else if(!validateNumber(producttypemaestrosunicos)){
             setProducttypemaestrosunicosValid(false);
             msjError();
-        }else if(credittaxaccount == ''){
+        }else if(!validateNumber(credittaxaccount)){
             setCredittaxaccountValid(false);
             msjError();
-        }else if(debittaxaccount==''){
+        }else if(!validateNumber(debittaxaccount)){
             setDebittaxaccountValid(false);
             msjError();
-        }else if( credittaxaccountinterest==''){
+        }else if(!validateNumber(credittaxaccountinterest)){
             setCredittaxaccountinterestValid(false);
             msjError();
-        }else if(debittaxaccountinterest==''){
+        }else if(!validateNumber(debittaxaccountinterest)){
             setDebittaxaccountinterestValid(false);
             msjError();
         }else{
