@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { CardHeader , Loading} from "../components/index";
-import EditarTabla from "../pages/editar-tabla";
+import ModalConfiguracionContableGeneral from "./modal-configuracion-contable-general";
 import { Row, Col, Button, Collapsible, CollapsibleItem, Icon, Table } from 'react-materialize'
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
 import ConfiguracionContable from "./configuracion-contable";
 import { toast } from 'react-toastify';
 import { ServerAPI } from "../../services/server";
-import ModalConfiguracionContableGeneral from './modal-configuracion-contable-general'
+// import ModalConfiguracionContableGeneral from './modal-configuracion-contable-general'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
@@ -32,9 +32,12 @@ export default function ConfiguracionContableGeneral() {
     const [infoModal,setInfoModal]=useState()
     const [emisionEditComponent,setEmisionEditComponent]=useState()
 
-    const [botonNuevo,setBotonNuevo]=useState()
-    const [saveModal,setSaveModal]=useState()
+    // const [botonNuevo,setBotonNuevo]=useState()
+    // const [saveModal,setSaveModal]=useState()
     const [openModal, setOpenModal] = React.useState(false);
+
+    const [titleModal, setTitleModal]=useState('')
+    const [descriptionModal, setDescriptionModal] = useState('')
 
 
     var contentTable = []
@@ -69,12 +72,32 @@ export default function ConfiguracionContableGeneral() {
         )
     };
 
+    async function goToNuevo() {
+        console.log('Se habilita la función de nuevo')
+        const infoModal = {
+            taxaccountid : '',
+            credittaxaccount : '',
+            debittaxaccount : '',
+            credittaxaccountinterest : '',
+            debittaxaccountinterest : '',
+            producttypedescription : '0',
+            producttypemaestrosunicos : ''
+        }
+        setTitleModal('Nuevo - Configuración general')
+        setDescriptionModal('En esta sección podrá realizar la creación de un nuevo registro Configuración general')
+        setInfoModal(infoModal)
+        //setEmisionEditComponent(emisiones)
+        setOpenModal(true)
+    };
+
     const TableBody = (props) => {
 
         async function goToEditarAux(event) {
             console.log('Se habilita la función de editar')
+            setTitleModal('Editar - Configuración general')
+            setDescriptionModal('En esta sección podrá realizar la edicion de los registros Configuración general')
             setInfoModal(props)
-            setEmisionEditComponent(emisiones)
+            //setEmisionEditComponent(emisiones)
             setOpenModal(true)
         };
 
@@ -187,16 +210,16 @@ export default function ConfiguracionContableGeneral() {
         cantPaginasSelect2 = selectValue;
     }
 
-    async function actualizarBotonNuevo(){
-        setBotonNuevo(
-            <ModalConfiguracionContableGeneral
-                emisiones={emisiones}
-                setSave={setSaveModal}
-            />);
-    }
+    // async function actualizarBotonNuevo(){
+    //     setBotonNuevo(
+    //         <ModalConfiguracionContableGeneral
+    //             emisiones={emisiones}
+    //             setSave={setSaveModal}
+    //         />);
+    // }
 
     async function reloadTableMain(cantReg, emisionReg) {
-        actualizarBotonNuevo();
+        // actualizarBotonNuevo();
         setTableRender(
             <Loading text={loaderText} aditional={aditional} />
         );
@@ -255,9 +278,8 @@ export default function ConfiguracionContableGeneral() {
                 if(emisionReg ==='0'){
                     setSelecTipoEmisiones(<SelecTipoEmisiones/>)
                 }
-                actualizarBotonNuevo();
-                
-                
+                // actualizarBotonNuevo();
+                setEmisionEditComponent(emisiones)
             }else{
                 toast.error('No se encontraron registros.');
                 setTableRender(null);
@@ -272,7 +294,7 @@ export default function ConfiguracionContableGeneral() {
     useEffect(() => {
         reloadTableMain(cantPaginasSelect,emision);
         document.title = title
-    }, [saveModal,cantPaginasSelect]);
+    }, [/*saveModal,*/cantPaginasSelect]);
 
     const style = {
         position: 'absolute',
@@ -295,7 +317,13 @@ export default function ConfiguracionContableGeneral() {
                 aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
-                        <EditarTabla reloadTableMain={reloadTableMain} setOpenModal ={setOpenModal} emisiones ={emisionEditComponent} info = {infoModal} />
+                        <ModalConfiguracionContableGeneral
+                            title={titleModal} 
+                            description={descriptionModal} 
+                            reloadTableMain={reloadTableMain}
+                            setOpenModal ={setOpenModal} 
+                            emisiones ={emisionEditComponent} 
+                            info = {infoModal} />
                     </Box>
                 </Modal>
                 <div>
@@ -306,7 +334,10 @@ export default function ConfiguracionContableGeneral() {
                             </Button>
                         </Col>
                         <Col s={6} m={2}>
-                            {botonNuevo}
+                        <Button node="button" onClick={goToNuevo} small className="indigo darken-4">
+                            Nuevo
+                        </Button>
+                            {/* {botonNuevo} */}
                         </Col>
                     </Row>
                     <CardHeader title={title} description={description} />
