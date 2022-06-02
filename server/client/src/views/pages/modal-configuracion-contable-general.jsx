@@ -50,7 +50,6 @@ export default function ModalConfiguracionContableGeneral(props) {
     }
 
     const handleChangeCredittaxaccount = (event) =>{
-        console.log('creditAccountConst: '+event.target.value)
         const creditAccountConst = event.target.value;
         setCredittaxaccount(creditAccountConst)
         setCredittaxaccountValid(validateNumber(creditAccountConst));
@@ -102,7 +101,6 @@ export default function ModalConfiguracionContableGeneral(props) {
     }
 
     async function handleSubmit() {
-        console.log(credittaxaccount)
         if (!validateNumber(credittaxaccount)){
             setCredittaxaccountValid(false);
             msjError(credittaxaccount==="");
@@ -170,6 +168,7 @@ export default function ModalConfiguracionContableGeneral(props) {
 
 
     useEffect(() => {
+        setProducttypedescription(props.info.producttypedescription)
         setTipoProceso(props.tipoProceso)
         setEmisiones(props.emisiones)
     }, [,props]);
@@ -230,6 +229,7 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <label  className={`${producttypedescriptionError? 'txt-red':''}`} >Tipo de emisión</label>
                     <FormControl variant="standard" error={producttypedescriptionError} sx={{ m: 1, minWidth: 200 , maxWidth: 200}}>
                         <Select
+                            defaultValue={props.info.producttypedescription}
                             onChange={onChangeEmision}
                             sx={{fontSize: 16, border: 'red 5px none'}}
                             >

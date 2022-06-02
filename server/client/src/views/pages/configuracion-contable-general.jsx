@@ -29,7 +29,7 @@ export default function ConfiguracionContableGeneral() {
     const [selecTipoEmisiones, setSelecTipoEmisiones] = useState();
 
     const [infoModal,setInfoModal]=useState()
-    const [emisionEditComponent,setEmisionEditComponent]=useState()
+    const [emisionEditComponent,setEmisionEditComponent]=useState([])
 
     const [openModal, setOpenModal] = React.useState(false);
 
@@ -70,14 +70,13 @@ export default function ConfiguracionContableGeneral() {
     };
 
     async function goToNuevo() {
-        console.log('Se habilita la función de nuevo')
         const infoModal = {
             taxaccountid : '',
             credittaxaccount : '',
             debittaxaccount : '',
             credittaxaccountinterest : '',
             debittaxaccountinterest : '',
-            producttypedescription : '0',
+            producttypedescription : '',
             producttypemaestrosunicos : ''
         }
         setTitleModal('Nuevo - Configuración general')
@@ -90,7 +89,6 @@ export default function ConfiguracionContableGeneral() {
     const TableBody = (props) => {
 
         async function goToEditarAux(event) {
-            console.log('Se habilita la función de editar')
             setTitleModal('Editar - Configuración general')
             setDescriptionModal('En esta sección podrá realizar la edicion de los registros Configuración general')
             setInfoModal(props)
