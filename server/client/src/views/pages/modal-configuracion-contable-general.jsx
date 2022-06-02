@@ -1,9 +1,7 @@
-import React, {useEffect } from "react";
-import { CardHeader } from "../components/index";
-import { Button } from 'react-materialize'
+import React, {useState,useEffect } from "react";
+import { Button,Row, Col, Divider } from 'react-materialize'
 import { ServerAPI } from "../../services/server";
 import Stack from '@mui/material/Stack';
-import { Col } from 'react-materialize'
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import FormControl from '@mui/material/FormControl';
@@ -12,30 +10,38 @@ import Select from '@mui/material/Select';
 import { toast } from 'react-toastify';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+
+
 const service = new ServerAPI();
 
 export default function ModalConfiguracionContableGeneral(props) {
 
-    const [open, setOpen] = React.useState(false);
-    const [mensajeWarning, setMensajeWarning] = React.useState('');
-    const [severity, setSeverity] = React.useState('info');
-    const [openModalNotificacion, setOpenModalNotificacion] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [mensajeWarning, setMensajeWarning] = useState('');
+    const [severity, setSeverity] = useState('info');
+    const [openModalNotificacion, setOpenModalNotificacion] = useState(false);
 
-    const [errorCuentaCrédito, setErrorCuentaCrédito] = React.useState(false);
-    const [errorCuentaDebito, setErrorCuentaDebito] = React.useState(false);
-    const [errorCuentaCreditoInteres, setErrorCuentaCreditoInteres] = React.useState(false);
-    const [errorCuentaDebitoInteres, setErrorCuentaDebitoInteres] = React.useState(false);
-    const [errorTipoEmisionMaestrosUnicos, setErrorTipoEmisionMaestrosUnicos] = React.useState(false);
+    const [emisiones, setEmisiones] = useState();
+
+    const [credittaxaccount, setCredittaxaccount] = useState("");
+    const [credittaxaccountValid, setCredittaxaccountValid] = useState(true);
+
+    const [debittaxaccount, setDebittaxaccount] = useState("");
+    const [debittaxaccountValid, setDebittaxaccountValid] = useState(true);
     
+    const [credittaxaccountinterest, setCredittaxaccountinterest] = useState("");
+    const [credittaxaccountinterestValid, setCredittaxaccountinterestValid] = useState(true);
 
-    const [emisiones, setEmisiones] = React.useState();
+    const [debittaxaccountinterest, setDebittaxaccountinterest] = useState("");
+    const [debittaxaccountinterestValid, setDebittaxaccountinterestValid] = useState(true);
+    
+    const [producttypedescription, setProducttypedescription] = useState("");
+    const [producttypedescriptionError, setProducttypedescriptionError] = useState(false);
+    
+    const [producttypemaestrosunicos, setProducttypemaestrosunicos] = useState("");
+    const [producttypemaestrosunicosValid, setProducttypemaestrosunicosValid] = useState(true);
 
-    const [credittaxaccount, setCredittaxaccount] = React.useState("");
-    const [debittaxaccount, setDebittaxaccount] = React.useState("");
-    const [credittaxaccountinterest, setCredittaxaccountinterest] = React.useState("");
-    const [debittaxaccountinterest, setDebittaxaccountinterest] = React.useState("");
-    const [producttypedescription, setProducttypedescription] = React.useState("");
-    const [producttypemaestrosunicos, setProducttypemaestrosunicos] = React.useState("");
+    const [tipoProceso, setTipoProceso] = useState('');
 
 
     function validateNumber(e) {
@@ -44,78 +50,80 @@ export default function ModalConfiguracionContableGeneral(props) {
     }
 
     const handleChangeCredittaxaccount = (event) =>{
-        setCredittaxaccount(event.target.value)
-        setErrorCuentaCrédito(!validateNumber(credittaxaccount));
+        console.log('creditAccountConst: '+event.target.value)
+        const creditAccountConst = event.target.value;
+        setCredittaxaccount(creditAccountConst)
+        setCredittaxaccountValid(validateNumber(creditAccountConst));
     }
 
     const handleChangeDebittaxaccount= (event) =>{
-        setDebittaxaccount(event.target.value)
-        setErrorCuentaDebito(!validateNumber(debittaxaccount));
+        const debitAccountConst = event.target.value;  
+        setDebittaxaccount(debitAccountConst)
+        setDebittaxaccountValid(validateNumber(debitAccountConst))
     }
 
     const handleChangeCredittaxaccountinterest = (event) =>{
-        setCredittaxaccountinterest(event.target.value)
-        setErrorCuentaCreditoInteres(!validateNumber(credittaxaccountinterest));
+        const creditInterest = event.target.value; 
+        setCredittaxaccountinterest(creditInterest)
+        setCredittaxaccountinterestValid(validateNumber(creditInterest));
     }
 
     const handleChangeDebittaxaccountinterest = (event) =>{
-        setDebittaxaccountinterest(event.target.value)
-        setErrorCuentaDebitoInteres(!validateNumber(debittaxaccountinterest));
+        const debitInterest = event.target.value;
+        setDebittaxaccountinterest(debitInterest)
+        setDebittaxaccountinterestValid(validateNumber(debitInterest))
     }
 
     const handleChangeProducttypemaestrosunicos = (event) =>{
-        setProducttypemaestrosunicos(event.target.value)
-        setErrorTipoEmisionMaestrosUnicos(!validateNumber(producttypemaestrosunicos));
+        const productMaestrosUnicos = event.target.value; 
+        setProducttypemaestrosunicos(productMaestrosUnicos)
+        setProducttypemaestrosunicosValid(validateNumber(productMaestrosUnicos))
     }
 
     const onChangeEmision = (event) => {
-        setProducttypedescription(event.target.value)
+        const productDescription = event.value;
+        setProducttypedescription(productDescription)
+        if(productDescription===""){
+            setProducttypedescriptionError(true);
+        }else{
+            setProducttypedescriptionError(false);
+        }
+    }
+
+    function msjError(msjTipo){
+        setOpenModalNotificacion(true);
+        if(msjTipo){
+            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
+        }else{
+            setMensajeWarning('Ingresar solo datos numericos.') 
+        }
+        setSeverity('error')
+        setOpen(true)
     }
 
     async function handleSubmit() {
+        console.log(credittaxaccount)
+        if (!validateNumber(credittaxaccount)){
+            setCredittaxaccountValid(false);
+            msjError(credittaxaccount==="");
+        }else if(!validateNumber(debittaxaccount)){
+            setDebittaxaccountValid(false)
+            msjError(debittaxaccount==="");
+        }else if(!validateNumber(credittaxaccountinterest)){
+            setCredittaxaccountinterestValid(false);
+            msjError(credittaxaccountinterest==="")
+        }else if(!validateNumber(debittaxaccountinterest)){
+            setDebittaxaccountinterestValid(false);
+            msjError(debittaxaccountinterest==="")
+        }else if(producttypedescription===""){
+            setProducttypedescriptionError(true)
+            msjError(true);
+        }else if(!validateNumber(producttypemaestrosunicos)){
+            setProducttypemaestrosunicosValid(false);
+            msjError(producttypemaestrosunicos==="");
+        }else {
 
-        if (credittaxaccount===""&&!errorCuentaCrédito) {
-            setOpenModalNotificacion(true)
-            setErrorCuentaCrédito(true)
-            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
-            setSeverity('error')
-            setOpen(true)
-          } else if (debittaxaccount===""&&!errorCuentaDebito) {
-            setOpenModalNotificacion(true)
-            setErrorCuentaDebito(true)
-            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
-            setOpen(true)
-            setSeverity('error')
-          }
-          else if (credittaxaccountinterest===""&&!errorCuentaCreditoInteres) {
-            setOpenModalNotificacion(true)
-            setErrorCuentaCreditoInteres(true)
-            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
-            setOpen(true)
-            setSeverity('error')
-          }
-          else if (debittaxaccountinterest===""&&!errorCuentaDebitoInteres) {
-            setOpenModalNotificacion(true)
-            setErrorCuentaDebitoInteres(true)
-            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
-            setOpen(true)
-            setSeverity('error')
-          }
-          else if (producttypedescription==="") {
-            setOpenModalNotificacion(true)
-            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
-            setOpen(true)
-            setSeverity('error')
-          }
-          else if (producttypemaestrosunicos===""&&!errorCuentaDebitoInteres) {
-            setOpenModalNotificacion(true)
-            setErrorTipoEmisionMaestrosUnicos(true)
-            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
-            setOpen(true)
-            setSeverity('error')
-          }else {
-
-            const dataToUpdate ={
+            const dataSubmit ={
                 "producttypemaestrosunicos": producttypemaestrosunicos,
                 "credittaxaccountinterest": credittaxaccountinterest,
                 "credittaxaccount": credittaxaccount,
@@ -123,19 +131,28 @@ export default function ModalConfiguracionContableGeneral(props) {
                 "debittaxaccount": debittaxaccount,
                 "producttypedescription": producttypedescription,
             }
-            const mensajeRespuesta =  await service.updateItemConfiguracionGeneral(dataToUpdate,props.info.taxaccountid).then(response => {
-                return response;
+            if(tipoProceso==='Nuevo'){
+                const responseCreate = await service.createItemConfiguracionGeneral(dataSubmit).then(response => {
+                    return response;
+                    });
+                if(responseCreate.status===200){
+                    toast.success("Configuración registrada correctamente.");
+                }else{
+                    toast.error("Error al registrar configuración.");
                 }
-            );
-            if (mensajeRespuesta.status === 200){
-                toast.success("Datos actualizados");
-            }else{
-                toast.error("Datos no actualizados");
+            }else if(tipoProceso==='Editar'){
+                const mensajeRespuesta =  await service.updateItemConfiguracionGeneral(dataSubmit,props.info.taxaccountid).then(response => {
+                    return response;
+                    }
+                );
+                if (mensajeRespuesta.status === 200){
+                    toast.success("Configuración actualizada correctamente.");
+                }else{
+                    toast.error("Error al actualizar configuración.");
+                }
             }
-
-            props.reloadTableMain("10","0")
+            props.reloadTableMain(props.cantPaginas,"0")
             goToConfiguracionGeneral()
-
         }
     }
 
@@ -153,7 +170,7 @@ export default function ModalConfiguracionContableGeneral(props) {
 
 
     useEffect(() => {
-        props.emisiones.shift()
+        setTipoProceso(props.tipoProceso)
         setEmisiones(props.emisiones)
     }, [,props]);
 
@@ -167,44 +184,51 @@ export default function ModalConfiguracionContableGeneral(props) {
 
     return (
         <React.Fragment>
-            <CardHeader title={props.title} description={props.description } />
+            <Row>
+                <Col s={12}>
+                    <h4 className='card-title indigo-text'>{props.title}</h4>
+                    <Divider></Divider>
+                    <div>
+                        <p className="grey-text text-darken-2">{props.description}</p>
+                    </div>
+                </Col>
+            </Row>
             <Stack direction="row" spacing={0.5} >
                 <div className="input-field-2">
-                    <label className={`${errorCuentaCrédito ? 'txt-red':''}`}>Cuenta crédito</label>
-                    <input className={`${errorCuentaCrédito? 'invalid':'valid'}`}
+                    <label className={`${credittaxaccountValid? '':'txt-red'}`}>Cuenta crédito</label>
+                    <input className={`${credittaxaccountValid? 'valid':'invalid'}`} 
                     onChange={handleChangeCredittaxaccount}
                     placeholder={props.info.credittaxaccount}
-                    type="number"
+                    type="text"
                     />
                 </div>
                 <div className="input-field-2">
-                    <label className={`${errorCuentaDebito ? 'txt-red':''}`}>Cuenta débito</label>
-                    <input className={`${errorCuentaDebito? 'invalid':'valid'}`}
+                    <label className={`${debittaxaccountValid? '':'txt-red'}`}>Cuenta débito</label>
+                    <input className={`${debittaxaccountValid? 'valid':'invalid'}`} 
                     onChange={handleChangeDebittaxaccount}
                     placeholder={props.info.debittaxaccount}
-                    type="number"
+                    type="text"
                     />
                 </div>
                 <div className="input-field-2">
-                    <label className={`${errorCuentaCreditoInteres ? 'txt-red':''}`}>Cuenta crédito interés</label>
-                    <input className={`${errorCuentaCreditoInteres? 'invalid':'valid'}`}
+                    <label className={`${credittaxaccountinterestValid? '':'txt-red'}`}>Cuenta crédito interés</label>
+                    <input className={`${credittaxaccountinterestValid? 'valid':'invalid'}`} 
                     onChange={handleChangeCredittaxaccountinterest}
                     placeholder={props.info.credittaxaccountinterest}
-                    type="number"
+                    type="text"
                     />
                 </div>
                 <div className="input-field-2">
-                    <label className={`${errorCuentaDebitoInteres ? 'txt-red':''}`}>Cuenta débito interés</label>
-                    <input className={`${errorCuentaDebitoInteres? 'invalid':'valid'}`}
+                    <label  className={`${debittaxaccountinterestValid? '':'txt-red'}`}>Cuenta débito interés</label>
+                    <input className={`${debittaxaccountinterestValid? 'valid':'invalid'}`} 
                     onChange={handleChangeDebittaxaccountinterest}
                     placeholder={props.info.debittaxaccountinterest}
-                    type="number"
+                    type="text"
                     />
                 </div>
                 <Col s={10} m={3}>
-                    <label >Tipo de emisión</label>
-                    {/* <Select className="basic-single" styles={styleTipoEmision} defaultValue={props.emisiones[0]} options={props.emisiones} onChange={onChangeEmision} /> */}
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                    <label  className={`${producttypedescriptionError? 'txt-red':''}`} >Tipo de emisión</label>
+                    <FormControl variant="standard" error={producttypedescriptionError} sx={{ m: 1, minWidth: 200 , maxWidth: 200}}>
                         <Select
                             onChange={onChangeEmision}
                             sx={{fontSize: 16, border: 'red 5px none'}}
@@ -218,11 +242,11 @@ export default function ModalConfiguracionContableGeneral(props) {
                     </FormControl>
                 </Col>
                  <div className="input-field-2">
-                    <label className={`${errorTipoEmisionMaestrosUnicos ? 'txt-red':''}`}>Código tipo emisión Maestros Únicos</label>
-                    <input className={`${errorTipoEmisionMaestrosUnicos? 'invalid':'valid'}`}
+                    <label  className={`${producttypemaestrosunicosValid? '':'txt-red'}`}>Código tipo emisión Maestros Únicos</label>
+                    <input  className={`${producttypemaestrosunicosValid? 'valid':'invalid'}`} 
                     onChange={handleChangeProducttypemaestrosunicos}
                     placeholder={props.info.producttypemaestrosunicos}
-                    type="number"
+                    type="text"
                     />
                 </div>
             </Stack>
