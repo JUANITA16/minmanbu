@@ -80,7 +80,7 @@ export default function ModalConfiguracionContableGeneral(props) {
     }
 
     const onChangeEmision = (event) => {
-        const productDescription = event.value;
+        const productDescription = event.target.value;
         setProducttypedescription(productDescription)
         if(productDescription===""){
             setProducttypedescriptionError(true);
