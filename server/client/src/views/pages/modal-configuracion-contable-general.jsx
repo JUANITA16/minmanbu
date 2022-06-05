@@ -89,36 +89,34 @@ export default function ModalConfiguracionContableGeneral(props) {
         }
     }
 
-    function msjError(msjTipo){
+    function msjError(){
         setOpenModalNotificacion(true);
-        if(msjTipo){
-            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
-        }else{
-            setMensajeWarning('Ingresar solo datos numericos.') 
-        }
+        setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
         setSeverity('error')
         setOpen(true)
     }
 
     async function handleSubmit() {
-        if (!validateNumber(credittaxaccount)){
+        if (!credittaxaccountValid || credittaxaccount===""){
             setCredittaxaccountValid(false);
-            msjError(credittaxaccount==="");
-        }else if(!validateNumber(debittaxaccount)){
+            if(credittaxaccount===""){
+                msjError();
+            }
+        }else if(debittaxaccount===""){
             setDebittaxaccountValid(false)
-            msjError(debittaxaccount==="");
-        }else if(!validateNumber(credittaxaccountinterest)){
+            msjError();
+        }else if(credittaxaccountinterest===""){
             setCredittaxaccountinterestValid(false);
-            msjError(credittaxaccountinterest==="")
-        }else if(!validateNumber(debittaxaccountinterest)){
+            msjError()
+        }else if(debittaxaccountinterest===""){
             setDebittaxaccountinterestValid(false);
-            msjError(debittaxaccountinterest==="")
+            msjError()
         }else if(producttypedescription===""){
             setProducttypedescriptionError(true)
-            msjError(true);
-        }else if(!validateNumber(producttypemaestrosunicos)){
+            msjError();
+        }else if(producttypemaestrosunicos===""){
             setProducttypemaestrosunicosValid(false);
-            msjError(producttypemaestrosunicos==="");
+            msjError();
         }else {
 
             const dataSubmit ={
@@ -198,7 +196,7 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <input className={`${credittaxaccountValid? 'valid':'invalid'}`} 
                     onChange={handleChangeCredittaxaccount}
                     placeholder={props.info.credittaxaccount}
-                    type="text"
+                    type="number"
                     />
                 </div>
                 <div className="input-field-2">
@@ -206,7 +204,7 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <input className={`${debittaxaccountValid? 'valid':'invalid'}`} 
                     onChange={handleChangeDebittaxaccount}
                     placeholder={props.info.debittaxaccount}
-                    type="text"
+                    type="number"
                     />
                 </div>
                 <div className="input-field-2">
@@ -214,7 +212,7 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <input className={`${credittaxaccountinterestValid? 'valid':'invalid'}`} 
                     onChange={handleChangeCredittaxaccountinterest}
                     placeholder={props.info.credittaxaccountinterest}
-                    type="text"
+                    type="number"
                     />
                 </div>
                 <div className="input-field-2">
@@ -222,7 +220,7 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <input className={`${debittaxaccountinterestValid? 'valid':'invalid'}`} 
                     onChange={handleChangeDebittaxaccountinterest}
                     placeholder={props.info.debittaxaccountinterest}
-                    type="text"
+                    type="number"
                     />
                 </div>
                 <Col s={10} m={3}>
@@ -246,7 +244,7 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <input  className={`${producttypemaestrosunicosValid? 'valid':'invalid'}`} 
                     onChange={handleChangeProducttypemaestrosunicos}
                     placeholder={props.info.producttypemaestrosunicos}
-                    type="text"
+                    type="number"
                     />
                 </div>
             </Stack>
