@@ -50,33 +50,38 @@ export default function ModalConfiguracionContableGeneral(props) {
     }
 
     const handleChangeCredittaxaccount = (event) =>{
-        const creditAccountConst = event.target.value;
-        setCredittaxaccount(creditAccountConst)
-        setCredittaxaccountValid(validateNumber(creditAccountConst));
+        if(event.target.validity.valid){
+            setCredittaxaccount(event.target.value)
+            setCredittaxaccountValid(event.target.value!='');
+        }
     }
 
     const handleChangeDebittaxaccount= (event) =>{
-        const debitAccountConst = event.target.value;  
-        setDebittaxaccount(debitAccountConst)
-        setDebittaxaccountValid(validateNumber(debitAccountConst))
+        if(event.target.validity.valid){
+            setDebittaxaccount(event.target.value)
+            setDebittaxaccountValid(event.target.value!='');
+        }
     }
 
     const handleChangeCredittaxaccountinterest = (event) =>{
-        const creditInterest = event.target.value; 
-        setCredittaxaccountinterest(creditInterest)
-        setCredittaxaccountinterestValid(validateNumber(creditInterest));
+        if(event.target.validity.valid){
+            setCredittaxaccountinterest(event.target.value)
+            setCredittaxaccountinterestValid(event.target.value!='');
+        }
     }
 
     const handleChangeDebittaxaccountinterest = (event) =>{
-        const debitInterest = event.target.value;
-        setDebittaxaccountinterest(debitInterest)
-        setDebittaxaccountinterestValid(validateNumber(debitInterest))
+        if(event.target.validity.valid){
+            setDebittaxaccountinterest(event.target.value)
+            setDebittaxaccountinterestValid(event.target.value!='');
+        }
     }
 
     const handleChangeProducttypemaestrosunicos = (event) =>{
-        const productMaestrosUnicos = event.target.value; 
-        setProducttypemaestrosunicos(productMaestrosUnicos)
-        setProducttypemaestrosunicosValid(validateNumber(productMaestrosUnicos))
+        if(event.target.validity.valid){
+            setProducttypemaestrosunicos(event.target.value)
+            setProducttypemaestrosunicosValid(event.target.value!='');
+        }
     }
 
     const onChangeEmision = (event) => {
@@ -97,11 +102,9 @@ export default function ModalConfiguracionContableGeneral(props) {
     }
 
     async function handleSubmit() {
-        if (!credittaxaccountValid || credittaxaccount===""){
+        if (credittaxaccount===""){
             setCredittaxaccountValid(false);
-            if(credittaxaccount===""){
-                msjError();
-            }
+            msjError();
         }else if(debittaxaccount===""){
             setDebittaxaccountValid(false)
             msjError();
@@ -196,7 +199,9 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <input className={`${credittaxaccountValid? 'valid':'invalid'}`} 
                     onChange={handleChangeCredittaxaccount}
                     placeholder={props.info.credittaxaccount}
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*"
+                    value = {credittaxaccount}
                     />
                 </div>
                 <div className="input-field-2">
@@ -204,7 +209,9 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <input className={`${debittaxaccountValid? 'valid':'invalid'}`} 
                     onChange={handleChangeDebittaxaccount}
                     placeholder={props.info.debittaxaccount}
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*"
+                    value = {debittaxaccount}
                     />
                 </div>
                 <div className="input-field-2">
@@ -212,7 +219,9 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <input className={`${credittaxaccountinterestValid? 'valid':'invalid'}`} 
                     onChange={handleChangeCredittaxaccountinterest}
                     placeholder={props.info.credittaxaccountinterest}
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*"
+                    value = {credittaxaccountinterest}
                     />
                 </div>
                 <div className="input-field-2">
@@ -220,7 +229,9 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <input className={`${debittaxaccountinterestValid? 'valid':'invalid'}`} 
                     onChange={handleChangeDebittaxaccountinterest}
                     placeholder={props.info.debittaxaccountinterest}
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*"
+                    value = {debittaxaccountinterest}
                     />
                 </div>
                 <Col s={10} m={3}>
@@ -244,7 +255,9 @@ export default function ModalConfiguracionContableGeneral(props) {
                     <input  className={`${producttypemaestrosunicosValid? 'valid':'invalid'}`} 
                     onChange={handleChangeProducttypemaestrosunicos}
                     placeholder={props.info.producttypemaestrosunicos}
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*"
+                    value = {producttypemaestrosunicos}
                     />
                 </div>
             </Stack>
