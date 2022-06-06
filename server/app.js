@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require('helmet');
 const bodyparser = require('body-parser');
 const path = require("path");
 require('dotenv').config(); // Load environment variables from .env file
@@ -17,7 +18,33 @@ const setUp = async() => {
     app.use(cors(corsOptions));
     app.use(bodyparser.urlencoded({ extended: false }));
     app.use(bodyparser.json());
-    
+    app.use(helmet());
+    app.use(
+        helmet({
+            contentSecurityPolicy: false,
+        })
+        );
+    app.use(
+        helmet.hsts({
+          maxAge: 31536001,
+        })
+      );
+    app.use(
+        helmet.contentSecurityPolicy({
+            directives: {
+                "default-src": ["'none'"],
+                "connect-src": ["https://login.microsoftonline.com/",process.env.URLORIGIN],
+                "manifest-src": ["'self'"],
+                "object-src": ["'none'"],
+                "img-src": ["'self'","data:"],
+                "frame-ancestors": ["'self'"],
+                "form-action": ["'self'"],
+                "base-uri": ["'self'"],
+                "script-src": ["'self'", "'unsafe-inline'"],
+                "style-src": ["'self'","'unsafe-inline'"],
+            },
+        })
+      );
     app.disable('x-powered-by');
     app.disable('server');
 
