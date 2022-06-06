@@ -43,44 +43,38 @@ export default function ModalConfiguracionContableGeneral(props) {
 
     const [tipoProceso, setTipoProceso] = useState('');
 
-
-    function validateNumber(e) {
-        const pattern = /^[0-9]{1,}$/;
-        return pattern.test(e)
-    }
-
     const handleChangeCredittaxaccount = (event) =>{
         if(event.target.validity.valid){
             setCredittaxaccount(event.target.value)
-            setCredittaxaccountValid(event.target.value!='');
+            setCredittaxaccountValid(event.target.value!=='');
         }
     }
 
     const handleChangeDebittaxaccount= (event) =>{
         if(event.target.validity.valid){
             setDebittaxaccount(event.target.value)
-            setDebittaxaccountValid(event.target.value!='');
+            setDebittaxaccountValid(event.target.value!=='');
         }
     }
 
     const handleChangeCredittaxaccountinterest = (event) =>{
         if(event.target.validity.valid){
             setCredittaxaccountinterest(event.target.value)
-            setCredittaxaccountinterestValid(event.target.value!='');
+            setCredittaxaccountinterestValid(event.target.value!=='');
         }
     }
 
     const handleChangeDebittaxaccountinterest = (event) =>{
         if(event.target.validity.valid){
             setDebittaxaccountinterest(event.target.value)
-            setDebittaxaccountinterestValid(event.target.value!='');
+            setDebittaxaccountinterestValid(event.target.value!=='');
         }
     }
 
     const handleChangeProducttypemaestrosunicos = (event) =>{
         if(event.target.validity.valid){
             setProducttypemaestrosunicos(event.target.value)
-            setProducttypemaestrosunicosValid(event.target.value!='');
+            setProducttypemaestrosunicosValid(event.target.value!=='');
         }
     }
 
@@ -121,7 +115,6 @@ export default function ModalConfiguracionContableGeneral(props) {
             setProducttypemaestrosunicosValid(false);
             msjError();
         }else {
-
             const dataSubmit ={
                 "producttypemaestrosunicos": producttypemaestrosunicos,
                 "credittaxaccountinterest": credittaxaccountinterest,
