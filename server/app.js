@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require('helmet');
 const bodyparser = require('body-parser');
 const path = require("path");
 require('dotenv').config(); // Load environment variables from .env file
@@ -17,6 +18,7 @@ const setUp = async() => {
     app.use(cors(corsOptions));
     app.use(bodyparser.urlencoded({ extended: false }));
     app.use(bodyparser.json());
+    app.use(helmet());
     
     app.disable('x-powered-by');
     app.disable('server');
