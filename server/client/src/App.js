@@ -45,9 +45,6 @@ export default function App() {
               
               </AuthenticatedTemplate>
             }
-            <Switch>
-              <Route path={base + '/ui-configuracion-contable'} exact component={ConfiguracionContable} />
-            </Switch>
             <UnauthenticatedTemplate>
               <Route path={base + '/'} exact component={Logout} />
               <Route path="*">
