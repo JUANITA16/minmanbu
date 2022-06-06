@@ -20,21 +20,29 @@ const setUp = async() => {
     app.use(bodyparser.json());
     app.use(helmet());
     app.use(
+        helmet({
+            contentSecurityPolicy: false,
+        })
+        );
+    app.use(
         helmet.hsts({
           maxAge: 31536001,
         })
       );
     app.use(
         helmet.contentSecurityPolicy({
-          directives: {
-            "object-src": ["'none'"],
-            "img-src": ["'self'","data:"],
-            "frame-ancestors": ["'self'"],
-            "form-action": ["'self'"],
-            "base-uri": ["'self'"],
-            "script-src": ["'unsafe-inline'"],
-            "style-src": ["'unsafe-inline'"],,
-          },
+            directives: {
+                "default-src": ["'none'"],
+                "connect-src": ["https://login.microsoftonline.com/"],
+                "manifest-src": ["*"],
+                "object-src": ["'none'"],
+                "img-src": ["'self'","data:"],
+                "frame-ancestors": ["'self'"],
+                "form-action": ["'self'"],
+                "base-uri": ["'self'"],
+                "script-src": ["*", "'unsafe-inline'"],
+                "style-src": ["*"],
+            },
         })
       );
     app.disable('x-powered-by');
