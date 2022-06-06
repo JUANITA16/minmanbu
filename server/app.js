@@ -41,7 +41,7 @@ const setUp = async() => {
                 "form-action": ["'self'"],
                 "base-uri": ["'self'"],
                 "script-src": ["'self'", "'unsafe-inline'"],
-                "style-src": ["'self'"],
+                "style-src": ["'self'","'unsafe-inline'"],
             },
         })
       );
