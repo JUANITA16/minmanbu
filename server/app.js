@@ -24,19 +24,19 @@ const setUp = async() => {
           maxAge: 31536001,
         })
       );
-    app.use(
-        helmet.contentSecurityPolicy({
-          directives: {
-            "object-src": ["'none'"],
-            "img-src": ["'self'","data:"],
-            "frame-ancestors": ["'self'"],
-            "form-action": ["'self'"],
-            "base-uri": ["'self'"],
-            "script-src": ["'unsafe-inline'"],
-            "style-src": ["'unsafe-inline'"],,
-          },
-        })
-      );
+    // app.use(
+    //     helmet.contentSecurityPolicy({
+    //       directives: {
+    //         "object-src": ["'none'"],
+    //         "img-src": ["'self'","data:"],
+    //         "frame-ancestors": ["'self'"],
+    //         "form-action": ["'self'"],
+    //         "base-uri": ["'self'"],
+    //         "script-src": ["'unsafe-inline'"],
+    //         "style-src": ["'unsafe-inline'"],,
+    //       },
+    //     })
+    //   );
     app.disable('x-powered-by');
     app.disable('server');
 
