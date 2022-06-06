@@ -34,14 +34,14 @@ const setUp = async() => {
             directives: {
                 "default-src": ["'none'"],
                 "connect-src": ["https://login.microsoftonline.com/"],
-                "manifest-src": ["*"],
+                "manifest-src": ["'self'"],
                 "object-src": ["'none'"],
                 "img-src": ["'self'","data:"],
                 "frame-ancestors": ["'self'"],
                 "form-action": ["'self'"],
                 "base-uri": ["'self'"],
-                "script-src": ["*", "'unsafe-inline'"],
-                "style-src": ["*"],
+                "script-src": ["'self'", "'unsafe-inline'"],
+                "style-src": ["'self'"],
             },
         })
       );
