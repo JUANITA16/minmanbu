@@ -12,7 +12,6 @@ const setUp = async() => {
     // cors
     const corsOptions = {
         origin: process.env.URLORIGIN,
-        "Content-Security-Policy":"default-src 'self';",
         optionsSuccessStatus: 200 
     }
     app.use(cors(corsOptions));
