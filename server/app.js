@@ -33,7 +33,7 @@ const setUp = async() => {
         helmet.contentSecurityPolicy({
             directives: {
                 "default-src": ["'none'"],
-                "connect-src": ["https://login.microsoftonline.com/"],
+                "connect-src": ["https://login.microsoftonline.com/",process.env.URLORIGIN],
                 "manifest-src": ["'self'"],
                 "object-src": ["'none'"],
                 "img-src": ["'self'","data:"],
