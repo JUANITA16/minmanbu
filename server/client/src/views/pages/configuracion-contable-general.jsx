@@ -90,7 +90,7 @@ export default function ConfiguracionContableGeneral() {
 
         async function goToEditarAux(event) {
             setTitleModal('Editar - Configuración general')
-            setDescriptionModal('En esta sección podrá realizar la edicion de los registros Configuración general')
+            setDescriptionModal('En esta sección podrá realizar la edición de los registros Configuración general')
             setInfoModal(props)
             setOpenModal(true)
             setTipoProceso("Editar")

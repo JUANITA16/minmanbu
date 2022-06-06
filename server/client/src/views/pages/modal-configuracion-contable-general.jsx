@@ -43,40 +43,39 @@ export default function ModalConfiguracionContableGeneral(props) {
 
     const [tipoProceso, setTipoProceso] = useState('');
 
-
-    function validateNumber(e) {
-        const pattern = /^[0-9]{1,}$/;
-        return pattern.test(e)
-    }
-
     const handleChangeCredittaxaccount = (event) =>{
-        const creditAccountConst = event.target.value;
-        setCredittaxaccount(creditAccountConst)
-        setCredittaxaccountValid(validateNumber(creditAccountConst));
+        if(event.target.validity.valid){
+            setCredittaxaccount(event.target.value)
+            setCredittaxaccountValid(event.target.value!=='');
+        }
     }
 
     const handleChangeDebittaxaccount= (event) =>{
-        const debitAccountConst = event.target.value;  
-        setDebittaxaccount(debitAccountConst)
-        setDebittaxaccountValid(validateNumber(debitAccountConst))
+        if(event.target.validity.valid){
+            setDebittaxaccount(event.target.value)
+            setDebittaxaccountValid(event.target.value!=='');
+        }
     }
 
     const handleChangeCredittaxaccountinterest = (event) =>{
-        const creditInterest = event.target.value; 
-        setCredittaxaccountinterest(creditInterest)
-        setCredittaxaccountinterestValid(validateNumber(creditInterest));
+        if(event.target.validity.valid){
+            setCredittaxaccountinterest(event.target.value)
+            setCredittaxaccountinterestValid(event.target.value!=='');
+        }
     }
 
     const handleChangeDebittaxaccountinterest = (event) =>{
-        const debitInterest = event.target.value;
-        setDebittaxaccountinterest(debitInterest)
-        setDebittaxaccountinterestValid(validateNumber(debitInterest))
+        if(event.target.validity.valid){
+            setDebittaxaccountinterest(event.target.value)
+            setDebittaxaccountinterestValid(event.target.value!=='');
+        }
     }
 
     const handleChangeProducttypemaestrosunicos = (event) =>{
-        const productMaestrosUnicos = event.target.value; 
-        setProducttypemaestrosunicos(productMaestrosUnicos)
-        setProducttypemaestrosunicosValid(validateNumber(productMaestrosUnicos))
+        if(event.target.validity.valid){
+            setProducttypemaestrosunicos(event.target.value)
+            setProducttypemaestrosunicosValid(event.target.value!=='');
+        }
     }
 
     const onChangeEmision = (event) => {
@@ -89,38 +88,33 @@ export default function ModalConfiguracionContableGeneral(props) {
         }
     }
 
-    function msjError(msjTipo){
+    function msjError(){
         setOpenModalNotificacion(true);
-        if(msjTipo){
-            setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
-        }else{
-            setMensajeWarning('Ingresar solo datos numericos.') 
-        }
+        setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
         setSeverity('error')
         setOpen(true)
     }
 
     async function handleSubmit() {
-        if (!validateNumber(credittaxaccount)){
+        if (credittaxaccount===""){
             setCredittaxaccountValid(false);
-            msjError(credittaxaccount==="");
-        }else if(!validateNumber(debittaxaccount)){
+            msjError();
+        }else if(debittaxaccount===""){
             setDebittaxaccountValid(false)
-            msjError(debittaxaccount==="");
-        }else if(!validateNumber(credittaxaccountinterest)){
+            msjError();
+        }else if(credittaxaccountinterest===""){
             setCredittaxaccountinterestValid(false);
-            msjError(credittaxaccountinterest==="")
-        }else if(!validateNumber(debittaxaccountinterest)){
+            msjError()
+        }else if(debittaxaccountinterest===""){
             setDebittaxaccountinterestValid(false);
-            msjError(debittaxaccountinterest==="")
+            msjError()
         }else if(producttypedescription===""){
             setProducttypedescriptionError(true)
-            msjError(true);
-        }else if(!validateNumber(producttypemaestrosunicos)){
+            msjError();
+        }else if(producttypemaestrosunicos===""){
             setProducttypemaestrosunicosValid(false);
-            msjError(producttypemaestrosunicos==="");
+            msjError();
         }else {
-
             const dataSubmit ={
                 "producttypemaestrosunicos": producttypemaestrosunicos,
                 "credittaxaccountinterest": credittaxaccountinterest,
@@ -199,6 +193,8 @@ export default function ModalConfiguracionContableGeneral(props) {
                     onChange={handleChangeCredittaxaccount}
                     placeholder={props.info.credittaxaccount}
                     type="text"
+                    pattern="[0-9]*"
+                    value = {credittaxaccount}
                     />
                 </div>
                 <div className="input-field-2">
@@ -207,6 +203,8 @@ export default function ModalConfiguracionContableGeneral(props) {
                     onChange={handleChangeDebittaxaccount}
                     placeholder={props.info.debittaxaccount}
                     type="text"
+                    pattern="[0-9]*"
+                    value = {debittaxaccount}
                     />
                 </div>
                 <div className="input-field-2">
@@ -215,6 +213,8 @@ export default function ModalConfiguracionContableGeneral(props) {
                     onChange={handleChangeCredittaxaccountinterest}
                     placeholder={props.info.credittaxaccountinterest}
                     type="text"
+                    pattern="[0-9]*"
+                    value = {credittaxaccountinterest}
                     />
                 </div>
                 <div className="input-field-2">
@@ -223,6 +223,8 @@ export default function ModalConfiguracionContableGeneral(props) {
                     onChange={handleChangeDebittaxaccountinterest}
                     placeholder={props.info.debittaxaccountinterest}
                     type="text"
+                    pattern="[0-9]*"
+                    value = {debittaxaccountinterest}
                     />
                 </div>
                 <Col s={10} m={3}>
@@ -247,6 +249,8 @@ export default function ModalConfiguracionContableGeneral(props) {
                     onChange={handleChangeProducttypemaestrosunicos}
                     placeholder={props.info.producttypemaestrosunicos}
                     type="text"
+                    pattern="[0-9]*"
+                    value = {producttypemaestrosunicos}
                     />
                 </div>
             </Stack>
