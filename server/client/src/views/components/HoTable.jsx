@@ -1,18 +1,38 @@
-import { CircularProgress, Modal } from "@mui/material";
+import { CircularProgress, Modal, Box } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { Button, Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
 import Select from 'react-select'
-import ConfiguracionContable from "../pages/configuracion-contable";
+import ModalConfiguracionHomologacion from "../pages/ModalHomologacion";
 
-function MyTable({tableData}) {
+function MyTable({tableData, setEdits}) {
   
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
   const [isloading, setIsloading] = useState(true);
-  const [tableBody, setTableBody] = useState([])
-  const [open, setOpen] = useState(false)
+  const [tableBody, setTableBody] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [infoModal, setInfoModal] = useState({
+    accountid: "",
+    accounting_account: "", 
+    cosif: "", 
+    costcenteraccounting: ""
+  })
+  const modalTitle = "Editar - Configuración homologación"
+  const modalDescription = "En esta sección podrá realizar la edición de los registros Configuración homologación"
+  const tipoProceso = "Editar"
+
+  // const modalStyle = {
+  //   position: 'absolute',
+  //   top: '50%',
+  //   left: '50%',
+  //   transform: 'translate(-50%, -50%)',
+  //   width: '50%',
+  //   bgcolor: 'background.paper',
+  //   boxShadow: 24,
+  //   p: 4,
+  // };
 
 
   const totalResults = [
@@ -28,8 +48,8 @@ function MyTable({tableData}) {
   };
   
   const handleEdit = function (event){
-    setOpen(true)
-    console.log("Edit element")
+    setInfoModal(JSON.parse(event.target.value))
+    setOpen(true);
   };
 
   const renderLoading = function (isloading){
@@ -40,13 +60,7 @@ function MyTable({tableData}) {
     }
   };
 
-  const modalStyle = {
-    backgroundColor: 'white',
-    border: '2px solid #000',
-    boxShadow: 24,
-    top: '50%',
-    left: '50%'
-  }
+
 
   useEffect(function () {
     //Calculate the total of pages using ceil method
@@ -62,11 +76,17 @@ function MyTable({tableData}) {
   useEffect(function () {
     setTableBody(visibleData.map( (data) => {
       return (
-        <tr key={data.accounting_account}>
+        <tr key={data.accountid}>
           <td>{data.accounting_account}</td>
           <td>{data.cosif}</td>
           <td>{data.costcenteraccounting}</td>
-          <td><Button small onClick={handleEdit} className="indigo darken-4">
+          <td><Button value={JSON.stringify({
+              accountid: data.accountid,
+              accounting_account: data.accounting_account, 
+              cosif: data.cosif, 
+              costcenteraccounting: data.costcenteraccounting
+              })}
+            small onClick={handleEdit} className="indigo darken-4">
             Editar</Button>
           </td>
       </tr>)})
@@ -87,13 +107,23 @@ function MyTable({tableData}) {
      </Row>
     {/* Table generation */}
     <div>
-    <Modal open={open}
-      onClose={(event) => setOpen(false)}
+    <Modal
+      open={open}
+      onClose={() => setOpen(false)}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
       >
-        <div style={modalStyle}>
-          Editar
-        </div>
-    </Modal>
+        <Box className="modal-style" >
+          <ModalConfiguracionHomologacion
+            title={modalTitle} 
+            description={modalDescription} 
+            setEdits={setEdits}
+            setOpen={setOpen} 
+            info={infoModal}
+            tipoProceso={tipoProceso}
+            />
+        </Box>
+      </Modal>
       <Table>
         <thead>
           <tr>
