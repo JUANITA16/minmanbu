@@ -40,8 +40,6 @@ export default function ModalConfiguracionHomologacion(props) {
         ...prevValues,
         [event.target.id]: event.target.value!==''
       }))
-      console.log(values)
-      console.log(validation)
     }
   }
 

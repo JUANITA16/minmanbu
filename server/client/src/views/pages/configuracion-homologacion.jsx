@@ -7,7 +7,7 @@ import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
 import ModalConfiguracionHomologacion from "./ModalHomologacion";
 
-const HomoloView = function ({goBack, dbData, setEdits}) {
+const HomoloView = function ({goBack, dbData, edits, setEdits}) {
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
   const [tableData, setTableData] = useState(dbData);
@@ -49,6 +49,7 @@ const HomoloView = function ({goBack, dbData, setEdits}) {
   const createNew = function (event) {
     setOpen(true)
   };
+
   const onTextChange = function (event) {
     setFilters((prevData)=>(
       {
@@ -158,15 +159,16 @@ function ConfiguracionHomologacion (params) {
   const [dbData, setdbData] = useState([]);
   const [view, setView] = useState(<></>);
   const [edits, setEdits] = useState(0);
-  
+  const service = new ServerAPI();
+
   const getdbData = async function () {
     let resp = [];
-    const service = new ServerAPI();
     try {
       resp = await service.getAllCosif().then((resp) => {return resp});
       if (resp.status === 200) {
         setdbData(resp.data);
       }
+      return resp
     } catch (error) {
       console.error(error);
       
@@ -181,18 +183,11 @@ function ConfiguracionHomologacion (params) {
 
 
   useEffect(() => {
-    const resp = getdbData();
-    console.log(resp)
-    if (resp.status === 200) {
-      setdbData(resp.data);
-    }
-    
+    getdbData();
   }, [edits]);
 
   useEffect(() => {
-    console.log(dbData)
-    setView(<HomoloView  goBack={goBack} dbData={dbData} setEdits={setEdits}/> );
-    console.log("loading table")
+    setView(<HomoloView  goBack={goBack} dbData={dbData} edits={edits} setEdits={setEdits}/> );
   }, [dbData])
 
   return view
