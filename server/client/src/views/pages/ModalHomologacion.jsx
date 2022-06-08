@@ -85,6 +85,7 @@ export default function ModalConfiguracionHomologacion(props) {
           });
         if (responseCreate.status===200) {
           toast.success("Configuración registrada correctamente.");
+          props.setEdits((count) => count+1);
         } else {
           toast.error("Error al registrar configuración.");
         }
@@ -95,6 +96,7 @@ export default function ModalConfiguracionHomologacion(props) {
           );
         if (mensajeRespuesta.status === 200){
           toast.success("Configuración actualizada correctamente.");
+          props.setEdits((count) => count+1);
         } else{
           toast.error("Error al actualizar configuración.");
         }
