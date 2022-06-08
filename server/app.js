@@ -66,6 +66,8 @@ const setUp = async() => {
     const taxAprodTRoute = require('./routes/tax-a-prodt');
     const taxAprodTPutRoute = require('./routes/tax-a-prodt-put');
     const cosifRoute = require('./routes/cosif');
+    const cosifPostRoute = require('./routes/cosif-post');
+    const cosifPutRoute = require('./routes/cosif-put');
     const taxAprodTPostRoute = require('./routes/tax-a-prodt-post');
 
 
@@ -98,11 +100,6 @@ const setUp = async() => {
         taxAprodTRoute
     );
     
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        cosifRoute
-    );
 
     app.use( process.env.SERVER_BASE_PATH,
         passport.authenticate('oauth-bearer', { session: false }),
@@ -114,6 +111,23 @@ const setUp = async() => {
         passport.authenticate('oauth-bearer', { session: false }),
         routeGuard(authConfig.accessMatrix),
         taxAprodTPostRoute
+    );
+
+    app.use( process.env.SERVER_BASE_PATH,
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        cosifRoute
+    );
+    app.use( process.env.SERVER_BASE_PATH,
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        cosifPostRoute
+    );
+    
+    app.use( process.env.SERVER_BASE_PATH,
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        cosifPutRoute
     );
     
     /* CLIENT SIDE ################################################################## */
