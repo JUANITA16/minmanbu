@@ -87,6 +87,34 @@ export class ServerAPI {
     };
 
 
+    
+    
+    updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
+        const url = this.base_url + "/tax-a-prodt"
+        
+        const config = {
+            headers: { Authorization: await getToken() },
+            params: {
+                idRow,
+            }
+        }
+        const res = await axios.put(url,dataToUpdate,config)
+        
+        return res;
+    }
+    
+    
+    createItemConfiguracionGeneral = async (dataCreate) => {
+        const url = this.base_url + "/tax-a-prodt"
+        
+        const config = {
+            headers: { Authorization: await getToken() }
+        }
+        const res = await axios.post(url,dataCreate,config)
+      
+        return res;
+    }
+
     getAllCosif = async () => {
         
         const url = this.base_url + "/tblCosifAccounting"
@@ -97,10 +125,9 @@ export class ServerAPI {
         
         return res;
     };
-
-
-    updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
-        const url = this.base_url + "/tax-a-prodt"
+    
+    updateItemConfiguracionHomologacion = async (dataToUpdate,idRow) => {
+        const url = this.base_url + "/tblCosifAccounting"
 
         const config = {
             headers: { Authorization: await getToken() },
@@ -114,8 +141,8 @@ export class ServerAPI {
     }
 
 
-    createItemConfiguracionGeneral = async (dataCreate) => {
-        const url = this.base_url + "/tax-a-prodt"
+    createItemConfiguracionHomologacion = async (dataCreate) => {
+        const url = this.base_url + "/tblCosifAccounting"
 
         const config = {
             headers: { Authorization: await getToken() }
