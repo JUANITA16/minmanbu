@@ -74,24 +74,29 @@ function MyTable({tableData, setEdits}) {
   }, [maxResults, tableData]);
 
   useEffect(function () {
-    setTableBody(visibleData.map( (data) => {
-      return (
-        <tr key={data.accountid}>
-          <td>{data.accounting_account}</td>
-          <td>{data.cosif}</td>
-          <td>{data.costcenteraccounting}</td>
-          <td><Button value={JSON.stringify({
-              accountid: data.accountid,
-              accounting_account: data.accounting_account, 
-              cosif: data.cosif, 
-              costcenteraccounting: data.costcenteraccounting
-              })}
-            small onClick={handleEdit} className="indigo darken-4">
-            Editar</Button>
-          </td>
-      </tr>)})
-    );
-
+    if (visibleData[0]==='Empty') {
+      setTableBody(
+        <tr key={"Empty"}>
+          <td> No se encontraron registros.</td>
+        </tr>);
+    } else {
+      setTableBody(visibleData.map( (data) => {
+        return (
+          <tr key={data.accountid}>
+            <td>{data.accounting_account}</td>
+            <td>{data.cosif}</td>
+            <td>{data.costcenteraccounting}</td>
+            <td><Button value={JSON.stringify({
+                accountid: data.accountid,
+                accounting_account: data.accounting_account, 
+                cosif: data.cosif, 
+                costcenteraccounting: data.costcenteraccounting
+                })}
+              small onClick={handleEdit} className="indigo darken-4">
+              Editar</Button>
+            </td>
+        </tr>)}));
+    }
   }, [visibleData]);
 
 
