@@ -32,9 +32,12 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
 
   const handleApplyFilters = function (event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
-    setTableData(
-      tableData.filter((value) => applyFilters(value, filters))
-    );
+    let filteredData = tableData.filter((value) => applyFilters(value, filters))
+    if (filteredData.length===0) {
+      setTableData(["Empty"])
+    } else {
+      setTableData(tableData.filter((value) => applyFilters(value, filters)));
+    }
     setfiltEnable(true);
   };
 
@@ -51,12 +54,14 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
   };
 
   const onTextChange = function (event) {
-    setFilters((prevData)=>(
-      {
-        ...prevData,
-        [event.target.id]: event.target.value
-      }
-    ));
+    if (event.target.validity.valid) {
+      setFilters((prevData)=>(
+        {
+          ...prevData,
+          [event.target.id]: event.target.value
+        }
+      ));
+    }
   };
 
   useEffect(function () {
@@ -99,14 +104,14 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
               <Col s={12} m={6} l={6} xl={6}>
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
-                    id="numeroCuenta" value={filters.numeroCuenta}/>
+                    id="numeroCuenta" value={filters.numeroCuenta} pattern="[0-9]*"/>
                   <label htmlFor="numeroCuenta">Número de Cuenta</label>
                 </div>
               </Col>
               <Col s={12} m={6} l={6} xl={6}  >
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
-                    id="numeroCosif" value={filters.numeroCosif}/>
+                    id="numeroCosif" value={filters.numeroCosif} pattern="[0-9]*"/>
                   <label htmlFor="numeroCosif" >Número de Cuenta cosif</label>
                 </div>
               </Col>

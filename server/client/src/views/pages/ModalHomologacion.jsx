@@ -2,7 +2,7 @@ import React, {useState,useEffect } from "react";
 import { Button,Row, Col, Divider } from 'react-materialize'
 import { ServerAPI } from "../../services/server";
 import { toast } from 'react-toastify';
-import { Box, Modal, Snackbar, Alert, Stack } from "@mui/material";
+import { Box, Modal, Snackbar, Alert, Stack, LinearProgress, Fade } from "@mui/material";
 
 
 const service = new ServerAPI();
@@ -13,6 +13,7 @@ export default function ModalConfiguracionHomologacion(props) {
   const [mensajeWarning, setMensajeWarning] = useState('');
   const [severity, setSeverity] = useState('info');
   const [openModalNotificacion, setOpenModalNotificacion] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   
   const [validation, setValidation] = useState({
     accountNumber: true,
@@ -72,6 +73,7 @@ export default function ModalConfiguracionHomologacion(props) {
       }));
       msjError();
     }else {
+      setisLoading(true)
       const dataSubmit ={
         "accounting_account": values.accounting_account,
         "cosif": values.cosif,
@@ -105,6 +107,7 @@ export default function ModalConfiguracionHomologacion(props) {
 
   async function goToConfiguracionGeneral () {
       props.setOpen(false)
+      setisLoading(false)
   };
 
   const handleClose = (event, reason) => {
@@ -174,16 +177,25 @@ export default function ModalConfiguracionHomologacion(props) {
                 </div>
               </Col>
             </Row>
+            <Row>
+              <Col s={6} className="loading">
+                <Fade in={isLoading}>
+                  <LinearProgress color="inherit" />
+                </Fade>
+              </Col>
+            </Row>
             <Stack direction="row" spacing={0.5} >
-                <Button node="button" small className="indigo darken-4" onClick={handleSubmit}>
+                <Button node="button" small className="indigo darken-4" 
+                  onClick={handleSubmit} disabled={isLoading}>
                     Guardar
                 </Button>
                 <br />
                 <Button node="button" small  className="indigo darken-4" onClick={goToConfiguracionGeneral} >
                     Cancelar
                 </Button>
+                
             </Stack>
-
+            
             <Modal
                 open={openModalNotificacion}
                 onClose={() => setOpenModalNotificacion(false)}
