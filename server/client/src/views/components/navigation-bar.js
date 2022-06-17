@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Navbar, Icon } from 'react-materialize'
 import { Link } from "react-router-dom";
+import LogoutIcon from '@mui/icons-material/Logout';
+import { IconButton } from "@mui/material";
+import { useMsal } from "@azure/msal-react";
 
 export default function NavigationBar() {
     const base = process.env.PUBLIC_URL;
-
+    const { instance } = useMsal();
+    let homeAccountId = instance.getActiveAccount()?.homeAccountId
     const [menu] = useState([
         {
             name: "Home",
@@ -23,6 +27,15 @@ export default function NavigationBar() {
             url: `${base}/ui-configuracion-contable`
         }
     ])
+
+    const handleLogout = function (event) {
+        const logoutRequest = {
+            account: instance.getAccountByHomeId(homeAccountId),
+            mainWindowRedirectUri: "https://minmambu-dev.btgpactual.com.co/",
+            postLogoutRedirectUri: "https://minmambu-dev.btgpactual.com.co/"
+        }
+        instance.logoutPopup(logoutRequest).catch((e)=> console.error(e))
+    }
 
     return (
         <Navbar
@@ -47,6 +60,10 @@ export default function NavigationBar() {
             {menu.map((menu, i) => {
                 return <Link key={i} to={menu.url}>{menu.name}</Link>
             })}
+            <IconButton onClick={handleLogout}>
+                <LogoutIcon sx={{color: "white"}}/>
+            </IconButton>
         </Navbar>
+        
     );
 }
