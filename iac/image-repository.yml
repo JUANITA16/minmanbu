@@ -31,6 +31,7 @@ Resources:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
       Name: !Sub 'scm-${project}-${appName}-${serviceName}-${stage}-version'
+      KmsKeyId: ${self:custom.KmsKeyIdMinmambu}
       Description: !Sub 'Deployed version for image ecr-${project}-${appName}-${serviceName}-${stage}'
       SecretString: '{"version":"latest"}'
       Tags:
