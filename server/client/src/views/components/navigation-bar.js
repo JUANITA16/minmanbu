@@ -31,10 +31,9 @@ export default function NavigationBar() {
     const handleLogout = function (event) {
         const logoutRequest = {
             account: instance.getAccountByHomeId(homeAccountId),
-            mainWindowRedirectUri: "https://minmambu-dev.btgpactual.com.co/",
-            postLogoutRedirectUri: "https://minmambu-dev.btgpactual.com.co/"
+            postLogoutRedirectUri: process.env.REACT_APP_REDIRECT_URI
         }
-        instance.logoutPopup(logoutRequest).catch((e)=> console.error(e))
+        instance.logoutRedirect(logoutRequest).catch((e)=>console.error(e))
     }
 
     return (
