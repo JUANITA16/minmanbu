@@ -12,3 +12,4 @@ Rol=Compute
 Tecnologia=ECS
 UnidadNegocio=$(unidadNegocio)
 Aplicativo=$(Aplicativo)
+KmsKeyIdMinmambu=$(KmsKeyIdMinmambu)
