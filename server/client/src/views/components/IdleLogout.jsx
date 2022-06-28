@@ -6,7 +6,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 
 
 export default function IdleLogout() {
-  const timeout = 5000;
+  // timeout is set in mins * seconds * 1000, time is measured in miliseconds.
+  const timeout = 10 * 60 * 1000;
   const [isIdle, setIsIdle] = useState(false);
   const [isPromptOpen, setisPromptOpen] = useState(false);
 
@@ -33,7 +34,16 @@ export default function IdleLogout() {
     onActive: handleOnActive,
     onIdle: handleOnIdle,
     startOnMount: true,
-    startManually: false
+    startManually: false,
+    events: [
+      'keydown',
+      'wheel',
+      'mousewheel',
+      'mousedown',
+      'touchstart',
+      'touchmove',
+      'visibilitychange'
+    ],
   });
 
 
