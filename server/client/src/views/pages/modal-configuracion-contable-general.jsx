@@ -165,7 +165,7 @@ export default function ModalConfiguracionContableGeneral(props) {
         setProducttypedescription(props.info.producttypedescription)
         setTipoProceso(props.tipoProceso)
         setEmisiones(props.emisiones)
-    }, [,props]);
+    }, [props]);
 
     const style = {
         position: 'absolute',
