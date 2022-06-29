@@ -13,6 +13,8 @@ Parameters:
     Type: String
   serviceName:
     Type: String
+  KmsKeyIdMinmambu:
+    Type: String
 Resources:
   ImageRepository:
     Type: AWS::ECR::Repository
@@ -31,6 +33,7 @@ Resources:
     Type: 'AWS::SecretsManager::Secret'
     Properties:
       Name: !Sub 'scm-${project}-${appName}-${serviceName}-${stage}-version'
+      KmsKeyId: !Sub ${KmsKeyIdMinmambu}
       Description: !Sub 'Deployed version for image ecr-${project}-${appName}-${serviceName}-${stage}'
       SecretString: '{"version":"latest"}'
       Tags:

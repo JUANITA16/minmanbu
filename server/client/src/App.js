@@ -5,6 +5,7 @@ import { Home, GenerateSap, NavigationBar ,CreacionCuenta, Error404, Logout, Con
 
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import React from 'react';
+import IdleLogout from './views/components/IdleLogout';
 
 export default function App() {
   const base = process.env.PUBLIC_URL;
@@ -14,12 +15,12 @@ export default function App() {
   return (
     <Section className="blue-grey lighten-5 p0">
       <Router>
-        
         <NavigationBar />
         <Container className='bg-white'>
           <Card className="z-depth-3">
             {user &&
               <AuthenticatedTemplate>
+                <IdleLogout />
               {(user.roles === undefined ?
                 <Error404 /> :
                 <Switch>
