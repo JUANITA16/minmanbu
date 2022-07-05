@@ -10,7 +10,7 @@
     "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.7.0",
-    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.27.2",
@@ -38,7 +38,8 @@
     "local": "react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll=false",
+    "test:coverage": "npm run test -- --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -61,6 +62,13 @@
   },
   "devDependencies": {
     "@types/react": "^17.0.18",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "jest-watch-typeahead": "^0.6.5"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/index.js"
+    ]
   }
 }
