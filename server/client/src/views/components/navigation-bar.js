@@ -25,6 +25,10 @@ export default function NavigationBar() {
         {
             name: "Configuración contable",
             url: `${base}/ui-configuracion-contable`
+        },
+        {
+            name: "Actualización tasas",
+            url: `${base}/ui-actualizacion-tasas`
         }
     ])
 
