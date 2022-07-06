@@ -6,6 +6,7 @@ import { Home, GenerateSap, NavigationBar ,CreacionCuenta, Error404, Logout, Con
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
 import React from 'react';
 import IdleLogout from './views/components/IdleLogout';
+import ActualizacionTasas from './views/pages/ActualizacionTasas';
 
 export default function App() {
   const base = process.env.PUBLIC_URL;
@@ -41,6 +42,12 @@ export default function App() {
                     <Route path={base + '/ui-configuracion-contable'} exact component={ConfiguracionContable} />:
                     <Route path={base + '/ui-configuracion-contable'} exact component={Error404} />
                   }
+                  {(user.roles.includes("MINMAMBU_ROLE_ADMIN") || 
+                    user.roles.includes("MINMAMBU_ROLE_ADMIN_PRODUCT_CDT")) ? 
+                    <Route path={base + '/ui-actualizacion-tasas'} exact component={ActualizacionTasas} />:
+                    <Route path={base + '/ui-actualizacion-tasas'} exact component={Error404} />
+                  }
+
                 </Switch>
               )}
               
