@@ -63,7 +63,7 @@ export default function IdleLogout() {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Señor usuario su sesión cerro por tiempo de inactividad.
+          Señor usuario su sesión cerró por tiempo de inactividad.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
