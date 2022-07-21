@@ -11,11 +11,10 @@ import { toast } from 'react-toastify';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
-
-const service = new ServerAPI();
-
 export default function ModalConfiguracionContableGeneral(props) {
 
+    const service = new ServerAPI();
+    
     const [open, setOpen] = useState(false);
     const [mensajeWarning, setMensajeWarning] = useState('');
     const [severity, setSeverity] = useState('info');

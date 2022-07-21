@@ -1,7 +1,7 @@
 import { Box, Modal } from "@mui/material";
 import { Fragment, useEffect, useState } from "react"
 import { Button, Col, Collapsible, CollapsibleItem, Icon, Row } from "react-materialize";
-import ServerAPI from "../../services/server";
+import { ServerAPI } from "../../services/server";
 import { CardHeader } from "../components";
 import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
