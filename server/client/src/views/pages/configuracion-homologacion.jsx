@@ -169,9 +169,10 @@ function ConfiguracionHomologacion (params) {
   const getdbData = async function () {
     let resp = [];
     try {
-      resp = await service.getAllCosif().then((resp) => {return resp});
+      resp = await service.getAllCosif();
       if (resp.status === 200) {
-        setdbData(resp.data);
+        var dataTable = await resp.data
+        setdbData(dataTable);
       }
       return resp
     } catch (error) {
