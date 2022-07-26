@@ -2,7 +2,7 @@ import { setError, convertTZ, addDays } from '../helpers/utils';
 import axios from 'axios';
 import { getToken } from '../index';
 
-export class ServerAPI {
+class ServerAPI {
     base_url = process.env.REACT_APP_SERVER_BASE_PATH
 
     generateFile = async (from, to) => {
@@ -153,4 +153,4 @@ export class ServerAPI {
     }
 }
 
-export default ServerAPI;
+export {ServerAPI} ;

@@ -5,7 +5,14 @@ import ReactPaginate from "react-paginate";
 import Select from 'react-select'
 
 function ActTable(props) {
-  let tableData = [];
+  let tableData = [
+    {
+      update_id:"",
+      consecutive : "",
+      exec_date :"",
+      user: ""
+    }
+  ];
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
@@ -47,6 +54,7 @@ function ActTable(props) {
   };
   
   const handleDetails = function (event){
+    props.setIsPantallaPrincipal(false)
     console.log("Abrir Detalle")
   };
 

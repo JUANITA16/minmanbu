@@ -1,7 +1,7 @@
 import { Box, Modal } from "@mui/material";
 import { Fragment, useEffect, useState } from "react"
 import { Button, Col, Collapsible, CollapsibleItem, Icon, Row } from "react-materialize";
-import ServerAPI from "../../services/server";
+import { ServerAPI } from "../../services/server";
 import { CardHeader } from "../components";
 import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
@@ -169,9 +169,10 @@ function ConfiguracionHomologacion (params) {
   const getdbData = async function () {
     let resp = [];
     try {
-      resp = await service.getAllCosif().then((resp) => {return resp});
+      resp = await service.getAllCosif();
       if (resp.status === 200) {
-        setdbData(resp.data);
+        var dataTable = await resp.data
+        setdbData(dataTable);
       }
       return resp
     } catch (error) {
