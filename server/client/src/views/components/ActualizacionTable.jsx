@@ -5,7 +5,14 @@ import ReactPaginate from "react-paginate";
 import Select from 'react-select'
 
 function ActTable(props) {
-  let tableData = [];
+  let tableData = [
+    {
+      update_id:"",
+      consecutive : "",
+      exec_date :"",
+      user: ""
+    }
+  ];
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
