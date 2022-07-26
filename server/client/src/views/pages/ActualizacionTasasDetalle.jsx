@@ -8,10 +8,6 @@ import ReactPaginate from 'react-paginate';
 
 import ExportExcel from 'react-export-excel'
 
-const ExcelFile = ExportExcel.ExcelFile;
-const ExcelSheet = ExportExcel.ExcelSheet;
-const ExcelColumn = ExportExcel.ExcelColumn;
-
 export default function ActualizacionTasasDetalle(props) {
     //Detalles
     const [tableHeaderDetalle, setTableHeaderDetalle] = useState();
@@ -28,6 +24,11 @@ export default function ActualizacionTasasDetalle(props) {
     var currentItemsDetalle = [];
     var itemOffsetDetalle;
     var totalPaginasDetalle = 0;
+
+    
+    const ExcelFile = ExportExcel.ExcelFile;
+    const ExcelSheet = ExportExcel.ExcelSheet;
+    const ExcelColumn = ExportExcel.ExcelColumn;
 
 
     const TableBodyDetalle = (props) => {
@@ -175,9 +176,11 @@ export default function ActualizacionTasasDetalle(props) {
               </Button>
             </Col>
             <Col s={2} m={2} style={{ float: 'right' }} >
-              <label className="active">Cantidad de registros</label>
-              <Select className="basic-single" defaultValue={cantPaginasDetalle[0]}  options={cantPaginasDetalle} onChange={onChangeCantPaginasDetalle} />
-            </Col>
+                <form data-testid="cantRegForm">
+                    <label htmlFor="cantRegSelect"   className="active">Cantidad de registros</label>
+                    <Select className="basic-single" name="cantRegSelect"   inputId="cantRegSelect" defaultValue={cantPaginasDetalle[0]}  options={cantPaginasDetalle} onChange={onChangeCantPaginasDetalle} />
+                </form>
+              </Col>
           </Row>
           <Row>
             <Table>
