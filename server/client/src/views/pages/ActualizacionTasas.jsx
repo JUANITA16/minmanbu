@@ -4,6 +4,7 @@ import { CardHeader, InputDate } from "../components";
 import Select from 'react-select'
 import { convertTZ } from "../../helpers/utils";
 import ActTable from "../components/ActualizacionTable";
+import ActualizacionTasasDetalle from './ActualizacionTasasDetalle'
 
 function ActualizacionTasas() {
   const currDate = convertTZ(new Date());
@@ -16,6 +17,7 @@ function ActualizacionTasas() {
   const [consecutivo, setConsecutivo] = useState("");
   const [filtenable, setfiltEnable] = useState(false);
   const [table, setTable] = useState(<></>);
+  const [isPantallaPrincipal, setIsPantallaPrincipal] = useState(true);
 
   function applyFilters(record, filters) {
     let isValid = true
@@ -39,10 +41,10 @@ function ActualizacionTasas() {
     return table
   }
   useEffect( function () {
-    setTable(<ActTable />)
-  } ,[])
+    setTable(<ActTable setIsPantallaPrincipal={setIsPantallaPrincipal}/>)
+  } ,[isPantallaPrincipal,])
 
-  return (
+  return isPantallaPrincipal ? (
     <Fragment>
       <CardHeader title={"Actualización Masiva de Tasas"}
         description={"En esta sección podrá realizar el proceso de actualización de tasas de forma masiva."} />
@@ -107,8 +109,7 @@ function ActualizacionTasas() {
       </Row>
       {renderTable()}
     </Fragment>
-  )
-
+  ): (<ActualizacionTasasDetalle setIsPantallaPrincipal={setIsPantallaPrincipal}/>)
 }
 
 export default ActualizacionTasas;
