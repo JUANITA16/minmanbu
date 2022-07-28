@@ -16,7 +16,7 @@
     "axios": "^0.27.2",
     "axios-oauth-client": "^1.4.3",
     "material-icons": "^1.2.0",
-    "materialize-css": "^1.0.0",
+    "materialize-css": "^1.0.0-rc.2",
     "qs": "^6.10.1",
     "react": "^17.0.2",
     "react-datepicker": "^4.2.0",
