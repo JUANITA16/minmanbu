@@ -284,7 +284,7 @@ export default function CreacionCuenta() {
       "application/vnd.ms-excel",
       "text/csv"
     ];
-    let validExtensions = [".xlsx", ".xls", ".csv"];
+    let validExtensions = ["xlsx", "xls", "csv"];
     let nameArray = fileName.split(".")
     
     if (validExtensions.includes(nameArray[nameArray.length -1]) & 
