@@ -10,10 +10,10 @@ import { ServerAPI } from "../../services/server";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
-const service = new ServerAPI();
-
 export default function ConfiguracionContableGeneral() {
   
+    const service = new ServerAPI();
+
     const title = "Configuración general"
     const description = "En esta sección podrá realizar la configuración general asociada a los movimientos de CDTs desde Dominus"
     
@@ -47,8 +47,10 @@ export default function ConfiguracionContableGeneral() {
     const SelecTipoEmisiones = (props) => {
         return(
             <Col s={12} m={3}>
-                <label className="active">Tipo de emisión</label>
-                <Select className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
+                <form data-testid="tipoEmisionForm">
+                    <label htmlFor="tipoEmisionSelect" className="active">Tipo de emisión</label>
+                    <Select name="tipoEmisionSelect"  inputId="tipoEmisionSelect" className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
+                </form>
             </Col>
         )
     }
@@ -215,12 +217,10 @@ export default function ConfiguracionContableGeneral() {
             setSelecTipoEmisiones(<SelecTipoEmisiones/>)
             setIsDisabledButtonFilter(true);
         }
-        const dataTable =  await service.getAllTaxAProdT().then(response => {
-            return response;
-            }
-          );
+        const dataTable =  await service.getAllTaxAProdT();
+
         if (dataTable.status === 200){
-            var contentAll =dataTable.data;
+            var contentAll = await dataTable.data;
             if (contentAll.length > 0) {
 
                 contentAll.forEach(element =>{
@@ -359,8 +359,10 @@ export default function ConfiguracionContableGeneral() {
                     </Row>
                     <Row>
                         <Col s={12} m={2}>
-                            <label className="active">Cantidad de registros</label>
-                            <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginasGeneral} />
+                            <form data-testid="cantRegForm">
+                                <label htmlFor="cantRegSelect"  className="active">Cantidad de registros</label>
+                                <Select name="cantRegSelect" inputId="cantRegSelect" className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginasGeneral} />
+                            </form>
                         </Col>
                         <Col s={6} m={12}>
                             <Table>

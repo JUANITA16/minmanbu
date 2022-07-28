@@ -4,10 +4,9 @@ import { ServerAPI } from "../../services/server";
 import { toast } from 'react-toastify';
 import { Box, Modal, Snackbar, Alert, Stack, LinearProgress, Fade } from "@mui/material";
 
-
-const service = new ServerAPI();
-
 export default function ModalConfiguracionHomologacion(props) {
+
+  const service = new ServerAPI();
 
   const [open, setOpen] = useState(false);
   const [mensajeWarning, setMensajeWarning] = useState('');

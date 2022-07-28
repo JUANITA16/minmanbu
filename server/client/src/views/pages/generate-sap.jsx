@@ -4,9 +4,10 @@ import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
 import { Row, Col, Button } from 'react-materialize'
 import { ServerAPI } from "../../services/server";
 
-const service = new ServerAPI();
-
 export default function GenerateSap() {
+  
+  const service = new ServerAPI();
+
   const title = 'Archivo SAP';
   const description = 'En esta sección podrá generar el archivo plano por parte de SAP, para generarlo solo debe seleccionar las fechas y enviar la solicitud la cual será generada de forma automatica.';
   const [startDate, setStartDate] = useState(convertTZ(new Date()));
