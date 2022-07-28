@@ -278,17 +278,38 @@ export default function CreacionCuenta() {
     setIsDisabledButtonFilter(true);
   }
 
-  const changeHandler = (event) => {
-    if (event) {
-
-      if (event.target.files[0] !== undefined) {
-        setSelectedFile(event.target.files[0]);
-        setNameFileSelected(event.target.files[0].name);
-        setIsSelected(true);
-        setIsDisabledButton(false);
-      }
-
+  const valideFileType = function (fileType, fileName) {
+    let validTypes = [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "text/csv"
+    ];
+    let validExtensions = [".xlsx", ".xls", ".csv"];
+    let nameArray = fileName.split(".")
+    
+    if (validExtensions.includes(nameArray[nameArray.length -1]) & 
+        validTypes.includes(fileType)) {
+      return true
+    } else {
+      return false
     }
+
+  };
+
+  const changeHandler = (event) => {
+    event.preventDefault()
+    if (valideFileType(event.target.files[0].type, event.target.files[0].name)) {
+      setSelectedFile(event.target.files[0]);
+      setNameFileSelected(event.target.files[0].name);
+      setIsSelected(true);
+      setIsDisabledButton(false);
+    } else {
+      setSelectedFile("");
+      setNameFileSelected("El archivo es inválido. Por favor subir un archivo .xlsx, .xls o .csv");
+      setIsSelected(false);
+      setIsDisabledButton(true);
+    }
+
   };
 
   const toBase64 = file => new Promise((resolve, reject) => {
