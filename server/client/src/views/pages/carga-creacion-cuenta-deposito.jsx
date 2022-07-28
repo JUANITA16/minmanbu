@@ -288,7 +288,7 @@ export default function CreacionCuenta() {
     let nameArray = fileName.split(".")
     
     if (validExtensions.includes(nameArray[nameArray.length -1]) & 
-        validTypes.includes(fileType)) {
+        validTypes.includes(fileType) & !(fileName.startsWith("="))) {
       return true
     } else {
       return false
