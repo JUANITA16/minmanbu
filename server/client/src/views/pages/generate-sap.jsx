@@ -67,7 +67,7 @@ const renderElement = () => {
         </form>
       </React.Fragment>
     )
-    : showToast('Estamos generando el archivo, por favor consulte el resultado del proceso')
+    : null
 }
 
 return renderElement()
