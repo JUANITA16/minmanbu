@@ -53,7 +53,6 @@ export default function GenerateSap() {
   }, [startDate, endDate])
 
 async function submit(event) {
-  showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
   event.preventDefault();
   setResponse(() => '');
   setFileName(() => '');
