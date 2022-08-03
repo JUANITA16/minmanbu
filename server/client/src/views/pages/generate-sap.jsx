@@ -28,11 +28,8 @@ export default function GenerateSap() {
     setData(() => `Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   }, [startDate, endDate])
 
-  useEffect(() => {
-    showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
-  }, [response, fileName, contentFile])
-
 async function submit(event) {
+  showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
   event.preventDefault();
   setResponse(() => '');
   setFileName(() => '');
