@@ -46,8 +46,7 @@ async function submit(event) {
 }
 
 const renderElement = () => {
-  return !inProgress
-    ? (
+  return (
       <React.Fragment>
         <CardHeader title={title} description={description} aditional={aditional} />
         <form onSubmit={submit}>
@@ -59,7 +58,7 @@ const renderElement = () => {
               <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate}   dateInput={endDate} />
             </Col>
             <Col s={12} className="input-field m0">
-              <Button node="button" type="submit" small className="indigo darken-4">
+              <Button node="button" type="submit" small className="indigo darken-4" >
                 Generar
                 </Button>
             </Col>
@@ -67,7 +66,7 @@ const renderElement = () => {
         </form>
       </React.Fragment>
     )
-    : showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
+
 }
 
 return renderElement()
