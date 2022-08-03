@@ -67,7 +67,7 @@ const renderElement = () => {
         </form>
       </React.Fragment>
     )
-    : <Loading text={loaderText} aditional={aditional} />
+    : showToast('Estamos generando el archivo, por favor consulte el resultado del proceso')
 }
 
 return renderElement()
