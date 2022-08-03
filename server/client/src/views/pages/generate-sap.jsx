@@ -25,11 +25,35 @@ export default function GenerateSap() {
   }, []);
 
   useEffect(() => {
+    function download() {
+      console.log('fileName download:' + fileName);
+      const element = document.createElement("a");
+      const file = new Blob([contentFile], { type: 'text/plain;charset-utf-8' });
+      element.href = URL.createObjectURL(file);
+      element.download = fileName;
+      document.body.appendChild(element); // Required for this to work in FireFox
+      element.click();
+    }
+
+    if (response !== '') {
+      setInProgress(() => false);
+      showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
+      showToast(() => response);
+
+      // if(fileName !== '' && (typeof fileName !== 'undefined') && contentFile!=='' ) {
+      //   download();
+      // }
+      
+    }
+  }, [response, fileName, contentFile])
+
+
+  useEffect(() => {
     setData(() => `Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   }, [startDate, endDate])
 
 async function submit(event) {
-  //showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
+  showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
   event.preventDefault();
   setResponse(() => '');
   setFileName(() => '');
