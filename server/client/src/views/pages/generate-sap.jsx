@@ -82,7 +82,7 @@ const renderElement = () => {
               <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate}   dateInput={endDate} />
             </Col>
             <Col s={12} className="input-field m0">
-              <Button node="button" type="submit" small className="indigo darken-4" >
+              <Button node="button" type="submit" small className="indigo darken-4" disabled={inProgress} >
                 Generar
                 </Button>
             </Col>
