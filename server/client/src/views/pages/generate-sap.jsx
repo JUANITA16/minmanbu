@@ -14,6 +14,8 @@ export default function GenerateSap() {
   const [endDate, setEndDate] = useState(convertTZ(new Date()));
   const [aditional, setData] = useState(`Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   const [loaderText] = useState('Estamos generando el archivo, por favor espere...');
+  const loadDescription = 'Estamos generando el archivo, por favor espere...';
+  
   const [inProgress, setInProgress] = useState(false);
   const [response, setResponse] = useState('');
   const [fileName, setFileName] = useState('');
@@ -69,9 +71,28 @@ async function submit(event) {
 }
 
 const renderElement = () => {
-  return (
+  return !inProgress ? (
       <React.Fragment>
         <CardHeader title={title} description={description} aditional={aditional} />
+        <form onSubmit={submit}>
+          <Row>
+            <Col s={12} m={6} className="input-field date text-left">
+              <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate}  dateInput={startDate}  />
+            </Col>
+            <Col s={12} m={6} className="input-field date text-left">
+              <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate}   dateInput={endDate} />
+            </Col>
+            <Col s={12} className="input-field m0">
+              <Button node="button" type="submit" small className="indigo darken-4" disabled={inProgress} >
+                Generar
+                </Button>
+            </Col>
+          </Row>
+        </form>
+      </React.Fragment>
+    ) : (
+      <React.Fragment>
+        <CardHeader title={title} description={loadDescription} aditional={aditional} />
         <form onSubmit={submit}>
           <Row>
             <Col s={12} m={6} className="input-field date text-left">
