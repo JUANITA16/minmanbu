@@ -69,12 +69,8 @@ async function submit(event) {
 
   
  service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),user_name).then( (data) => {
-    if( data && data.message){
-      //setFileName(() => data.filename);
-      //setContenFile(() => data.information);
-      //setResponse(() => data.detail + "-" + data.filename);
-      setResponse(() => data.message);
-      }
+    setResponse(() => data.message);
+    
   });
 }
 
