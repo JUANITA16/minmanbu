@@ -45,9 +45,10 @@ export default function GenerateSap() {
       setInProgress(() => false);
       showToast(() => response);
 
-      // if(fileName !== '' && (typeof fileName !== 'undefined') && contentFile!=='' ) {
+      if(fileName !== '' && (typeof fileName !== 'undefined') && contentFile!=='' ) {
       //   download();
-      // }
+        console.log('fileName download:' + fileName);
+      }
       
     }
   }, [response, fileName, contentFile])
@@ -76,6 +77,9 @@ async function submit(event) {
       setResponse(() => data.detail + "-" + data.filename);
       }
   });
+
+  let resp = []
+  return resp;
 }
 
 const renderElement = () => {
