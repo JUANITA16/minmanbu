@@ -69,6 +69,13 @@ async function submit(event) {
 
   const user_name = 'test_user'
   
+ service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),user_name).then( (data) => {
+    if( data && data.detail){
+      setFileName(() => data.filename);
+      setContenFile(() => data.information);
+      setResponse(() => data.detail + "-" + data.filename);
+      }
+  });
 }
 
 const renderElement = () => {
