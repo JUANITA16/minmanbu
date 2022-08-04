@@ -57,9 +57,8 @@ async function submit(event) {
   setContenFile(() => '');
   setInProgress(() => true);
 
-  const user_name = 'test_user'
   
- service.generateFile(setFormatDate(startDate), setFormatDate(endDate),user_name).then( (data) => {
+ service.generateFile(setFormatDate(startDate), setFormatDate(endDate)).then( (data) => {
     if( data && data.detail){
       setFileName(() => data.filename);
       setContenFile(() => data.information);
