@@ -1,24 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { InputDate, CardHeader, Loading } from '../components/index'
 import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
-import { Row, Col, Button } from 'react-materialize'
+import { Button, Col, Row, CollapsibleItem, Icon, Collapsible } from "react-materialize";
 import { ServerAPI } from "../../services/server";
 
 export default function GenerateSap() {
   
   const service = new ServerAPI();
-
+  const currDate = convertTZ(new Date());
+  let minDate = new Date();
+  minDate.setDate(minDate.getDate()-6);
   const title = 'Archivo SAP';
   const description = 'En esta sección podrá generar el archivo plano por parte de SAP, para generarlo solo debe seleccionar las fechas y enviar la solicitud la cual será generada de forma automatica.';
   const [startDate, setStartDate] = useState(convertTZ(new Date()));
   const [endDate, setEndDate] = useState(convertTZ(new Date()));
+  const [initDate, setInitDate] = useState(currDate);
+  const [finalDate, setFinalDate] = useState(currDate);
   const [aditional, setData] = useState(`Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   const [loaderText] = useState('Estamos generando el archivo, por favor espere...');
   const [inProgress, setInProgress] = useState(false);
   const [response, setResponse] = useState('');
   const [fileName, setFileName] = useState('');
   const [contentFile, setContenFile] = useState('');
+  const [filtenable, setfiltEnable] = useState(false);
+  const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
 
+  const handleApplyFilters = function (event) {
+    setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
+    setfiltEnable(true);
+  };
+  const handleDeleteFilters = function (event) {
+    setFilterHeader(<p>Filtros</p>);
+    setInitDate(currDate);
+    setFinalDate(currDate);
+    setfiltEnable(false);
+  };
 
   useEffect(() => {
     document.title = title
@@ -81,11 +97,47 @@ const renderElement = () => {
               <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate}   dateInput={endDate} />
             </Col>
             <Col s={12} className="input-field m0">
-              <Button node="button" type="submit" small className="indigo darken-4">
+              <Button style={{ float: 'right' }} node="button" type="submit" small className="indigo darken-4">
                 Generar
-                </Button>
+              </Button>
             </Col>
           </Row>
+        {/* Filtros */}
+        <Row>
+          <Collapsible accordion={false}>
+              <CollapsibleItem
+              expanded={false}
+              header={filterHeader}
+              icon={<Icon>filter_list</Icon>}
+              node="div"
+              >
+              <Row>
+                <Col s={12} m={6} l={6} xl={6}>
+                  <InputDate labelName="Fecha Inicial" maxValue={finalDate} 
+                    setDate={setInitDate} dateInput={initDate}  />
+                </Col>
+                <Col s={12} m={6} l={6} xl={6}  >
+                  <InputDate labelName="Fecha Final" maxValue={currDate}
+                  minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />
+                </Col>
+                </Row>
+              <Row>
+                <Col s={12} m={6} l={6} xl={3}>
+                  <Button node="button" small className="indigo darken-4" 
+                    onClick={handleApplyFilters} disabled={filtenable} >
+                    Aplicar filtros
+                  </Button>
+                </Col>
+                <Col s={12} m={6} l={6} xl={3}>
+                  <Button node="button"  small className="indigo darken-4"
+                    onClick={handleDeleteFilters} disabled={!filtenable}>
+                    Borrar filtros
+                  </Button>
+                </Col>
+              </Row>
+            </CollapsibleItem>
+          </Collapsible>  
+        </Row>
         </form>
       </React.Fragment>
     )

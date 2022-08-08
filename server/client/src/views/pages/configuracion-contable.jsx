@@ -10,14 +10,12 @@ export default function ConfiguracionContable() {
 
     const [pantallaVisible, setPantallaVisible] = useState();
     async function goToConfiguracionGeneral (event) {
-        console.log('go to configuracion general');
         setPantallaVisible(
             <ConfiguracionContableGeneral/>
         );
     };
 
     async function goToHomologacion (event) {
-        console.log('Go to Homologación');
         setPantallaVisible(
             <ConfiguracionHomologacion />
         );
