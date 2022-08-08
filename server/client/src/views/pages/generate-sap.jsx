@@ -4,12 +4,17 @@ import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
 import { Button, Col, Row, CollapsibleItem, Icon, Collapsible } from "react-materialize";
 import { ServerAPI } from "../../services/server";
 
+import { useMsal } from "@azure/msal-react";
+
 export default function GenerateSap() {
-  
+
   const service = new ServerAPI();
   const currDate = convertTZ(new Date());
   let minDate = new Date();
   minDate.setDate(minDate.getDate()-6);
+
+  // const { instance } = useMsal();
+
   const title = 'Archivo SAP';
   const description = 'En esta sección podrá generar el archivo plano por parte de SAP, para generarlo solo debe seleccionar las fechas y enviar la solicitud la cual será generada de forma automatica.';
   const [startDate, setStartDate] = useState(convertTZ(new Date()));
@@ -37,12 +42,9 @@ export default function GenerateSap() {
   };
 
   useEffect(() => {
+    console.log(instance)
     document.title = title
   }, []);
-
-  useEffect(() => {
-    setData(() => `Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
-  }, [startDate, endDate])
 
   useEffect(() => {
     function download() {
@@ -59,33 +61,41 @@ export default function GenerateSap() {
       setInProgress(() => false);
       showToast(() => response);
 
-      if(fileName !== '' && (typeof fileName !== 'undefined') && contentFile!=='' ) {
-        download();
-      }
+      // if(fileName !== '' && (typeof fileName !== 'undefined') && contentFile!=='' ) {
+      //   download();
+      // }
       
     }
   }, [response, fileName, contentFile])
 
+
+  useEffect(() => {
+    setData(() => `Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
+  }, [startDate, endDate])
+
 async function submit(event) {
+  showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
   event.preventDefault();
   setResponse(() => '');
   setFileName(() => '');
   setContenFile(() => '');
   setInProgress(() => true);
 
+  const user_name = instance.getActiveAccount().idTokenClaims
+
   
- service.generateFile(setFormatDate(startDate), setFormatDate(endDate)).then( (data) => {
-    if( data && data.detail){
-      setFileName(() => data.filename);
-      setContenFile(() => data.information);
-      setResponse(() => data.detail + "-" + data.filename);
+ service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),user_name).then( (data) => {
+    if( data && data.message){
+      //setFileName(() => data.filename);
+      //setContenFile(() => data.information);
+      //setResponse(() => data.detail + "-" + data.filename);
+      setResponse(() => data.message);
       }
   });
 }
 
 const renderElement = () => {
-  return !inProgress
-    ? (
+  return (
       <React.Fragment>
         <CardHeader title={title} description={description} aditional={aditional} />
         <form onSubmit={submit}>
@@ -97,11 +107,13 @@ const renderElement = () => {
               <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate}   dateInput={endDate} />
             </Col>
             <Col s={12} className="input-field m0">
-              <Button style={{ float: 'right' }} node="button" type="submit" small className="indigo darken-4">
+              <Button node="button" style={{ float: 'right' }} type="submit" 
+                      small className="indigo darken-4" disabled={inProgress} >
                 Generar
               </Button>
             </Col>
           </Row>
+        </form>
         {/* Filtros */}
         <Row>
           <Collapsible accordion={false}>
@@ -138,10 +150,9 @@ const renderElement = () => {
             </CollapsibleItem>
           </Collapsible>  
         </Row>
-        </form>
       </React.Fragment>
     )
-    : <Loading text={loaderText} aditional={aditional} />
+
 }
 
 return renderElement()

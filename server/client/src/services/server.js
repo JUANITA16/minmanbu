@@ -5,12 +5,12 @@ import { getToken } from '../index';
 class ServerAPI {
     base_url = process.env.REACT_APP_SERVER_BASE_PATH
 
-    generateSAP = async (from, to) => {
+    generateSAP = async (from, to,user_name) => {
         try{
             const url = this.base_url + "/sap"
             const config = {
                 headers: { Authorization: await getToken() },
-                params: { from, to}
+                params: { from, to,user_name}
             }
 
             const res = await axios.get(url, config);
