@@ -65,10 +65,10 @@ async function submit(event) {
   setContenFile(() => '');
   setInProgress(() => true);
 
-  const user_name = instance.getActiveAccount().idTokenClaims
+  const {name} = instance.getActiveAccount().idTokenClaims
 
   
- service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),user_name).then( (data) => {
+ service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),name).then( (data) => {
     if( data && data.message){
       //setFileName(() => data.filename);
       //setContenFile(() => data.information);
