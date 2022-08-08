@@ -20,7 +20,7 @@ export default function GenerateSap() {
   let minDate = new Date();
   minDate.setDate(minDate.getDate()-6);
 
-  // const { instance } = useMsal();
+  const { instance } = useMsal();
 
   const title = 'Archivo SAP';
   const description = 'En esta sección podrá generar el archivo plano por parte de SAP, para generarlo solo debe seleccionar las fechas y enviar la solicitud la cual será generada de forma automatica.';
@@ -121,12 +121,10 @@ async function submit(event) {
   setContenFile('');
   setInProgress(true);
 
-  // const user_name = instance.getActiveAccount().idTokenClaims
-  const user_name = "Cristian Triana"
-  
+  const {name} = instance.getActiveAccount().idTokenClaims
 
   
- service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),user_name).then( (data) => {
+ service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),name).then( (data) => {
     if( data && data.message){
       //setFileName(() => data.filename);
       //setContenFile(() => data.information);
