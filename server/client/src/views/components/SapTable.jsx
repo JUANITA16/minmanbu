@@ -1,44 +1,17 @@
-import { CircularProgress, Modal, Box } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { Button, Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
 import Select from 'react-select'
 
-function ActTable(props) {
-  let tableData = [
-    {
-      update_id:"",
-      consecutive : "",
-      exec_date :"",
-      user: ""
-    }
-  ];
+function SapTable({tableData}) {
+
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
   const [isloading, setIsloading] = useState(true);
   const [tableBody, setTableBody] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [infoModal, setInfoModal] = useState({
-    consecutive: "",
-    accounting_account: "", 
-    cosif: "", 
-    costcenteraccounting: ""
-  })
-  const modalTitle = "Editar - Configuración homologación"
-  const modalDescription = "En esta sección podrá realizar la edición de los registros Configuración homologación"
-  const tipoProceso = "Editar"
 
-  // const modalStyle = {
-  //   position: 'absolute',
-  //   top: '50%',
-  //   left: '50%',
-  //   transform: 'translate(-50%, -50%)',
-  //   width: '50%',
-  //   bgcolor: 'background.paper',
-  //   boxShadow: 24,
-  //   p: 4,
-  // };
 
 
   const totalResults = [
@@ -53,10 +26,10 @@ function ActTable(props) {
     setVisibleData(tableData.slice(page*maxResults, maxResults*(page + 1)))
   };
   
-  const handleDetails = function (event){
-    props.setIsPantallaPrincipal(false)
-    console.log("Abrir Detalle")
-  };
+  const handleDownload = function(event){
+    event.preventDefault();
+    console.log("Descargando el Archivo...")
+  }
 
   const renderLoading = function (isloading){
     if (isloading) {
@@ -88,12 +61,14 @@ function ActTable(props) {
     } else {
       setTableBody(visibleData.map( (data) => {
         return (
-          <tr key={data.update_id}>
-            <td>{data.consecutive}</td>
-            <td>{data.exec_date}</td>
-            <td>{data.user}</td>
-            <td><Button small onClick={handleDetails} className="indigo darken-4">
-              Detalles</Button>
+          <tr key={data.id}>
+            <td>{data.dateProcess}</td>
+            <td>{data.filename}</td>
+            <td>{data.from_date}</td>
+            <td>{data.file_status}</td>
+            <td>{data.user_name}</td>
+            <td><Button small onClick={handleDownload} className="indigo darken-4">
+              Descargar</Button>
             </td>
         </tr>)}));
     }
@@ -111,15 +86,16 @@ function ActTable(props) {
        </Col>
      </Row>
     {/* Table generation */}
-    <div>
-  
+    <div> 
       <Table>
         <thead>
           <tr>
-            <th>Consecutivo </th>
-            <th>Fecha ejecución</th>
+            <th>Fecha generación</th>
+            <th>Nombre del Archivo</th>
+            <th>Periodo Generación</th>
+            <th>Estado Generación</th>
             <th>Usuario</th>
-            <th>Detalles</th>
+            <th>Descarga</th>
           </tr>
         </thead>
         <tbody>
@@ -146,4 +122,4 @@ function ActTable(props) {
 
 }
 
-export default ActTable
+export default SapTable

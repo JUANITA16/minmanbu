@@ -42,7 +42,7 @@ function ActualizacionTasas() {
   }
   useEffect( function () {
     setTable(<ActTable setIsPantallaPrincipal={setIsPantallaPrincipal}/>)
-  } ,[isPantallaPrincipal,])
+  } ,[isPantallaPrincipal])
 
   return isPantallaPrincipal ? (
     <Fragment>

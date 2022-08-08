@@ -5,6 +5,13 @@ import { Button, Col, Row, CollapsibleItem, Icon, Collapsible } from "react-mate
 import { ServerAPI } from "../../services/server";
 
 import { useMsal } from "@azure/msal-react";
+import SapTable from "../components/SapTable";
+import ExportExcel from 'react-export-excel'
+
+
+const ExcelFile = ExportExcel.ExcelFile;
+const ExcelSheet = ExportExcel.ExcelSheet;
+const ExcelColumn = ExportExcel.ExcelColumn;
 
 export default function GenerateSap() {
 
@@ -22,13 +29,24 @@ export default function GenerateSap() {
   const [initDate, setInitDate] = useState(currDate);
   const [finalDate, setFinalDate] = useState(currDate);
   const [aditional, setData] = useState(`Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
-  const [loaderText] = useState('Estamos generando el archivo, por favor espere...');
   const [inProgress, setInProgress] = useState(false);
   const [response, setResponse] = useState('');
   const [fileName, setFileName] = useState('');
   const [contentFile, setContenFile] = useState('');
   const [filtenable, setfiltEnable] = useState(false);
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
+  const [table, setTable] = useState(<></>);
+  const [tableData, setTableData] = useState([
+    {
+      id:"",
+      dateProcess : "",
+      filename :"",
+      from_date :"",
+      file_status :"",
+      user_name: "",
+    }
+  ]);
+
 
   const handleApplyFilters = function (event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
@@ -40,11 +58,33 @@ export default function GenerateSap() {
     setFinalDate(currDate);
     setfiltEnable(false);
   };
+  
+  const dbData = [
+    {
+      id:"123",
+      dateProcess : "fecaa",
+      filename :"test.txt",
+      from_date :"123",
+      file_status :"Bien",
+      user_name: "Cristian"
+    }
+  ]
+
+  function renderTable() {
+    return table
+  }
 
   useEffect(() => {
-    console.log(instance)
     document.title = title
   }, []);
+
+  useEffect(() => {
+    setTableData(dbData)
+  }, [dbData])
+
+  useEffect(() => {
+    setTable(<SapTable tableData={tableData} />);
+  }, [tableData])
 
   useEffect(() => {
     function download() {
@@ -74,14 +114,16 @@ export default function GenerateSap() {
   }, [startDate, endDate])
 
 async function submit(event) {
-  showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
   event.preventDefault();
-  setResponse(() => '');
-  setFileName(() => '');
-  setContenFile(() => '');
-  setInProgress(() => true);
+  showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
+  setResponse('');
+  setFileName('');
+  setContenFile('');
+  setInProgress(true);
 
-  const user_name = instance.getActiveAccount().idTokenClaims
+  // const user_name = instance.getActiveAccount().idTokenClaims
+  const user_name = "Cristian Triana"
+  
 
   
  service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),user_name).then( (data) => {
@@ -150,6 +192,25 @@ const renderElement = () => {
             </CollapsibleItem>
           </Collapsible>  
         </Row>
+        {/* Renderizado de la tabla */}
+        {renderTable()}
+        <Row>
+            <Col s={12} m={12} className="input-field m0">
+              <ExcelFile
+                element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+                filename="Resultado de creación Plano SAP">
+                <ExcelSheet data={tableData} name="Resultados">
+                  <ExcelColumn label="Fecha generación" value="dateProcess" />
+                  <ExcelColumn label="Nombre del Archivo" value="filename" />
+                  <ExcelColumn label="Periodo Generación" value="from_date" />
+                  <ExcelColumn label="Estado Generación" value="file_status" />
+                  <ExcelColumn label="Usuario" value="user_name" />
+                </ExcelSheet>
+    
+              </ExcelFile>
+    
+            </Col>
+          </Row>
       </React.Fragment>
     )
 
