@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { InputDate, CardHeader, Loading } from '../components/index'
+import { InputDate, CardHeader } from '../components/index'
 import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
 import { Button, Col, Row, CollapsibleItem, Icon, Collapsible } from "react-materialize";
 import { ServerAPI } from "../../services/server";
 
 import { useMsal } from "@azure/msal-react";
 import SapTable from "../components/SapTable";
-import ExportExcel from 'react-export-excel'
+import ReactExport from 'react-export-excel';
 
 
-const ExcelFile = ExportExcel.ExcelFile;
-const ExcelSheet = ExportExcel.ExcelSheet;
-const ExcelColumn = ExportExcel.ExcelColumn;
 
 export default function GenerateSap() {
-
+  const ExcelFile = ReactExport.ExcelFile;
+  const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+  const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
   const service = new ServerAPI();
   const currDate = convertTZ(new Date());
   let minDate = new Date();
@@ -46,6 +45,18 @@ export default function GenerateSap() {
       user_name: "",
     }
   ]);
+  const [dbData, setDbData] = useState(
+    [
+      {
+        id:"123",
+        dateProcess : "fecaa",
+        filename :"test.txt",
+        from_date :"123",
+        file_status :"Bien",
+        user_name: "Cristian"
+      }
+    ]
+  )
 
 
   const handleApplyFilters = function (event) {
@@ -58,17 +69,7 @@ export default function GenerateSap() {
     setFinalDate(currDate);
     setfiltEnable(false);
   };
-  
-  const dbData = [
-    {
-      id:"123",
-      dateProcess : "fecaa",
-      filename :"test.txt",
-      from_date :"123",
-      file_status :"Bien",
-      user_name: "Cristian"
-    }
-  ]
+
 
   function renderTable() {
     return table
@@ -98,7 +99,7 @@ export default function GenerateSap() {
     }
 
     if (response !== '') {
-      setInProgress(() => false);
+      // setInProgress(() => false);
       showToast(() => response);
 
       // if(fileName !== '' && (typeof fileName !== 'undefined') && contentFile!=='' ) {
@@ -113,7 +114,7 @@ export default function GenerateSap() {
     setData(() => `Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   }, [startDate, endDate])
 
-async function submit(event) {
+async function handleSubmit(event) {
   event.preventDefault();
   showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
   setResponse('');
@@ -126,10 +127,7 @@ async function submit(event) {
   
  service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),name).then( (data) => {
     if( data && data.message){
-      //setFileName(() => data.filename);
-      //setContenFile(() => data.information);
-      //setResponse(() => data.detail + "-" + data.filename);
-      setResponse(() => data.message);
+      showToast(data.message);
       }
   });
 }
@@ -138,7 +136,7 @@ const renderElement = () => {
   return (
       <React.Fragment>
         <CardHeader title={title} description={description} aditional={aditional} />
-        <form onSubmit={submit}>
+        <form onSubmit={handleSubmit}>
           <Row>
             <Col s={12} m={6} className="input-field date text-left">
               <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate}  dateInput={startDate}  />
@@ -148,7 +146,8 @@ const renderElement = () => {
             </Col>
             <Col s={12} className="input-field m0">
               <Button node="button" style={{ float: 'right' }} type="submit" 
-                      small className="indigo darken-4" disabled={inProgress} >
+                      small className="indigo darken-4" disabled={inProgress}
+                      data-testid="test-submit" >
                 Generar
               </Button>
             </Col>
