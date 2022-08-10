@@ -16,8 +16,7 @@ export default function GenerateSap() {
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
   const service = new ServerAPI();
   const currDate = convertTZ(new Date());
-  let minDate = new Date();
-  minDate.setDate(minDate.getDate()-6);
+  let minDate = new Date(2021, 1, 1);
 
   const { instance } = useMsal();
 
@@ -99,13 +98,7 @@ export default function GenerateSap() {
     }
 
     if (response !== '') {
-      // setInProgress(() => false);
       showToast(() => response);
-
-      // if(fileName !== '' && (typeof fileName !== 'undefined') && contentFile!=='' ) {
-      //   download();
-      // }
-      
     }
   }, [response, fileName, contentFile])
 
@@ -113,6 +106,9 @@ export default function GenerateSap() {
   useEffect(() => {
     setData(() => `Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   }, [startDate, endDate])
+
+
+  
 
 async function handleSubmit(event) {
   event.preventDefault();
@@ -131,6 +127,23 @@ async function handleSubmit(event) {
       }
   });
 }
+useEffect(() => {
+  // Comparamos las fechas para que no superen los 7 días(Fecha Final)
+  let deltaDate = endDate - startDate
+  // El número especifícado en el condicional equivale a la diferencia de 7 días
+  if (deltaDate > 518400931) {
+    setEndDate(startDate)
+  }
+}, [startDate])
+useEffect(() => {
+  // Comparamos las fechas para que no superen los 7 días(Fecha Inicial)
+  let deltaDate = endDate - startDate
+  // El número especifícado en el condicional equivale a la diferencia de 7 días
+  if (deltaDate > 518400931) {
+    setStartDate(endDate)
+  }
+}, [endDate])
+
 
 const renderElement = () => {
   return (
@@ -139,10 +152,12 @@ const renderElement = () => {
         <form onSubmit={handleSubmit}>
           <Row>
             <Col s={12} m={6} className="input-field date text-left">
-              <InputDate labelName="Fecha inicial" maxValue={endDate} setDate={setStartDate}  dateInput={startDate}  />
+              <InputDate labelName="Fecha inicial" maxValue={currDate} 
+                setDate={setStartDate}  dateInput={startDate} minValue={minDate} />
             </Col>
             <Col s={12} m={6} className="input-field date text-left">
-              <InputDate labelName="Fecha final" minValue={startDate} setDate={setEndDate}   dateInput={endDate} />
+              <InputDate labelName="Fecha final" minValue={startDate} 
+                setDate={setEndDate}  dateInput={endDate}  />
             </Col>
             <Col s={12} className="input-field m0">
               <Button node="button" style={{ float: 'right' }} type="submit" 
@@ -169,7 +184,7 @@ const renderElement = () => {
                 </Col>
                 <Col s={12} m={6} l={6} xl={6}  >
                   <InputDate labelName="Fecha Final" maxValue={currDate}
-                  minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />
+                    minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />
                 </Col>
                 </Row>
               <Row>
