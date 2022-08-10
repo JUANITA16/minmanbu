@@ -53,7 +53,6 @@ export default function App() {
               
               </AuthenticatedTemplate>
             }
-            <Route path={base + '/ui-generate-sap'} exact component={GenerateSap} />
             <UnauthenticatedTemplate>
               <Route path={base + '/'} exact component={Logout} />
               <Route path="*">
