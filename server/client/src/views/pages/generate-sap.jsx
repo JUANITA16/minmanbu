@@ -152,7 +152,7 @@ const renderElement = () => {
         <form onSubmit={handleSubmit}>
           <Row>
             <Col s={12} m={6} className="input-field date text-left">
-              <InputDate labelName="Fecha inicial" maxValue={currDate} 
+              <InputDate labelName="Fecha inicial" maxValue={endDate} 
                 setDate={setStartDate}  dateInput={startDate} minValue={minDate} />
             </Col>
             <Col s={12} m={6} className="input-field date text-left">
