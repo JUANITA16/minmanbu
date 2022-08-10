@@ -5,6 +5,25 @@ import { getToken } from '../index';
 class ServerAPI {
     base_url = process.env.REACT_APP_SERVER_BASE_PATH
 
+    generateSAP = async (from, to,user_name) => {
+        try{
+            const url = this.base_url + "/sap"
+            const config = {
+                headers: { Authorization: await getToken() },
+                params: { from, to,user_name}
+            }
+
+            const res = await axios.get(url, config);
+            const data = await res.data;
+            return data;
+        }
+        catch(err){
+            console.log("ERROR sap:");
+            return setError("Error generando el archivo.", err.response);
+        }
+    }
+
+
     generateFile = async (from, to) => {
         try{
             const url = this.base_url + "/sap"
@@ -18,7 +37,7 @@ class ServerAPI {
             return data;
         }
         catch(err){
-            console.log("ERROR sap: ", err.response);
+            console.log("ERROR sap");
             return setError("Error generando el archivo.", err.response);
         }
     }
@@ -36,7 +55,7 @@ class ServerAPI {
             return data;
         }
         catch(err){
-            console.log("ERROR massive: ", err.response);
+            console.log("ERROR massive");
             return setError("Error cargando el archivo.", err.response);
         }
     }

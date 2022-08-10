@@ -3,9 +3,7 @@ const axios = require('axios');
 const { getSecret } = require('../utils/secret');
 
 router.put('/tax-a-prodt', async (req, res) => {
-    console.log("Route get /tax-a-prodt");
     try{
-        console.log("Getting secretApiKey");
         const Authorization = await getSecret(process.env.SECRET_APIKEY); // ApiKey para consumir lambdas
         
         const URL = process.env.BACK_BASE + process.env.BACK_TAXAPRODT+"/"+ req.query.idRow;
@@ -17,7 +15,6 @@ router.put('/tax-a-prodt', async (req, res) => {
 
         res.json(data); // Responder los mismos datos que se obtuvieron
 
-        console.log("get success ");
     } catch (err){
         if( !err.response ){
             err.response = {
@@ -26,7 +23,7 @@ router.put('/tax-a-prodt', async (req, res) => {
             }
         }
         const { status, data } = err.response;
-        console.log("Error",data);
+        console.error("Error", 500);
         res.status(status).json( data );
     }
 })
