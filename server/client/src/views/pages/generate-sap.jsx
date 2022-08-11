@@ -75,10 +75,10 @@ export default function GenerateSap() {
     return table
   }
 
-  const getdbData = async function () {
+  const getdbData = async function (from_date, to_date) {
     let resp = [];
     try {
-      resp = await service.getSapFiles(startDate, endDate);
+      resp = await service.getSapFiles(from_date, to_date);
       if (resp.status === 200) {
         let dataTable = await resp.data
         setDbData(dataTable);
@@ -94,7 +94,9 @@ export default function GenerateSap() {
 
   useEffect(() => {
     document.title = title
-    getdbData();
+    getdbData(
+      startDate.toISOString().slice(0,10), 
+      endDate.toISOString().slice(0,10));
   }, []);
 
   useEffect(() => {

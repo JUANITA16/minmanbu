@@ -2,7 +2,7 @@ const router = require('express').Router();
 const axios = require('axios');
 const { getSecret } = require('../utils/secret');
 
-router.get('/table', async (req, res) => {
+router.get('/files', async (req, res) => {
     try{
         const Authorization = await getSecret(process.env.SECRET_APIKEY); // ApiKey para consumir lambdas
         
@@ -11,7 +11,7 @@ router.get('/table', async (req, res) => {
             params: req.query,
             headers: { Authorization }
         }; // Headers a enviar
-        const api = await axios.get(URL + ( req.query.consecutive !== "" ? "/" + req.query.consecutive : "" ), config);
+        const api = await axios.get(URL, config);
         const data = await api.data;
 
         res.json(data); // Responder los mismos datos que se obtuvieron

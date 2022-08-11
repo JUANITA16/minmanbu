@@ -60,13 +60,14 @@ class ServerAPI {
         }
     }
 
-    getSapFiles = async (startDate, endDate) => {
-        const url = this.base_url + "/files";
+    getSapFiles = async (from_date, to_date) => {
+        // const url = this.base_url + "/files";
+        const url = this.base_url + "/files"
         const config = {
-            headers: { Authorization: "minmambu" }, 
+            headers: { Authorization: await getToken()},
             params: {
-                from_date: startDate,
-                to_date: endDate
+                from_date: from_date,
+                to_date: to_date
             }
         }
         const res = await axios.get(url, config);
