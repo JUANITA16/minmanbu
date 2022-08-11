@@ -30,6 +30,11 @@ const authConfig = async() => {
                 methods:[ "GET" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CC", "MINMAMBU_ROLE_ADMIN_PRODUCT_CDT" ]
             },
+            sap_files: {
+                path: "/files",
+                methods:[ "GET" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
             sap: {
                 path: "/sap",
                 methods:[ "GET" ],
