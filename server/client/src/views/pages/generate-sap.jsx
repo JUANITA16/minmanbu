@@ -61,7 +61,9 @@ export default function GenerateSap() {
   const handleApplyFilters = function (event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
+    resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
     console.log(dbData)
+    console.log(resp)
   };
   const handleDeleteFilters = function (event) {
     setFilterHeader(<p>Filtros</p>);
