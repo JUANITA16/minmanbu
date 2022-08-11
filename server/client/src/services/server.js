@@ -60,6 +60,21 @@ class ServerAPI {
         }
     }
 
+    getSapFiles = async (startDate, endDate) => {
+        const url = this.base_url + "/files";
+        const config = {
+            headers: { Authorization: "minmambu" }, 
+            params: {
+                from_date: startDate,
+                to_date: endDate
+            }
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    }
+
+
     getDataTable = async (startDate, endDate, consecutive,isWeek) => {
         if(isWeek){
             startDate = convertTZ(addDays(new Date(),-7))

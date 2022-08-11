@@ -61,6 +61,7 @@ export default function GenerateSap() {
   const handleApplyFilters = function (event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
+    console.log(dbData)
   };
   const handleDeleteFilters = function (event) {
     setFilterHeader(<p>Filtros</p>);
@@ -74,8 +75,26 @@ export default function GenerateSap() {
     return table
   }
 
+  const getdbData = async function () {
+    let resp = [];
+    try {
+      resp = await service.getSapFiles(startDate, endDate);
+      if (resp.status === 200) {
+        let dataTable = await resp.data
+        setDbData(dataTable);
+      }
+      return resp
+    } catch (error) {
+      console.error(error);
+      
+      return resp;
+    }
+  }
+
+
   useEffect(() => {
     document.title = title
+    getdbData();
   }, []);
 
   useEffect(() => {
