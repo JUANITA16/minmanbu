@@ -34,33 +34,15 @@ export default function GenerateSap() {
   const [filtenable, setfiltEnable] = useState(false);
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [table, setTable] = useState(<></>);
-  const [tableData, setTableData] = useState([
-    {
-      id:"",
-      dateProcess : "",
-      filename :"",
-      from_date :"",
-      file_status :"",
-      user_name: "",
-    }
-  ]);
-  const [dbData, setDbData] = useState(
-    [
-      {
-        id:"123",
-        dateProcess : "fecaa",
-        filename :"test.txt",
-        from_date :"123",
-        file_status :"Bien",
-        user_name: "Cristian"
-      }
-    ]
-  )
+  const [tableData, setTableData] = useState([]);
+  const [dbData, setDbData] = useState([]);
 
 
-  const handleApplyFilters = function (event) {
+  const handleApplyFilters = async function (event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
+    let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
+    setDbData(resp)
   };
   const handleDeleteFilters = function (event) {
     setFilterHeader(<p>Filtros</p>);
@@ -74,8 +56,27 @@ export default function GenerateSap() {
     return table
   }
 
-  useEffect(() => {
+  const getdbData = async function (from_date, to_date) {
+    let resp = [];
+    try {
+      resp = await service.getSapFiles(from_date, to_date);
+      if (resp.length===0) {
+        return ["Empty"]
+      } else {
+        return resp
+      }
+    } catch (error) {
+      console.error(error);
+      
+      return resp;
+    }
+  }
+
+
+  useEffect(async () => {
     document.title = title
+    let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
+    setDbData(resp)
   }, []);
 
   useEffect(() => {

@@ -24,24 +24,6 @@ class ServerAPI {
     }
 
 
-    generateFile = async (from, to) => {
-        try{
-            const url = this.base_url + "/sap"
-            const config = {
-                headers: { Authorization: await getToken() },
-                params: { from, to }
-            }
-
-            const res = await axios.get(url, config);
-            const data = await res.data;
-            return data;
-        }
-        catch(err){
-            console.log("ERROR sap");
-            return setError("Error generando el archivo.", err.response);
-        }
-    }
-
     uploadFile = async (bodyUpload) => {
         try{
             const url = this.base_url + "/massive" + (bodyUpload.product === "CDT" ? "/cdt" : "/cc");
@@ -59,6 +41,19 @@ class ServerAPI {
             return setError("Error cargando el archivo.", err.response);
         }
     }
+
+    getSapFiles = async (from_date, to_date) => {
+        // const url = this.base_url + "/files";
+        const url = this.base_url + "/files"
+        const config = {
+            headers: { Authorization: await getToken()},
+            params: {from_date, to_date }
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    }
+
 
     getDataTable = async (startDate, endDate, consecutive,isWeek) => {
         if(isWeek){
