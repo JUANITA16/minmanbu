@@ -34,28 +34,8 @@ export default function GenerateSap() {
   const [filtenable, setfiltEnable] = useState(false);
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [table, setTable] = useState(<></>);
-  const [tableData, setTableData] = useState([
-    {
-      id:"",
-      dateProcess : "",
-      filename :"",
-      from_date :"",
-      file_status :"",
-      user_name: "",
-    }
-  ]);
-  const [dbData, setDbData] = useState(
-    [
-      {
-        id:"123",
-        dateProcess : "fecaa",
-        filename :"test.txt",
-        from_date :"123",
-        file_status :"Bien",
-        user_name: "Cristian"
-      }
-    ]
-  )
+  const [tableData, setTableData] = useState([]);
+  const [dbData, setDbData] = useState([]);
 
 
   const handleApplyFilters = async function (event) {
@@ -80,7 +60,11 @@ export default function GenerateSap() {
     let resp = [];
     try {
       resp = await service.getSapFiles(from_date, to_date);
-      return resp
+      if (resp.length===0) {
+        return ["Empty"]
+      } else {
+        return resp
+      }
     } catch (error) {
       console.error(error);
       
