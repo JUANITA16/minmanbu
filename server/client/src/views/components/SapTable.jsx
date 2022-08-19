@@ -28,7 +28,7 @@ function SapTable({tableData}) {
   
   const handleDownload = function(event){
     event.preventDefault();
-    console.log("Descargando el Archivo...")
+    console.log("Descargando el Archivo...");
   }
 
   const renderLoading = function (isloading){
@@ -43,13 +43,18 @@ function SapTable({tableData}) {
 
   useEffect(function () {
     //Calculate the total of pages using ceil method
-    settotalPages(Math.ceil(tableData.length/maxResults));
-    setVisibleData(tableData.slice(0, maxResults));
-    if (tableData.length >0 ) {
-      setIsloading(false);
-    } else {
-      setIsloading(true)
+    try {
+      settotalPages(Math.ceil(tableData.length/maxResults));
+      setVisibleData(tableData.slice(0, maxResults));
+      if (tableData.length >0 ) {
+        setIsloading(false);
+      } else {
+        setIsloading(true)
+      }
+    } catch (error) {
+      console.error(error);
     }
+    
   }, [maxResults, tableData]);
 
   useEffect(function () {
