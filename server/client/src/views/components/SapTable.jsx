@@ -28,7 +28,7 @@ function SapTable({tableData}) {
   
   const handleDownload = function(event){
     event.preventDefault();
-    console.log("Descargando el Archivo...")
+    console.log("Descargando el Archivo...");
   }
 
   const renderLoading = function (isloading){

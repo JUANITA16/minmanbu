@@ -31,8 +31,8 @@ export default function GenerateSap() {
   const [response, setResponse] = useState('');
   const [fileName, setFileName] = useState('');
   const [contentFile, setContenFile] = useState('');
-  const [filtenable, setfiltEnable] = useState(false);
-  const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
+  const [filtenable, setfiltEnable] = useState(true);
+  const [filterHeader, setFilterHeader] = useState(<p><strong><u>Filtros</u></strong></p>);
   const [table, setTable] = useState(<></>);
   const [tableData, setTableData] = useState([]);
   const [dbData, setDbData] = useState([]);
@@ -49,6 +49,7 @@ export default function GenerateSap() {
     setInitDate(currDate);
     setFinalDate(currDate);
     setfiltEnable(false);
+    setTableData(["Empty"])
   };
 
 
