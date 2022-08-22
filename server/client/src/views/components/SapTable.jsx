@@ -45,20 +45,11 @@ function SapTable({tableData}) {
       }
     } catch (error) {
       console.error(error);
-      
-      return resp;
+      showToast(sapFileUrl.message)
     }
     console.log("Descargando el Archivo...");
   }
-  function download(fileName, contentFile) {
-    console.log('fileName download:' + fileName);
-    const element = document.createElement("a");
-    const file = new Blob([contentFile], { type: 'text/plain;charset-utf-8' });
-    element.href = URL.createObjectURL(file);
-    element.download = fileName;
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
-  }
+
 
   const renderLoading = function (isloading){
     if (isloading) {
