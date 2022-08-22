@@ -45,10 +45,10 @@ class ServerAPI {
     getSapFiles = async (from_date, to_date) => {
         // const url = this.base_url + "/files";
         const url = this.base_url + "/files"
-        let reqUrl = "" 
+        const reqUrl = "" 
         const config = {
             headers: { Authorization: await getToken()},
-            params: {from_date, to_date }
+            params: {reqUrl, from_date, to_date }
         }
         const res = await axios.get(url, config);
         const data = await res.data;
