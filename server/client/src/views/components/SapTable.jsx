@@ -45,9 +45,8 @@ function SapTable({tableData}) {
       }
     } catch (error) {
       console.error(error);
-      showToast(sapFileUrl.message)
+      showToast(sapFileUrl.detail)
     }
-    console.log("Descargando el Archivo...");
   }
 
 
