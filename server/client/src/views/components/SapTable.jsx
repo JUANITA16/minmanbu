@@ -37,11 +37,11 @@ function SapTable({tableData}) {
       sapFileUrl = await service.getSapURL(
         JSON.parse(event.target.value).filename
         )
-      if (resp.url == "") {
-        showToast(resp.message)
+      if (sapFileUrl.url == "") {
+        showToast(sapFileUrl.message)
       } else {
         showToast("Descargando el archivo.")
-        window.open(resp.url)
+        window.open(sapFileUrl.url)
       }
     } catch (error) {
       console.error(error);
