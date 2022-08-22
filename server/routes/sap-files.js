@@ -6,7 +6,8 @@ router.get('/files', async (req, res) => {
     try{
         const Authorization = await getSecret(process.env.SECRET_APIKEY); // ApiKey para consumir lambdas
         
-        const URL = process.env.BACK_BASE + "/files/";
+        const URL = process.env.BACK_BASE + "/files/" + req.query.reqUrl;
+        delete req.query.reqUrl
         const config = { 
             params: req.query,
             headers: { Authorization }
