@@ -25,7 +25,7 @@
         "dotenv": "^10.0.0",
         "express": "^4.18.1",
         "helmet": "^5.1.0",
-        "passport": "^0.5.2",
+        "passport": "^0.6.0",
         "passport-azure-ad": "^4.3.1"
     },
     "devDependencies": {
