@@ -1,11 +1,14 @@
 import { CircularProgress } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
+import { ServerAPI } from "../../services/server";
 import { Button, Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
 import Select from 'react-select'
+import { showToast } from "../../helpers/utils";
 
 function SapTable({tableData}) {
 
+  const service = new ServerAPI()
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
@@ -13,7 +16,7 @@ function SapTable({tableData}) {
   const [tableBody, setTableBody] = useState([]);
 
 
-
+  
   const totalResults = [
     { value: 5, label: '5' },
     { value: 10, label: '10' },
@@ -26,9 +29,35 @@ function SapTable({tableData}) {
     setVisibleData(tableData.slice(page*maxResults, maxResults*(page + 1)))
   };
   
-  const handleDownload = function(event){
+  const handleDownload = async function(event){
     event.preventDefault();
+    let sapFileUrl = ""
+
+    try {
+      sapFileUrl = await service.getSapURL(
+        JSON.parse(event.target.value).filename
+        )
+      if (resp.url == "") {
+        showToast(resp.message)
+      } else {
+        showToast("Descargando el archivo.")
+        window.open(resp.url)
+      }
+    } catch (error) {
+      console.error(error);
+      
+      return resp;
+    }
     console.log("Descargando el Archivo...");
+  }
+  function download(fileName, contentFile) {
+    console.log('fileName download:' + fileName);
+    const element = document.createElement("a");
+    const file = new Blob([contentFile], { type: 'text/plain;charset-utf-8' });
+    element.href = URL.createObjectURL(file);
+    element.download = fileName;
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
   }
 
   const renderLoading = function (isloading){
@@ -72,7 +101,10 @@ function SapTable({tableData}) {
             <td>{data.from_date}</td>
             <td>{data.file_status}</td>
             <td>{data.user_name}</td>
-            <td><Button small onClick={handleDownload} className="indigo darken-4">
+            <td><Button value={JSON.stringify({
+                  filename: data.filename
+                })}
+                  small onClick={handleDownload} className="indigo darken-4">
               Descargar</Button>
             </td>
         </tr>)}));

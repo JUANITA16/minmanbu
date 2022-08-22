@@ -90,22 +90,6 @@ export default function GenerateSap() {
     setTable(<SapTable tableData={tableData} />);
   }, [tableData])
 
-  useEffect(() => {
-    function download() {
-      console.log('fileName download:' + fileName);
-      const element = document.createElement("a");
-      const file = new Blob([contentFile], { type: 'text/plain;charset-utf-8' });
-      element.href = URL.createObjectURL(file);
-      element.download = fileName;
-      document.body.appendChild(element); // Required for this to work in FireFox
-      element.click();
-    }
-
-    if (response !== '') {
-      showToast(() => response);
-    }
-  }, [response, fileName, contentFile])
-
 
   useEffect(() => {
     setData(() => `Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
