@@ -1,11 +1,14 @@
 import { CircularProgress } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
+import { ServerAPI } from "../../services/server";
 import { Button, Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
 import Select from 'react-select'
+import { showToast } from "../../helpers/utils";
 
 function SapTable({tableData}) {
 
+  const service = new ServerAPI()
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
@@ -13,7 +16,7 @@ function SapTable({tableData}) {
   const [tableBody, setTableBody] = useState([]);
 
 
-
+  
   const totalResults = [
     { value: 5, label: '5' },
     { value: 10, label: '10' },
@@ -26,10 +29,26 @@ function SapTable({tableData}) {
     setVisibleData(tableData.slice(page*maxResults, maxResults*(page + 1)))
   };
   
-  const handleDownload = function(event){
+  const handleDownload = async function(event){
     event.preventDefault();
-    console.log("Descargando el Archivo...");
+    let sapFileUrl = ""
+
+    try {
+      sapFileUrl = await service.getSapURL(
+        JSON.parse(event.target.value).filename
+        )
+      if (sapFileUrl.url == "") {
+        showToast(sapFileUrl.message)
+      } else {
+        showToast("Descargando el archivo.")
+        window.open(sapFileUrl.url)
+      }
+    } catch (error) {
+      console.error(error);
+      showToast(sapFileUrl.detail)
+    }
   }
+
 
   const renderLoading = function (isloading){
     if (isloading) {
@@ -72,7 +91,10 @@ function SapTable({tableData}) {
             <td>{data.from_date}</td>
             <td>{data.file_status}</td>
             <td>{data.user_name}</td>
-            <td><Button small onClick={handleDownload} className="indigo darken-4">
+            <td><Button value={JSON.stringify({
+                  filename: data.filename
+                })}
+                  small onClick={handleDownload} className="indigo darken-4">
               Descargar</Button>
             </td>
         </tr>)}));
