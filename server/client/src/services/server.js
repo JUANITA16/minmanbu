@@ -18,7 +18,7 @@ class ServerAPI {
             return data;
         }
         catch(err){
-            console.log("ERROR sap:");
+            console.info("ERROR sap:");
             return setError("Error generando el archivo.", err.response);
         }
     }
@@ -37,7 +37,7 @@ class ServerAPI {
             return data;
         }
         catch(err){
-            console.log("ERROR massive");
+            console.info("Error massive");
             return setError("Error cargando el archivo.", err.response);
         }
     }
@@ -97,7 +97,7 @@ class ServerAPI {
             };
         }
         catch(err){
-            console.log("ERROR Table: ", err.response)
+            console.info("ERROR Table: ", err.response)
             return setError("Error obteniendo la tabla.", err.response);
         }
     }

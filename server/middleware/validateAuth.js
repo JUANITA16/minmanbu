@@ -1,6 +1,6 @@
 const routeGuard = (accessMatrix) => {
     return (req, res, next) => {
-        console.log("Inicio middleware de validación")
+        console.info("Inicio middleware de validación")
         if (req.authInfo.roles === undefined) return res.status(403).json({error: 'User without roles'});
         const roles = req.authInfo.roles;
         let path = false;

@@ -177,7 +177,7 @@ const setUp = async() => {
 
     // - To route no found
     app.use((req, res, next) => {
-        console.log("Ruta no encontrada: ", req.path);
+        console.info("Ruta no encontrada: ", req.path);
         res.status(404).send("Sorry cant find that");
     });
 
