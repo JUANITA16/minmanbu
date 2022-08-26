@@ -7,13 +7,13 @@ setUp().then( app => {
     let server = {};
     try {
         server = app.listen(PORT, HOST);
-        console.log(`Running on http://${HOST}:${PORT}`);
+        console.info(`Running on http://${HOST}:${PORT}`);
     }
     catch(err){
-        console.log('Error server:', err.message);
-        server.close(() => console.log("Servidor closed"));
+        console.info('Error server:', err.message);
+        server.close(() => console.info("Servidor closed"));
     }
 })
 .catch( err =>{
-console.log('Error:', err.message);
+console.info('Error:', err.message);
 })

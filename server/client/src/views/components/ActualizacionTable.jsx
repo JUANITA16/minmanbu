@@ -55,7 +55,6 @@ function ActTable(props) {
   
   const handleDetails = function (event){
     props.setIsPantallaPrincipal(false)
-    console.log("Abrir Detalle")
   };
 
   const renderLoading = function (isloading){

@@ -3,7 +3,7 @@ const axios = require('axios');
 const { getSecret } = require('../utils/secret');
 
 router.post('/tblCosifAccounting', async (req, res) => {
-    console.log("Route post /tblCosifAccounting");
+    console.info("Route post /tblCosifAccounting");
     try{
         const Authorization = await getSecret(process.env.SECRET_APIKEY); // ApiKey para consumir lambdas
         

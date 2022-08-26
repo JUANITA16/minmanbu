@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { InputDate, CardHeader } from '../components/index'
 import { setFormatDate, showToast, convertTZ } from "../../helpers/utils";
 import { Button, Col, Row, CollapsibleItem, Icon, Collapsible } from "react-materialize";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { ServerAPI } from "../../services/server";
 
 import { useMsal } from "@azure/msal-react";
@@ -28,15 +29,12 @@ export default function GenerateSap() {
   const [finalDate, setFinalDate] = useState(currDate);
   const [aditional, setData] = useState(`Desde: ${setFormatDate(startDate)} hasta: ${setFormatDate(endDate)}`);
   const [inProgress, setInProgress] = useState(false);
-  const [response, setResponse] = useState('');
-  const [fileName, setFileName] = useState('');
-  const [contentFile, setContenFile] = useState('');
   const [filtenable, setfiltEnable] = useState(true);
   const [filterHeader, setFilterHeader] = useState(<p><strong><u>Filtros</u></strong></p>);
   const [table, setTable] = useState(<></>);
   const [tableData, setTableData] = useState([]);
   const [dbData, setDbData] = useState([]);
-
+  const [dialogOpen, setdialogOpen] = useState(false);
 
   const handleApplyFilters = async function (event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
@@ -101,9 +99,6 @@ export default function GenerateSap() {
 async function handleSubmit(event) {
   event.preventDefault();
   showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
-  setResponse('');
-  setFileName('');
-  setContenFile('');
   setInProgress(true);
 
   const {name} = instance.getActiveAccount().idTokenClaims
@@ -120,6 +115,7 @@ useEffect(() => {
   let deltaDate = endDate - startDate
   // El número especifícado en el condicional equivale a la diferencia de 7 días
   if (deltaDate > 518400931) {
+    setdialogOpen(true)
     setEndDate(startDate)
   }
 }, [startDate])
@@ -128,6 +124,7 @@ useEffect(() => {
   let deltaDate = endDate - startDate
   // El número especifícado en el condicional equivale a la diferencia de 7 días
   if (deltaDate > 518400931) {
+    setdialogOpen(true)
     setStartDate(endDate)
   }
 }, [endDate])
@@ -210,7 +207,28 @@ const renderElement = () => {
               </ExcelFile>
     
             </Col>
-          </Row>
+        </Row>
+        <Dialog
+            open={dialogOpen}
+            onClose={()=>setdialogOpen(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title" color={"#001E62"}>
+              {"Fechas no validas"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                El periodo de fechas a procesar no es válido, el máximo son 7 días.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={()=>setdialogOpen(false)} 
+                className="indigo darken-4" autoFocus>
+                Cerrar
+              </Button>
+            </DialogActions>
+        </Dialog>
       </React.Fragment>
     )
 
