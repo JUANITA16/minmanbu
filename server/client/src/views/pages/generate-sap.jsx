@@ -215,7 +215,7 @@ const renderElement = () => {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title" color={"#001E62"}>
-              {"Fechas no validas"}
+              {"Fechas no válidas"}
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
