@@ -10,14 +10,18 @@ import { convertTZ, addDays } from "../../helpers/utils";
 
 import ExportExcel from 'react-export-excel'
 
-const service = new ServerAPI();
+import { useMsal } from "@azure/msal-react";
 
 const ExcelFile = ExportExcel.ExcelFile;
 const ExcelSheet = ExportExcel.ExcelSheet;
 const ExcelColumn = ExportExcel.ExcelColumn;
 
 export default function CreacionCuenta() {
-
+  
+  const service = new ServerAPI();
+  
+  const { instance } = useMsal();
+  const { name } = instance.getActiveAccount().idTokenClaims;
   const title = 'Creacion de cuentas masiva';
   const description = 'En esta sección podrá cargar archivos para la creación de cuenta en forma masiva.';
   const [selectedFile, setSelectedFile] = useState();
@@ -225,14 +229,15 @@ export default function CreacionCuenta() {
         var bodyUpload = {
           "product": product,
           "file_name": nameFileSelected,
-          "file_content": base64File
+          "file_content": base64File,
+          "user_upload": name
         }
 
         //Se invoca al servicio S3
         const responseMasivoService = await service.uploadFile(bodyUpload); //masivoService.uploadFile(bodyUpload);
        
         if (responseMasivoService && responseMasivoService.description === "ok") {
-          toast.success("Archivo cargado corrrectamente.");
+          toast.success("Archivo cargado correctamente, ver detalle.");
         
           isWeek = true;
           setConsecutivoCargue('');
@@ -273,17 +278,38 @@ export default function CreacionCuenta() {
     setIsDisabledButtonFilter(true);
   }
 
-  const changeHandler = (event) => {
-    if (event) {
-
-      if (event.target.files[0] !== undefined) {
-        setSelectedFile(event.target.files[0]);
-        setNameFileSelected(event.target.files[0].name);
-        setIsSelected(true);
-        setIsDisabledButton(false);
-      }
-
+  const valideFileType = function (fileType, fileName) {
+    let validTypes = [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "text/csv"
+    ];
+    let validExtensions = ["xlsx", "xls", "csv"];
+    let nameArray = fileName.split(".")
+    
+    if (validExtensions.includes(nameArray[nameArray.length -1]) & 
+        validTypes.includes(fileType) & !(fileName.startsWith("="))) {
+      return true
+    } else {
+      return false
     }
+
+  };
+
+  const changeHandler = (event) => {
+    event.preventDefault()
+    if (valideFileType(event.target.files[0].type, event.target.files[0].name)) {
+      setSelectedFile(event.target.files[0]);
+      setNameFileSelected(event.target.files[0].name);
+      setIsSelected(true);
+      setIsDisabledButton(false);
+    } else {
+      setSelectedFile("");
+      setNameFileSelected("El archivo es inválido. Por favor subir un archivo .xlsx, .xls o .csv");
+      setIsSelected(false);
+      setIsDisabledButton(true);
+    }
+
   };
 
   const toBase64 = file => new Promise((resolve, reject) => {
@@ -627,7 +653,7 @@ export default function CreacionCuenta() {
         </Row>
 
         <Row>
-          <Col s={2} m={2}>
+          <Col s={12} m={2}>
             <label className="active">Cantidad de registros</label>
             <Select className="basic-single" defaultValue={cantPaginas[0]} options={cantPaginas} onChange={onChangeCantPaginas} />
           </Col>

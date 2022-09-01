@@ -1,5 +1,5 @@
 # Build of React
-FROM node:14.17.0-alpine
+FROM node:14.17.0-alpine@sha256:b4cca2f95c701d632ffd39258f9ec9ee9fb13c8cc207f1da02eb990c98395ac1
 
 RUN apk add --no-cache git
 

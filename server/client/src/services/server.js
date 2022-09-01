@@ -2,15 +2,15 @@ import { setError, convertTZ, addDays } from '../helpers/utils';
 import axios from 'axios';
 import { getToken } from '../index';
 
-export class ServerAPI {
+class ServerAPI {
     base_url = process.env.REACT_APP_SERVER_BASE_PATH
 
-    generateFile = async (from, to) => {
+    generateSAP = async (from, to,user_name) => {
         try{
             const url = this.base_url + "/sap"
             const config = {
                 headers: { Authorization: await getToken() },
-                params: { from, to }
+                params: { from, to,user_name}
             }
 
             const res = await axios.get(url, config);
@@ -18,10 +18,11 @@ export class ServerAPI {
             return data;
         }
         catch(err){
-            console.log("ERROR sap: ", err.response);
+            console.info("ERROR sap:");
             return setError("Error generando el archivo.", err.response);
         }
     }
+
 
     uploadFile = async (bodyUpload) => {
         try{
@@ -36,10 +37,37 @@ export class ServerAPI {
             return data;
         }
         catch(err){
-            console.log("ERROR massive: ", err.response);
+            console.info("Error massive");
             return setError("Error cargando el archivo.", err.response);
         }
     }
+
+    getSapFiles = async (from_date, to_date) => {
+        // const url = this.base_url + "/files";
+        const url = this.base_url + "/files"
+        const reqUrl = "" 
+        const config = {
+            headers: { Authorization: await getToken()},
+            params: {reqUrl, from_date, to_date }
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    }
+
+    getSapURL = async (filename) => {
+        // const url = this.base_url + "/files";
+        const url = this.base_url + "/files"
+        let reqUrl = "download/" + filename 
+        const config = {
+            headers: { Authorization: await getToken()},
+            params: {reqUrl}
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    }
+
 
     getDataTable = async (startDate, endDate, consecutive,isWeek) => {
         if(isWeek){
@@ -69,11 +97,88 @@ export class ServerAPI {
             };
         }
         catch(err){
-            console.log("ERROR Table: ", err.response)
+            console.info("ERROR Table: ", err.response)
             return setError("Error obteniendo la tabla.", err.response);
         }
     }
 
+
+    getAllTaxAProdT = async () => {
+        
+        const url = this.base_url + "/tax-a-prodt"
+        const config = {
+            headers: { Authorization: await getToken() },
+        }
+        const res = await axios.get(url,config)
+        
+        return res;
+    };
+
+
+    
+    
+    updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
+        const url = this.base_url + "/tax-a-prodt"
+        
+        const config = {
+            headers: { Authorization: await getToken() },
+            params: {
+                idRow,
+            }
+        }
+        const res = await axios.put(url,dataToUpdate,config)
+        
+        return res;
+    }
+    
+    
+    createItemConfiguracionGeneral = async (dataCreate) => {
+        const url = this.base_url + "/tax-a-prodt"
+        
+        const config = {
+            headers: { Authorization: await getToken() }
+        }
+        const res = await axios.post(url,dataCreate,config)
+      
+        return res;
+    }
+
+    getAllCosif = async () => {
+        
+        const url = this.base_url + "/tblCosifAccounting"
+        const config = {
+            headers: { Authorization: await getToken() }
+        }
+        const res = await axios.get(url,config)
+        
+        return res;
+    };
+    
+    updateItemConfiguracionHomologacion = async (dataToUpdate,idRow) => {
+        const url = this.base_url + "/tblCosifAccounting"
+
+        const config = {
+            headers: { Authorization: await getToken() },
+            params: {
+                idRow,
+            }
+        }
+        const res = await axios.put(url,dataToUpdate,config)
+      
+        return res;
+    }
+
+
+    createItemConfiguracionHomologacion = async (dataCreate) => {
+        const url = this.base_url + "/tblCosifAccounting"
+
+        const config = {
+            headers: { Authorization: await getToken() }
+        }
+        const res = await axios.post(url,dataCreate,config)
+      
+        return res;
+    }
 }
 
-export default ServerAPI;
+export {ServerAPI} ;

@@ -14,5 +14,9 @@
     {
         "ParameterKey": "serviceName",
         "ParameterValue": "$(serviceName)"
+    },
+    {
+        "ParameterKey": "KmsKeyIdMinmambu",
+        "ParameterValue": "$(KmsKeyIdMinmambu)"
     }
 ]

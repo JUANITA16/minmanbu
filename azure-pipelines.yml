@@ -42,12 +42,6 @@ stages:
             filepath: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
             endWithNewLine: true
             verbose: true
-        - task: replace-variables-in-file@1
-          displayName: Set parameters values proxy
-          inputs:
-            filepath: '$(System.DefaultWorkingDirectory)/proxy/src/main/resources/application.properties'
-            endWithNewLine: true
-            verbose: true
         - task: file-to-variable@1
           displayName: Load tags to variable
           inputs:
@@ -94,12 +88,6 @@ stages:
           displayName: Set parameters values file server/client/.env
           inputs:
             filepath: '$(System.DefaultWorkingDirectory)/server/client/.env'
-            endWithNewLine: true
-            verbose: true
-        - task: replace-variables-in-file@1
-          displayName: Set parameters values file .properties
-          inputs:
-            filepath: '$(System.DefaultWorkingDirectory)/proxy/src/main/resources/application.properties'
             endWithNewLine: true
             verbose: true
         - task: AWSShellScript@1
