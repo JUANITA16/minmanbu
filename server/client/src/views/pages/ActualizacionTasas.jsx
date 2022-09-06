@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Button, Col, Row, CollapsibleItem, Icon, Collapsible } from "react-materialize";
 import { CardHeader, InputDate } from "../components";
 import Select from 'react-select'
-import { convertTZ } from "../../helpers/utils";
+import { convertTZ, showToast } from "../../helpers/utils";
 import ActTable from "../components/ActualizacionTable";
 import ActualizacionTasasDetalle from './ActualizacionTasasDetalle'
 
@@ -41,7 +41,7 @@ function ActualizacionTasas() {
   const onTextChange = function (event) {
     setConsecutivo(event.target.value)
   };
-
+  
   const updateRates = async function (event) {
     event.preventDefault()
     showToast('Estamos generando el archivo, por favor consulte el resultado del proceso')
@@ -51,7 +51,6 @@ function ActualizacionTasas() {
       }
     }
     )
-    console.log(resp)
   }
 
   function renderTable() {
