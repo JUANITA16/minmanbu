@@ -6,6 +6,8 @@ import { convertTZ } from "../../helpers/utils";
 import ActTable from "../components/ActualizacionTable";
 import ActualizacionTasasDetalle from './ActualizacionTasasDetalle'
 
+import { ServerAPI } from "../../services/server";
+
 function ActualizacionTasas() {
   const currDate = convertTZ(new Date());
   let minDate = new Date();
@@ -18,6 +20,8 @@ function ActualizacionTasas() {
   const [filtenable, setfiltEnable] = useState(false);
   const [table, setTable] = useState(<></>);
   const [isPantallaPrincipal, setIsPantallaPrincipal] = useState(true);
+  const service = new ServerAPI();
+
 
   function applyFilters(record, filters) {
     let isValid = true
@@ -37,6 +41,19 @@ function ActualizacionTasas() {
   const onTextChange = function (event) {
     setConsecutivo(event.target.value)
   };
+
+  const updateRates = async function (event) {
+    event.preventDefault()
+    showToast('Estamos generando el archivo, por favor consulte el resultado del proceso')
+    service.sendUpdateRate(selDate).then( (data) => {
+      if (data && data.message) {
+        showToast(data.message);
+      }
+    }
+    )
+    console.log(resp)
+  }
+
   function renderTable() {
     return table
   }
@@ -61,7 +78,7 @@ function ActualizacionTasas() {
       </Row>
       <Row>
         <Button node="button" style={{ float: 'right' }} 
-          className="indigo darken-4">
+          className="indigo darken-4" onClick={updateRates}>
           Ejecutar
         </Button>
       </Row>

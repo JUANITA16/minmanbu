@@ -69,6 +69,30 @@ class ServerAPI {
     }
 
 
+    sendUpdateRate = async (update_date) => {
+        const url = this.base_url + "/rates"
+        const config = {
+            headers: { Authorization: await getToken()},
+            params: { update_date }
+        }
+        const res = await axios.post(url, config);
+        const data = await res.data;
+        return data
+    }
+
+
+    getRatesData = async (initial_date, final_date) => {
+        const url = this.base_url + "/rates"
+        const config = {
+            headers: { Authorization: await getToken()},
+            params: {initial_date, final_date}
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    }
+
+
     getDataTable = async (startDate, endDate, consecutive,isWeek) => {
         if(isWeek){
             startDate = convertTZ(addDays(new Date(),-7))

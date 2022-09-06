@@ -97,6 +97,8 @@ const setUp = async() => {
     const cosifPutRoute = require('./routes/cosif-put');
     const taxAprodTPostRoute = require('./routes/tax-a-prodt-post');
     const sapFilesRoute = require('./routes/sap-files');
+    const ratesUpdateRoute = require('./routes/rates-update');
+    const ratesData = require('./routes/rates-data');
 
 
 
@@ -162,6 +164,18 @@ const setUp = async() => {
         passport.authenticate('oauth-bearer', { session: false }),
         routeGuard(authConfig.accessMatrix),
         sapFilesRoute
+    );
+    
+    app.use( process.env.SERVER_BASE_PATH,
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        ratesUpdateRoute
+    );
+
+    app.use( process.env.SERVER_BASE_PATH,
+        passport.authenticate('oauth-bearer', { session: false }),
+        routeGuard(authConfig.accessMatrix),
+        ratesData
     );
     
     /* CLIENT SIDE ################################################################## */
