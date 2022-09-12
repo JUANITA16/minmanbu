@@ -7,7 +7,7 @@ class ServerAPI {
 
     generateSAP = async (from, to,user_name) => {
         try{
-            const url = this.base_url + "/sap"
+            const url = this.base_url + "/sap/file/generate"
             const config = {
                 headers: { Authorization: await getToken() },
                 params: { from, to,user_name}
@@ -26,7 +26,7 @@ class ServerAPI {
 
     uploadFile = async (bodyUpload) => {
         try{
-            const url = this.base_url + "/massive" + (bodyUpload.product === "CDT" ? "/cdt" : "/cc");
+            const url = this.base_url + "/mambu/massiveAccounts";
             const config = {
                 headers: { Authorization: await getToken() },
             }
@@ -44,7 +44,7 @@ class ServerAPI {
 
     getSapFiles = async (from_date, to_date) => {
         // const url = this.base_url + "/files";
-        const url = this.base_url + "/files"
+        const url = this.base_url + "/files/"
         const reqUrl = "" 
         const config = {
             headers: { Authorization: await getToken()},
@@ -57,7 +57,7 @@ class ServerAPI {
 
     getSapURL = async (filename) => {
         // const url = this.base_url + "/files";
-        const url = this.base_url + "/files"
+        const url = this.base_url + "/files/"
         let reqUrl = "download/" + filename 
         const config = {
             headers: { Authorization: await getToken()},
@@ -103,7 +103,7 @@ class ServerAPI {
         const end_date = endDate.getFullYear() +'-'+("0"+(endDate.getMonth()+1)).slice(-2) + "-"+ ("0" + endDate.getDate()).slice(-2)+"T24:00:00"
         
         try{
-            const url = this.base_url + "/table";
+            const url = this.base_url + "/mambu/massiveAccounts/results";
             const config = {
                 headers: { Authorization: await getToken() },
                 params: {
@@ -129,7 +129,7 @@ class ServerAPI {
 
     getAllTaxAProdT = async () => {
         
-        const url = this.base_url + "/tax-a-prodt"
+        const url = this.base_url + "/taxaprodt"
         const config = {
             headers: { Authorization: await getToken() },
         }
@@ -142,7 +142,7 @@ class ServerAPI {
     
     
     updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
-        const url = this.base_url + "/tax-a-prodt"
+        const url = this.base_url + "/taxaprodt"
         
         const config = {
             headers: { Authorization: await getToken() },
@@ -157,7 +157,7 @@ class ServerAPI {
     
     
     createItemConfiguracionGeneral = async (dataCreate) => {
-        const url = this.base_url + "/tax-a-prodt"
+        const url = this.base_url + "/taxaprodt"
         
         const config = {
             headers: { Authorization: await getToken() }

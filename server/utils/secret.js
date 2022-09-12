@@ -5,14 +5,10 @@ const getSecret = async (secretId) => {
         region: process.env.REGION
     });
 
-    let secret = null;
     const response = await client.getSecretValue({ SecretId: secretId }).promise();
+    if ("SecretString" in response) return response.SecretString;
     
-    if ("SecretString" in response) {
-        secret = response.SecretString;
-    }
-    
-    return secret;
+    return null;
 }
 
 module.exports = { getSecret }
