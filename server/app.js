@@ -31,7 +31,7 @@ const setUp = async() => {
             directives: {
                 "default-src": ["'none'"],
                 "frame-src": ["'self'"],
-                "connect-src": ["'self'", "blob:"],
+                "connect-src": ["'self'", "blob:", "https://login.microsoftonline.com/",process.env.URLORIGIN],
                 "manifest-src": ["'self'"],
                 "object-src": ["'none'"],
                 "img-src": ["'self'","data:"],
@@ -102,7 +102,7 @@ const setUp = async() => {
     app.use( process.env.CLIENT_BASE_PATH, express.static(path.join(__dirname, "./client/build")));
 
     // - To front and pick up index
-    app.get( process.env.CLIENT_BASE_PATH + "/*", (req, res) => {
+    app.get( process.env.CLIENT_BASE_PATH + "*", (req, res) => {
         res.sendFile(
         path.join(__dirname, "./client/build/index.html")
         );

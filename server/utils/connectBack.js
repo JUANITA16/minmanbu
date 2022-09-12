@@ -4,7 +4,7 @@ const { getSecret } = require('./secret');
 const connectBack = async (url, method, params, headers, body) => {
     try {
         console.info("Getting secretApiKey");
-        const Authorization = await getSecret(process.env.SECRET_API_AUTH); // ApiKey para consumir lambdas
+        const Authorization = await getSecret(process.env.SECRET_APIKEY); // ApiKey para consumir lambdas
         console.info("Front call Back to:", url);
         const config = { 
             method,
