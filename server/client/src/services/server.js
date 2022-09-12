@@ -45,10 +45,9 @@ class ServerAPI {
     getSapFiles = async (from_date, to_date) => {
         // const url = this.base_url + "/files";
         const url = this.base_url + "/files/"
-        const reqUrl = "" 
         const config = {
             headers: { Authorization: await getToken()},
-            params: {reqUrl, from_date, to_date }
+            params: { from_date, to_date }
         }
         const res = await axios.get(url, config);
         const data = await res.data;
@@ -57,11 +56,9 @@ class ServerAPI {
 
     getSapURL = async (filename) => {
         // const url = this.base_url + "/files";
-        const url = this.base_url + "/files/"
-        let reqUrl = "download/" + filename 
+        const url = this.base_url + "/files/download/" + filename
         const config = {
-            headers: { Authorization: await getToken()},
-            params: {reqUrl}
+            headers: { Authorization: await getToken()}
         }
         const res = await axios.get(url, config);
         const data = await res.data;
@@ -142,13 +139,10 @@ class ServerAPI {
     
     
     updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
-        const url = this.base_url + "/taxaprodt"
+        const url = this.base_url + "/taxaprodt/" + idRow
         
         const config = {
-            headers: { Authorization: await getToken() },
-            params: {
-                idRow,
-            }
+            headers: { Authorization: await getToken() }
         }
         const res = await axios.put(url,dataToUpdate,config)
         
@@ -179,13 +173,10 @@ class ServerAPI {
     };
     
     updateItemConfiguracionHomologacion = async (dataToUpdate,idRow) => {
-        const url = this.base_url + "/tblCosifAccounting"
+        const url = this.base_url + "/tblCosifAccounting/" + idRow
 
         const config = {
-            headers: { Authorization: await getToken() },
-            params: {
-                idRow,
-            }
+            headers: { Authorization: await getToken() }
         }
         const res = await axios.put(url,dataToUpdate,config)
       
