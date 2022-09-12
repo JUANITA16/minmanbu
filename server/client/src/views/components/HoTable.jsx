@@ -54,7 +54,10 @@ function MyTable({tableData, setEdits}) {
   useEffect(function () {
     //Calculate the total of pages using ceil method
     settotalPages(Math.ceil(tableData.length/maxResults));
-    setVisibleData(tableData.slice(0, maxResults));
+    if (Array.isArray(tableData)) {
+      setVisibleData(tableData.slice(0, maxResults));
+    }
+    setVisibleData(["Empty"])
     if (tableData.length >0 ) {
       setIsloading(false);
     } else {
