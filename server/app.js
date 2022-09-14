@@ -12,28 +12,26 @@ const setUp = async() => {
 
     // cors
     const corsOptions = {
-        origin: process.env.URLORIGIN,
+        origin: process.env.URLORIGIN, 
         optionsSuccessStatus: 200 
     }
     app.use(cors(corsOptions));
     app.use(bodyparser.urlencoded({ extended: false }));
-    app.use(bodyparser.json());
+    app.use(bodyparser.json({limit: '6mb'})); // Limite del body que procesa una lambda en AWS
+    
     app.use(helmet());
-    app.use(
-        helmet({
-            contentSecurityPolicy: false,
-        })
-        );
+    app.use(helmet.contentSecurityPolicy());
     app.use(
         helmet.hsts({
           maxAge: 31536001,
         })
-      );
+    );
     app.use(
         helmet.contentSecurityPolicy({
             directives: {
                 "default-src": ["'none'"],
-                "connect-src": ["https://login.microsoftonline.com/",process.env.URLORIGIN],
+                "frame-src": ["'self'"],
+                "connect-src": ["'self'", "blob:", "https://login.microsoftonline.com/",process.env.URLORIGIN],
                 "manifest-src": ["'self'"],
                 "object-src": ["'none'"],
                 "img-src": ["'self'","data:"],
@@ -42,9 +40,11 @@ const setUp = async() => {
                 "base-uri": ["'self'"],
                 "script-src": ["'self'", "'unsafe-inline'"],
                 "style-src": ["'self'","'unsafe-inline'"],
+                blockAllMixedContent: []
             },
         })
-      );
+    );
+
     app.disable('x-powered-by');
     app.disable('server');
 
@@ -85,85 +85,18 @@ const setUp = async() => {
         })
     });
 
-    // Import routes
-    const sapRoute = require('./routes/sap');
-    const tableRoute = require('./routes/table');
-    const massiveCCRoute = require('./routes/massive-cc');
-    const massiveCDTRoute = require('./routes/massive-cdt');
-    const taxAprodTRoute = require('./routes/tax-a-prodt');
-    const taxAprodTPutRoute = require('./routes/tax-a-prodt-put');
-    const cosifRoute = require('./routes/cosif');
-    const cosifPostRoute = require('./routes/cosif-post');
-    const cosifPutRoute = require('./routes/cosif-put');
-    const taxAprodTPostRoute = require('./routes/tax-a-prodt-post');
-    const sapFilesRoute = require('./routes/sap-files');
+    // Import controllers + router
+    const router = express.Router();
+    const simpleController = require('./controllers/simpleController');
 
-
-
-    // - To call backapp.use( process.env.SERVER_BASE_PATH,
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        sapRoute
-    );
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        tableRoute
-    );
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        massiveCCRoute
-    );
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        massiveCDTRoute
-    );
+    router.all("/*", simpleController);
 
     app.use( process.env.SERVER_BASE_PATH,
         passport.authenticate('oauth-bearer', { session: false }),
         routeGuard(authConfig.accessMatrix),
-        taxAprodTRoute
-    );
-    
-
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        taxAprodTPutRoute
+        router
     );
 
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        taxAprodTPostRoute
-    );
-
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        cosifRoute
-    );
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        cosifPostRoute
-    );
-    
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        cosifPutRoute
-    );
-
-    app.use( process.env.SERVER_BASE_PATH,
-        passport.authenticate('oauth-bearer', { session: false }),
-        routeGuard(authConfig.accessMatrix),
-        sapFilesRoute
-    );
-    
     /* CLIENT SIDE ################################################################## */
     // Pick up static files of React
     app.use( process.env.CLIENT_BASE_PATH, express.static(path.join(__dirname, "./client/build")));
@@ -177,7 +110,6 @@ const setUp = async() => {
 
     // - To route no found
     app.use((req, res, next) => {
-        console.info("Ruta no encontrada: ", req.path);
         res.status(404).send("Sorry cant find that");
     });
 

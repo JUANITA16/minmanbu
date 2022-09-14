@@ -15,33 +15,28 @@ const authConfig = async() => {
             loggingLevel: "info"
         },
         accessMatrix: {
-            massive_cc:{
-                path: "/massive/cc",
+            massive_acc:{
+                path: "/mambu/massiveAccounts",
                 methods:[ "POST" ],
-                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CC" ]
-            },
-            massive_cdt:{
-                path: "/massive/cdt",
-                methods:[ "POST" ],
-                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CDT" ]
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CC", "MINMAMBU_ROLE_ADMIN_PRODUCT_CDT" ]
             },
             table:{
-                path: "/table",
+                path: "/mambu/massiveAccounts/results",
                 methods:[ "GET" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CC", "MINMAMBU_ROLE_ADMIN_PRODUCT_CDT" ]
             },
             sap_files: {
-                path: "/files",
+                path: "/files/",
                 methods:[ "GET" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             },
             sap: {
-                path: "/sap",
+                path: "/sap/file/generate",
                 methods:[ "GET" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             },
             tax_a_prodt: {
-                path: "/tax-a-prodt",
+                path: "/taxaprodt",
                 methods:[ "GET","PUT", "POST"],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             },
@@ -49,7 +44,12 @@ const authConfig = async() => {
                 path: "/tblCosifAccounting",
                 methods:[ "GET","PUT", "POST" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
-            }
+            },
+            rates: {
+                path: "/rates",
+                methods:[ "GET", "POST" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
         }
     }
 }

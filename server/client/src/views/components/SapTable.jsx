@@ -63,7 +63,13 @@ function SapTable({tableData}) {
   useEffect(function () {
     //Calculate the total of pages using ceil method
     try {
-      settotalPages(Math.ceil(tableData.length/maxResults));
+      if (Array.isArray(tableData)) {
+        settotalPages(Math.ceil(tableData.length/maxResults));
+        setVisibleData(tableData.slice(0, maxResults));
+      } else {
+        settotalPages(1);
+        setVisibleData(["Empty"]);
+      }
       setVisibleData(tableData.slice(0, maxResults));
       if (tableData.length >0 ) {
         setIsloading(false);

@@ -10,8 +10,8 @@
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "build": "npm run build --prefix client",
         "build:install": "cd client && npm i && npm run build",
-        "test": "jest",
-        "test:coverage": "jest --coverage"
+        "test": "jest --verbose ./tests",
+        "test:coverage": "jest --verbose ./tests --coverage"
     },
     "keywords": [],
     "author": "",

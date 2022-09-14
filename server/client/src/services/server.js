@@ -7,7 +7,7 @@ class ServerAPI {
 
     generateSAP = async (from, to,user_name) => {
         try{
-            const url = this.base_url + "/sap"
+            const url = this.base_url + "/sap/file/generate"
             const config = {
                 headers: { Authorization: await getToken() },
                 params: { from, to,user_name}
@@ -26,7 +26,7 @@ class ServerAPI {
 
     uploadFile = async (bodyUpload) => {
         try{
-            const url = this.base_url + "/massive" + (bodyUpload.product === "CDT" ? "/cdt" : "/cc");
+            const url = this.base_url + "/mambu/massiveAccounts";
             const config = {
                 headers: { Authorization: await getToken() },
             }
@@ -44,11 +44,10 @@ class ServerAPI {
 
     getSapFiles = async (from_date, to_date) => {
         // const url = this.base_url + "/files";
-        const url = this.base_url + "/files"
-        const reqUrl = "" 
+        const url = this.base_url + "/files/"
         const config = {
             headers: { Authorization: await getToken()},
-            params: {reqUrl, from_date, to_date }
+            params: { from_date, to_date }
         }
         const res = await axios.get(url, config);
         const data = await res.data;
@@ -57,11 +56,32 @@ class ServerAPI {
 
     getSapURL = async (filename) => {
         // const url = this.base_url + "/files";
-        const url = this.base_url + "/files"
-        let reqUrl = "download/" + filename 
+        const url = this.base_url + "/files/download/" + filename
+        const config = {
+            headers: { Authorization: await getToken()}
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    }
+
+
+    sendUpdateRate = async (update_date) => {
+        const url = this.base_url + "/rates"
         const config = {
             headers: { Authorization: await getToken()},
-            params: {reqUrl}
+            params: { update_date }
+        }
+        const res = await axios.post(url, config);
+        return res
+    }
+
+
+    getRatesData = async (initial_date, final_date) => {
+        const url = this.base_url + "/rates"
+        const config = {
+            headers: { Authorization: await getToken()},
+            params: {initial_date, final_date}
         }
         const res = await axios.get(url, config);
         const data = await res.data;
@@ -79,7 +99,7 @@ class ServerAPI {
         const end_date = endDate.getFullYear() +'-'+("0"+(endDate.getMonth()+1)).slice(-2) + "-"+ ("0" + endDate.getDate()).slice(-2)+"T24:00:00"
         
         try{
-            const url = this.base_url + "/table";
+            const url = this.base_url + "/mambu/massiveAccounts/results";
             const config = {
                 headers: { Authorization: await getToken() },
                 params: {
@@ -105,7 +125,7 @@ class ServerAPI {
 
     getAllTaxAProdT = async () => {
         
-        const url = this.base_url + "/tax-a-prodt"
+        const url = this.base_url + "/taxaprodt"
         const config = {
             headers: { Authorization: await getToken() },
         }
@@ -118,13 +138,10 @@ class ServerAPI {
     
     
     updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
-        const url = this.base_url + "/tax-a-prodt"
+        const url = this.base_url + "/taxaprodt/" + idRow
         
         const config = {
-            headers: { Authorization: await getToken() },
-            params: {
-                idRow,
-            }
+            headers: { Authorization: await getToken() }
         }
         const res = await axios.put(url,dataToUpdate,config)
         
@@ -133,7 +150,7 @@ class ServerAPI {
     
     
     createItemConfiguracionGeneral = async (dataCreate) => {
-        const url = this.base_url + "/tax-a-prodt"
+        const url = this.base_url + "/taxaprodt"
         
         const config = {
             headers: { Authorization: await getToken() }
@@ -155,13 +172,10 @@ class ServerAPI {
     };
     
     updateItemConfiguracionHomologacion = async (dataToUpdate,idRow) => {
-        const url = this.base_url + "/tblCosifAccounting"
+        const url = this.base_url + "/tblCosifAccounting/" + idRow
 
         const config = {
-            headers: { Authorization: await getToken() },
-            params: {
-                idRow,
-            }
+            headers: { Authorization: await getToken() }
         }
         const res = await axios.put(url,dataToUpdate,config)
       
