@@ -67,10 +67,9 @@ class ServerAPI {
 
 
     sendUpdateRate = async (update_date) => {
-        const url = this.base_url + "/rates"
+        const url = this.base_url + "/rates?update_date=" + update_date
         const config = {
-            headers: { Authorization: await getToken()},
-            params: { update_date }
+            headers: { Authorization: await getToken()}
         }
         const res = await axios.post(url, config);
         return res

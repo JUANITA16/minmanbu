@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Button, Col, Row, CollapsibleItem, Icon, Collapsible } from "react-materialize";
 import { CardHeader, InputDate } from "../components";
 import Select from 'react-select'
-import { convertTZ, showToast } from "../../helpers/utils";
+import { convertTZ, setFormatDate, showToast } from "../../helpers/utils";
 import ActTable from "../components/ActualizacionTable";
 import ActualizacionTasasDetalle from './ActualizacionTasasDetalle'
 
@@ -21,7 +21,6 @@ function ActualizacionTasas() {
   const [table, setTable] = useState(<></>);
   const [isPantallaPrincipal, setIsPantallaPrincipal] = useState(true);
   const service = new ServerAPI();
-
 
   function applyFilters(record, filters) {
     let isValid = true
@@ -45,7 +44,7 @@ function ActualizacionTasas() {
   const updateRates = async function (event) {
     event.preventDefault()
     showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
-    let resp = await service.sendUpdateRate(selDate)
+    let resp = await service.sendUpdateRate(setFormatDate(selDate))
     console.log(resp)
   }
 
