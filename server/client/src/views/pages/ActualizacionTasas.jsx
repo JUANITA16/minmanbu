@@ -44,13 +44,8 @@ function ActualizacionTasas() {
   
   const updateRates = async function (event) {
     event.preventDefault()
-    showToast('Estamos generando el archivo, por favor consulte el resultado del proceso')
-    service.sendUpdateRate(selDate).then( (data) => {
-      if (data && data.message) {
-        showToast(data.message);
-      }
-    }
-    )
+    showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
+    resp = await service.sendUpdateRate(selDate)
   }
 
   function renderTable() {

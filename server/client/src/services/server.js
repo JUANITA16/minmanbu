@@ -73,8 +73,7 @@ class ServerAPI {
             params: { update_date }
         }
         const res = await axios.post(url, config);
-        const data = await res.data;
-        return data
+        return res
     }
 
 
