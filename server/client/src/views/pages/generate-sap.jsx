@@ -67,8 +67,7 @@ export default function GenerateSap() {
         return resp
       }
     } catch (error) {
-      console.error(error);
-      
+      alert("Error Cargando tabla")
       return resp;
     }
   }

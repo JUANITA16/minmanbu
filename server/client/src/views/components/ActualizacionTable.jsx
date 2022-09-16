@@ -3,42 +3,14 @@ import { Fragment, useEffect, useState } from "react";
 import { Button, Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
 import Select from 'react-select'
+import { showToast } from "../../helpers/utils";
 
-function ActTable(props) {
-  let tableData = [
-    {
-      update_id:"",
-      consecutive : "",
-      exec_date :"",
-      user: ""
-    }
-  ];
+function ActTable({setIsPantallaPrincipal, tableData}) {
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
   const [isloading, setIsloading] = useState(true);
   const [tableBody, setTableBody] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [infoModal, setInfoModal] = useState({
-    consecutive: "",
-    accounting_account: "", 
-    cosif: "", 
-    costcenteraccounting: ""
-  })
-  const modalTitle = "Editar - Configuración homologación"
-  const modalDescription = "En esta sección podrá realizar la edición de los registros Configuración homologación"
-  const tipoProceso = "Editar"
-
-  // const modalStyle = {
-  //   position: 'absolute',
-  //   top: '50%',
-  //   left: '50%',
-  //   transform: 'translate(-50%, -50%)',
-  //   width: '50%',
-  //   bgcolor: 'background.paper',
-  //   boxShadow: 24,
-  //   p: 4,
-  // };
 
 
   const totalResults = [
@@ -54,7 +26,7 @@ function ActTable(props) {
   };
   
   const handleDetails = function (event){
-    props.setIsPantallaPrincipal(false)
+    setIsPantallaPrincipal(false)
   };
 
   const renderLoading = function (isloading){
@@ -69,13 +41,24 @@ function ActTable(props) {
 
   useEffect(function () {
     //Calculate the total of pages using ceil method
-    settotalPages(Math.ceil(tableData.length/maxResults));
-    setVisibleData(tableData.slice(0, maxResults));
-    if (tableData.length >0 ) {
-      setIsloading(false);
-    } else {
-      setIsloading(true)
+    try {
+      if (Array.isArray(tableData)) {
+        settotalPages(Math.ceil(tableData.length/maxResults));
+        setVisibleData(tableData.slice(0, maxResults));
+      } else {
+        settotalPages(1);
+        setVisibleData(["Empty"]);
+      }
+      setVisibleData(tableData.slice(0, maxResults));
+      if (tableData.length >0 ) {
+        setIsloading(false);
+      } else {
+        setIsloading(true)
+      }
+    } catch (error) {
+      showToast("Error cargando la tabla.")
     }
+    
   }, [maxResults, tableData]);
 
   useEffect(function () {
@@ -89,7 +72,7 @@ function ActTable(props) {
         return (
           <tr key={data.update_id}>
             <td>{data.consecutive}</td>
-            <td>{data.exec_date}</td>
+            <td>{data.date_process}</td>
             <td>{data.user}</td>
             <td><Button small onClick={handleDetails} className="indigo darken-4">
               Detalles</Button>

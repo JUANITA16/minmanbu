@@ -77,7 +77,7 @@ function SapTable({tableData}) {
         setIsloading(true)
       }
     } catch (error) {
-      console.error(error);
+      showToast("Error cargando la tabla.")
     }
     
   }, [maxResults, tableData]);
