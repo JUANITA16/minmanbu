@@ -23,7 +23,7 @@ export default function CreacionCuenta() {
   const { instance } = useMsal();
   const { name } = instance.getActiveAccount().idTokenClaims;
   const title = 'Creacion de cuentas masiva';
-  const description = 'En esta sección podrá cargar archivos para la creación de cuenta en forma masiva.';
+  const description = 'En esta sección podrá cargar archivos para la creación de cuentas en forma masiva.';
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
   const [nameFileSelected, setNameFileSelected] = useState("Ningún archivo seleccionado.");

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Button, Col, Row, CollapsibleItem, Icon, Collapsible } from "react-materialize";
+import { Col, Row, CollapsibleItem, Icon, Collapsible, Button } from "react-materialize";
 import { CardHeader, InputDate } from "../components";
 import Select from 'react-select'
-import { convertTZ, showToast } from "../../helpers/utils";
+import { convertTZ, setFormatDate, showToast } from "../../helpers/utils";
 import ActTable from "../components/ActualizacionTable";
 import ActualizacionTasasDetalle from './ActualizacionTasasDetalle'
 
@@ -19,18 +19,24 @@ function ActualizacionTasas() {
   const [consecutivo, setConsecutivo] = useState("");
   const [filtenable, setfiltEnable] = useState(false);
   const [table, setTable] = useState(<></>);
+  const [tableData, setTableData] = useState([]);
+  const [dbData, setDbData] = useState([]);
+  const [details, setdetails] = useState([])
   const [isPantallaPrincipal, setIsPantallaPrincipal] = useState(true);
   const service = new ServerAPI();
-
 
   function applyFilters(record, filters) {
     let isValid = true
     return isValid
   };
-  const handleApplyFilters = function (event) {
+  const handleApplyFilters = async function (event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
+    setTableData([])
+    let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
+    setDbData(resp)
   };
+
   const handleDeleteFilters = function (event) {
     setFilterHeader(<p>Filtros</p>);
     setInitDate(currDate);
@@ -42,19 +48,48 @@ function ActualizacionTasas() {
     setConsecutivo(event.target.value)
   };
   
+  const getdbData = async function (from_date, to_date) {
+    let resp = [];
+    try {
+      resp = await service.getRatesData(from_date, to_date);
+      if (resp.length===0) {
+        return ["Empty"]
+      } else {
+        return resp
+      }
+    } catch (error) {
+      alert("Error Cargando tabla")
+      return resp;
+    }
+  }
+
+useEffect(async () => {
+    let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
+    setDbData(resp)
+  }, [])
+
+  useEffect(() => {
+    setTableData(dbData)
+  }, [dbData])
+
   const updateRates = async function (event) {
     event.preventDefault()
     showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
-    let resp = await service.sendUpdateRate(selDate)
-    console.log(resp)
+    let resp = await service.sendUpdateRate(setFormatDate(selDate))
+    if (resp && resp.message){
+      showToast(resp.message)
+    } else {
+      showToast("Error en la solicitud.")
+    }
   }
 
   function renderTable() {
     return table
   }
   useEffect( function () {
-    setTable(<ActTable setIsPantallaPrincipal={setIsPantallaPrincipal}/>)
-  } ,[isPantallaPrincipal])
+    setTable(<ActTable tableData={tableData} setdetails={setdetails}
+                setIsPantallaPrincipal={setIsPantallaPrincipal}/>)
+  } ,[isPantallaPrincipal, tableData])
 
   return isPantallaPrincipal ? (
     <Fragment>
@@ -121,7 +156,8 @@ function ActualizacionTasas() {
       </Row>
       {renderTable()}
     </Fragment>
-  ): (<ActualizacionTasasDetalle setIsPantallaPrincipal={setIsPantallaPrincipal}/>)
-}
+  ): (<ActualizacionTasasDetalle setIsPantallaPrincipal={setIsPantallaPrincipal}
+        details={details} setdetails={setdetails} />)
+  }
 
 export default ActualizacionTasas;

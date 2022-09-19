@@ -20,7 +20,7 @@ export default function ActualizacionTasasDetalle(props) {
     const [exportaDetalle, setExportaDetalle] = useState();
 
 
-    var contentTableDetalle = []
+    let contentTableDetalle = props.details
     var currentItemsDetalle = [];
     var itemOffsetDetalle;
     var totalPaginasDetalle = 0;
@@ -30,21 +30,21 @@ export default function ActualizacionTasasDetalle(props) {
     const ExcelSheet = ExportExcel.ExcelSheet;
     const ExcelColumn = ExportExcel.ExcelColumn;
 
-
-    const TableBodyDetalle = (props) => {
+  console.log(props)
+    const TableBodyDetalle = ({details}) => {
         return (
           <tr>
             <td  style={{minWidth: 20, maxWidth: 100 , textAlign: "center" }}>
-              {props.rowId}
+              {details.id}
             </td >
             <td style={{minWidth: 10, maxWidth: 50 ,  textAlign: "center" }}>
-              {props.codeStatus}
+              {details.statusCode}
             </td>
             <td style={{ minWidth: 10, maxWidth: 150 , textAlign: "center" , wordBreak:"break-all" }}>
-              {props.status}
+              {details.status}
             </td>
             <td style={{ minWidth: 10, maxWidth: 250, wordBreak:"break-all"}}>
-              {props.detail}
+              {details.detail}
             </td>
           </tr>
         )
@@ -81,9 +81,8 @@ export default function ActualizacionTasasDetalle(props) {
         currentItemsDetalle = contentTableDetalle.slice(itemOffsetDetalle, endOffsetDetalle);
         
         setTableDetalleRender(<tbody>
-            {currentItemsDetalle.map((contenido, index) => {
-            return <TableBodyDetalle rowId={contenido.rowId}
-            codeStatus={contenido.codeStatus} status={contenido.status} detail={contenido.detail}  />
+            {currentItemsDetalle.map((details, index) => {
+            return <TableBodyDetalle details={details}  />
             })}
         </tbody>);
     }
@@ -103,16 +102,16 @@ export default function ActualizacionTasasDetalle(props) {
                 */
                 setTableHeaderDetalle(<thead>
                     <tr>
-                    <th data-field="rowId " style={{ textAlign: "center" }}>Id</th>
-                    <th data-field="codeStatus" style={{ textAlign: "center" }}>  Cod. Estado </th>
+                    <th data-field="id " style={{ textAlign: "center" }}>Id</th>
+                    <th data-field="statusCode" style={{ textAlign: "center" }}>  Cod. Estado </th>
                     <th data-field="status" style={{ textAlign: "center" }}> Estado </th>
                     <th data-field="detail" style={{ textAlign: "center" }}> Detalle </th>
                     </tr>
                 </thead>);
-                /*
+                
                 addData();
                 totalPaginasDetalle = Math.ceil(contentTableDetalle.length / cantPaginasSelectDetalle);
-                */
+                
                 setPaginationFooterDetalle(
                     <TableFooterPaginationDetalle />
                 );
@@ -146,6 +145,7 @@ export default function ActualizacionTasasDetalle(props) {
 
     
     async function changeActualizacionTasas (event) {
+        props.setdetails([])
         props.setIsPantallaPrincipal(true)
     };
 

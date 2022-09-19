@@ -15,7 +15,7 @@ export default function NavigationBar() {
             url: `${base}/`
         },
         {
-            name: "Sap",
+            name: "Archivo SAP",
             url: `${base}/ui-generate-sap`
         },
         {
@@ -40,6 +40,12 @@ export default function NavigationBar() {
         instance.logoutRedirect(logoutRequest).catch((e)=>console.error(e))
     }
 
+    const handleClick = function (menuUrl) {
+        if (window.location.pathname == menuUrl) {
+            window.location.reload()
+        }
+    }
+
     return (
         <Navbar
             alignLinks="right"
@@ -61,7 +67,7 @@ export default function NavigationBar() {
                 preventScrolling: true
             }}>
             {menu.map((menu, i) => {
-                return <Link key={i} to={menu.url}>{menu.name}</Link>
+                return <Link key={i} to={menu.url} onClick={()=>{handleClick(menu.url)}}>{menu.name}</Link>
             })}
             <IconButton onClick={handleLogout}>
                 <LogoutIcon sx={{color: "white"}}/>
