@@ -145,6 +145,7 @@ export default function ActualizacionTasasDetalle(props) {
 
     
     async function changeActualizacionTasas (event) {
+        props.setdetails([])
         props.setIsPantallaPrincipal(true)
     };
 

@@ -21,12 +21,7 @@ function ActualizacionTasas() {
   const [table, setTable] = useState(<></>);
   const [tableData, setTableData] = useState([]);
   const [dbData, setDbData] = useState([]);
-  const [details, setdetails] = useState([{
-      id: "",
-      statusCode: "",
-      status: "",
-      detail: ""
-    }])
+  const [details, setdetails] = useState([])
   const [isPantallaPrincipal, setIsPantallaPrincipal] = useState(true);
   const service = new ServerAPI();
 
@@ -162,7 +157,7 @@ useEffect(async () => {
       {renderTable()}
     </Fragment>
   ): (<ActualizacionTasasDetalle setIsPantallaPrincipal={setIsPantallaPrincipal}
-        details={details} />)
+        details={details} setdetails={setdetails} />)
   }
 
 export default ActualizacionTasas;
