@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 import Select from 'react-select'
 import { showToast } from "../../helpers/utils";
 
-function ActTable({setIsPantallaPrincipal, tableData}) {
+function ActTable({setIsPantallaPrincipal, tableData, setdetails}) {
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
@@ -26,7 +26,13 @@ function ActTable({setIsPantallaPrincipal, tableData}) {
   };
   
   const handleDetails = function (event){
+    event.preventDefault()
+    setdetails( (prevVal) => {
+      [...prevVal, JSON.parse(event.target.value)]
+    }
+    )
     setIsPantallaPrincipal(false)
+
   };
 
   const renderLoading = function (isloading){
@@ -74,7 +80,14 @@ function ActTable({setIsPantallaPrincipal, tableData}) {
             <td>{data.id}</td>
             <td>{data.date_process}</td>
             <td>{data.user}</td>
-            <td><Button small onClick={handleDetails} className="indigo darken-4">
+            <td><Button small onClick={handleDetails} 
+                  className="indigo darken-4"
+                  value={JSON.stringify({
+                    id: data.id,
+                    statusCode: data.status_code,
+                    status: data.status,
+                    detail: data.detailed
+                  })} >
               Detalles</Button>
             </td>
         </tr>)}));
