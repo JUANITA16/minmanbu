@@ -30,7 +30,7 @@ export default function ActualizacionTasasDetalle(props) {
     const ExcelSheet = ExportExcel.ExcelSheet;
     const ExcelColumn = ExportExcel.ExcelColumn;
 
-
+  console.log(props)
     const TableBodyDetalle = ({details}) => {
         return (
           <tr>
@@ -108,10 +108,10 @@ export default function ActualizacionTasasDetalle(props) {
                     <th data-field="detail" style={{ textAlign: "center" }}> Detalle </th>
                     </tr>
                 </thead>);
-                /*
+                
                 addData();
                 totalPaginasDetalle = Math.ceil(contentTableDetalle.length / cantPaginasSelectDetalle);
-                */
+                
                 setPaginationFooterDetalle(
                     <TableFooterPaginationDetalle />
                 );
