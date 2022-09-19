@@ -76,7 +76,8 @@ class ServerAPI {
             data={},
             config=config
         );
-        return res.data
+        const data = await res.data;
+        return data
     }
 
 
