@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Col, Row, CollapsibleItem, Icon, Collapsible } from "react-materialize";
+import { Col, Row, CollapsibleItem, Icon, Collapsible, Button } from "react-materialize";
 import { CardHeader, InputDate } from "../components";
 import Select from 'react-select'
 import { convertTZ, setFormatDate, showToast } from "../../helpers/utils";
@@ -7,7 +7,6 @@ import ActTable from "../components/ActualizacionTable";
 import ActualizacionTasasDetalle from './ActualizacionTasasDetalle'
 
 import { ServerAPI } from "../../services/server";
-import { Button } from "@mui/material";
 
 function ActualizacionTasas() {
   const currDate = convertTZ(new Date());
@@ -63,14 +62,19 @@ function ActualizacionTasas() {
     }
   }
 
+useEffect(async () => {
+    let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
+    setDbData(resp)
+  }, [])
+
   useEffect(() => {
     setTableData(dbData)
   }, [dbData])
 
-  const updateRates = async function (event) {
+  const updateRates = function (event) {
     event.preventDefault()
     showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
-    let resp = await service.sendUpdateRate(setFormatDate(selDate)).then(response => {
+    let resp = service.sendUpdateRate(setFormatDate(selDate)).then(response => {
       return response
     })
     if (resp && resp.message){
