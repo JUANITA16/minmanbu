@@ -27,9 +27,7 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails}) {
   
   const handleDetails = function (event){
     event.preventDefault()
-    setdetails( (prevVal) => {
-      [...prevVal, JSON.parse(event.target.value)]
-    }
+    setdetails( (prevVal) => [...prevVal, JSON.parse(event.target.value)]
     )
     setIsPantallaPrincipal(false)
 
