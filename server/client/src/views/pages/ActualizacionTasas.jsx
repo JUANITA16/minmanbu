@@ -71,12 +71,10 @@ useEffect(async () => {
     setTableData(dbData)
   }, [dbData])
 
-  const updateRates = function (event) {
+  const updateRates = async function (event) {
     event.preventDefault()
     showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
-    let resp = service.sendUpdateRate(setFormatDate(selDate)).then(response => {
-      return response
-    })
+    let resp = await service.sendUpdateRate(setFormatDate(selDate))
     if (resp && resp.message){
       showToast(resp.message)
     } else {

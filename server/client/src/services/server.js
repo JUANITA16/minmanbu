@@ -71,11 +71,7 @@ class ServerAPI {
         const config = {
             headers: { Authorization: await getToken()}
         }
-        const res = await axios.post(
-            url=url,
-            data={},
-            config=config
-        );
+        const res = await axios.post(url,{},config);
         const data = await res.data;
         return data
     }

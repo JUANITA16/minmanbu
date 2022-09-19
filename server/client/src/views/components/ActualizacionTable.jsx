@@ -70,8 +70,8 @@ function ActTable({setIsPantallaPrincipal, tableData}) {
     } else {
       setTableBody(visibleData.map( (data) => {
         return (
-          <tr key={data.update_id}>
-            <td>{data.consecutive}</td>
+          <tr key={data.id}>
+            <td>{data.id}</td>
             <td>{data.date_process}</td>
             <td>{data.user}</td>
             <td><Button small onClick={handleDetails} className="indigo darken-4">
