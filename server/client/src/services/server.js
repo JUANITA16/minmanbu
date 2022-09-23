@@ -26,7 +26,7 @@ class ServerAPI {
 
     uploadFile = async (bodyUpload) => {
         try{
-            const url = this.base_url + "/mambu/massiveAccounts";
+            const url = this.base_url + "/massive-acount/upload";
             const config = {
                 headers: { Authorization: await getToken() },
             }
