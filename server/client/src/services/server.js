@@ -26,7 +26,7 @@ class ServerAPI {
 
     uploadFile = async (bodyUpload) => {
         try{
-            const url = this.base_url + "/mambu/massiveAccounts";
+            const url = this.base_url + "/massive-acount/upload";
             const config = {
                 headers: { Authorization: await getToken() },
             }
@@ -99,7 +99,7 @@ class ServerAPI {
         const end_date = endDate.getFullYear() +'-'+("0"+(endDate.getMonth()+1)).slice(-2) + "-"+ ("0" + endDate.getDate()).slice(-2)+"T24:00:00"
         
         try{
-            const url = this.base_url + "/massive-acount/upload";
+            const url = this.base_url + "/mambu/massiveAccounts/results";
             const config = {
                 headers: { Authorization: await getToken() },
                 params: {
