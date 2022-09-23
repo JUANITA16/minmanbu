@@ -16,13 +16,8 @@ const authConfig = async() => {
         },
         accessMatrix: {
             massive_acc:{
-                path: "/mambu/massiveAccounts",
-                methods:[ "POST" ],
-                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CC", "MINMAMBU_ROLE_ADMIN_PRODUCT_CDT" ]
-            },
-            table:{
-                path: "/mambu/massiveAccounts/results",
-                methods:[ "GET" ],
+                path: "/mambu/",
+                methods:[ "POST", "GET" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CC", "MINMAMBU_ROLE_ADMIN_PRODUCT_CDT" ]
             },
             sap_files: {
