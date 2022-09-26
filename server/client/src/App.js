@@ -7,6 +7,7 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/
 import React from 'react';
 import IdleLogout from './views/components/IdleLogout';
 import ActualizacionTasas from './views/pages/ActualizacionTasas';
+import ReprocesosContablesD from './views/pages/ReprocesosCont';
 
 export default function App() {
   const base = process.env.PUBLIC_URL;
@@ -45,6 +46,11 @@ export default function App() {
                   {(user.roles.includes("MINMAMBU_ROLE_ADMIN") || 
                     user.roles.includes("MINMAMBU_ROLE_ADMIN_PRODUCT_CDT")) ? 
                     <Route path={base + '/ui-actualizacion-tasas'} exact component={ActualizacionTasas} />:
+                    <Route path={base + '/ui-actualizacion-tasas'} exact component={Error404} />
+                  }
+                  {(user.roles.includes("MINMAMBU_ROLE_ADMIN") || 
+                    user.roles.includes("MINMAMBU_ROLE_ADMIN_FINANCE")) ? 
+                    <Route path={base + '/ui-actualizacion-tasas'} exact component={ReprocesosContablesD} />:
                     <Route path={base + '/ui-actualizacion-tasas'} exact component={Error404} />
                   }
 

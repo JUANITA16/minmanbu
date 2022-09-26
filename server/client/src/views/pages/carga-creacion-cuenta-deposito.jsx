@@ -436,7 +436,7 @@ export default function CreacionCuenta() {
     setEndDate(convertTZ(new Date()));
     setIsDisabledButtonFilter(true);
 
-    const dataResultado = await service.getDataTable(startDate, endDate, id, isWeek); //tableService.getDataTable(startDate, endDate, id, isWeek)
+    const dataResultado = await service.getDataDetails(id); //tableService.getDataTable(startDate, endDate, id, isWeek)
     
     if(dataResultado.status===200 ){
       contentTableResultado = dataResultado.data[0].results_per_row;

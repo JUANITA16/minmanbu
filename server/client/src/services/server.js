@@ -89,6 +89,27 @@ class ServerAPI {
     }
 
 
+    getDataDetails = async (consecutive) => {
+
+        try{
+            const url = this.base_url + "/mambu/massiveAccounts/results/" + consecutive;
+            const config = {
+                headers: { Authorization: await getToken() }
+            }
+
+            const res = await axios.get(url, config);
+            const data = await res.data;
+            return {
+                status: 200,
+                data
+            };
+        }
+        catch(err){
+            console.info("ERROR Table: ", err.response)
+            return setError("Error obteniendo la tabla.", err.response);
+        }
+    }
+    
     getDataTable = async (startDate, endDate, consecutive,isWeek) => {
         if(isWeek){
             startDate = convertTZ(addDays(new Date(),-7))
@@ -104,8 +125,7 @@ class ServerAPI {
                 headers: { Authorization: await getToken() },
                 params: {
                     start_date,
-                    end_date,
-                    consecutive
+                    end_date
                 }
             }
 
