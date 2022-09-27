@@ -20,7 +20,10 @@ function ReprocesosContablesD() {
   )
   const [isPromptOpen, setisPromptOpen] = useState(false)
   const [proCont, setproCont] = useState(false)
-  
+  const [dialogContent, setdialogContent] = useState({
+    title: "",
+    content: ""
+  })
 
   const handleChange = function (event) {
     seteventType({
@@ -35,13 +38,21 @@ function ReprocesosContablesD() {
 
   const handleChangeAll = function (event) {
     // Cambia el valor de todos los campos.
-
-    seteventType({
-      constitucion: true,
-      interes: true,
-      rendimientos: true,
-      vencimientos: true
-    })
+    if (eventLen === 0) {
+      seteventType({
+        constitucion: true,
+        interes: true,
+        rendimientos: true,
+        vencimientos: true
+      })
+    } else {
+      seteventType({
+        constitucion: false,
+        interes: false,
+        rendimientos: false,
+        vencimientos: false
+      })
+    }
   }
 
   const handleClosePrompt = function (event){
@@ -56,6 +67,10 @@ function ReprocesosContablesD() {
 
   const handleGenerate = function (event){
     if (error) {
+      setdialogContent({
+        title: "No se pudo generar la solicitud",
+        content: "El periodo de fechas a procesar no es válido, el máximo son 7 días."
+      })
       setisPromptOpen(true)
     } else {
       // Acá se ingresa la función para generar.
@@ -67,7 +82,11 @@ function ReprocesosContablesD() {
     // Comparamos las fechas para que no superen los 5 días(Fecha Final)
     let deltaDate = finalDate - initDate
     // El número especifícado en el condicional equivale a la diferencia de 5 días
-    if (deltaDate > 518400931) {
+    if (deltaDate > 345601000) {
+      setdialogContent({
+        title: "Fechas no válidas",
+        content: "El periodo de fechas a procesar no es válido, el máximo son 5 días."
+      })
       setisPromptOpen(true)
       setFinalDate(initDate)
     }
@@ -76,7 +95,11 @@ function ReprocesosContablesD() {
     // Comparamos las fechas para que no superen los 5 días(Fecha Inicial)
     let deltaDate = finalDate - initDate
     // El número especifícado en el condicional equivale a la diferencia de 5 días
-    if (deltaDate > 518400931) {
+    if (deltaDate > 345601000) {
+      setdialogContent({
+        title: "Fechas no válidas",
+        content: "El periodo de fechas a procesar no es válido, el máximo son 5 días."
+      })
       setisPromptOpen(true)
       setInitDate(finalDate)
     }
@@ -91,7 +114,7 @@ function ReprocesosContablesD() {
           required
           error={error}
           component="fieldset"
-          sx={{ m: 6, border: "1px solid black"  }}
+          sx={{ m: 8, border: "1px solid black"  }}
           variant="standard"
         >
           <FormLabel component="legend">Tipo de evento</FormLabel>
@@ -187,11 +210,11 @@ function ReprocesosContablesD() {
         aria-describedby="alert-dialog-description"
         >
         <DialogTitle id="alert-dialog-title">
-          {"Fechas no válidas"}
+          {dialogContent.title}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            El periodo de fechas a procesar no es válido, el máximo son 5 días.
+            {dialogContent.content}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
