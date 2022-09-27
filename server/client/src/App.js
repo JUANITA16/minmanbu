@@ -50,8 +50,8 @@ export default function App() {
                   }
                   {(user.roles.includes("MINMAMBU_ROLE_ADMIN") || 
                     user.roles.includes("MINMAMBU_ROLE_ADMIN_FINANCE")) ? 
-                    <Route path={base + '/ui-actualizacion-tasas'} exact component={ReprocesosContablesD} />:
-                    <Route path={base + '/ui-actualizacion-tasas'} exact component={Error404} />
+                    <Route path={base + '/generacion-contabilidad'} exact component={ReprocesosContablesD} />:
+                    <Route path={base + '/generacion-contabilidad'} exact component={Error404} />
                   }
 
                 </Switch>
