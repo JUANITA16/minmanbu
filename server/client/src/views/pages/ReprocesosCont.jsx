@@ -35,6 +35,7 @@ function ReprocesosContablesD() {
 
   const handleChangeAll = function (event) {
     // Cambia el valor de todos los campos.
+
     seteventType({
       constitucion: true,
       interes: true,
@@ -90,7 +91,7 @@ function ReprocesosContablesD() {
           required
           error={error}
           component="fieldset"
-          sx={{ m: 4 }}
+          sx={{ m: 6, border: "1px solid black"  }}
           variant="standard"
         >
           <FormLabel component="legend">Tipo de evento</FormLabel>
@@ -98,7 +99,7 @@ function ReprocesosContablesD() {
             <FormControlLabel
               control={
               <Checkbox checked={eventLen===4} 
-                indeterminate={eventLen!==4}
+                indeterminate={eventLen!==4 && eventLen!==0}
                 onChange={handleChangeAll} 
                 name="todos" />
               }
@@ -145,7 +146,7 @@ function ReprocesosContablesD() {
           direction="column"
           justifyContent="center"
           alignItems="center"
-          sx={{ m: 4 }}>
+          sx={{ m: 4, border: "1px solid black" }}>
           <Grid item>
             <InputDate labelName="Fecha Inicial" maxValue={finalDate} 
               setDate={setInitDate} dateInput={initDate}  />
@@ -158,9 +159,9 @@ function ReprocesosContablesD() {
         <Grid 
           container
           direction="column"
-          justifyContent="center"
+          justifyContent="space-between"
           alignItems="center"
-          sx={{ m: 4 }}>
+          sx={{ m: 4, border: "1px solid black"  }}>
           <Grid item>
             <FormControlLabel
                 control={
