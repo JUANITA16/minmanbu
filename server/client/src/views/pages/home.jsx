@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { CardHeader } from "../components/index";
-import { Link } from 'react-router-dom';
-import { Row, Col } from 'react-materialize';
 import { useMsal } from "@azure/msal-react";
 
 export default function Home() {

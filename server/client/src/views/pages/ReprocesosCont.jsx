@@ -4,6 +4,7 @@ import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText
 import React, { useState, useEffect, Fragment } from "react";
 import { CardHeader, InputDate } from "../components";
 import { Button } from "react-materialize";
+import { convertTZ } from "../../helpers/utils";
 
 function ReprocesosContablesD() {
   const currDate = convertTZ(new Date());
@@ -50,7 +51,7 @@ function ReprocesosContablesD() {
   const {constitucion, interes, rendimientos, vencimientos} = eventType
   const eventLen = [constitucion, interes, rendimientos, vencimientos].filter((v) => v).length
   // Si ningún evento está seleccionado genera error
-  let error =  eventLen == 0;
+  let error =  eventLen === 0;
 
   const handleGenerate = function (event){
     if (error) {
@@ -96,7 +97,7 @@ function ReprocesosContablesD() {
           <FormGroup>
             <FormControlLabel
               control={
-              <Checkbox checked={eventLen==4} 
+              <Checkbox checked={eventLen===4} 
                 indeterminate={eventLen!==4}
                 onChange={handleChangeAll} 
                 name="todos" />

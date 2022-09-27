@@ -73,10 +73,13 @@ export default function GenerateSap() {
   }
 
 
-  useEffect(async () => {
-    document.title = title
-    let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
-    setDbData(resp)
+  useEffect(() => {
+    async function fetchData() {
+      document.title = title
+      let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
+      setDbData(resp)
+    }
+    fetchData()
   }, []);
 
   useEffect(() => {
