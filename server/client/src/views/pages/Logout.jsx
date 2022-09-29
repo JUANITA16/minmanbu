@@ -10,7 +10,7 @@ export default function Logout() {
   const { instance } = useMsal();
 
   const onSSO = () => {
-    instance.loginRedirect(loginRequest).catch( e => console.log("Error Login: ", e) );
+    instance.loginRedirect(loginRequest);
   };
 
   useEffect(() => {

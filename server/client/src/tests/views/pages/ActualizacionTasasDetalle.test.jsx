@@ -14,16 +14,21 @@ afterAll(() => {
 global.M = require('react-materialize');
 global.M = require('materialize-css');
 
-
+let details = []
+let setIsPantallaPrincipal = jest.fn()
+let setdetails = jest.fn()
 describe('ActualizacionTasasDetalle', () => {
     test('render ActualizacionTasasDetalle', async () =>  {
-        await act( async () => render(<ActualizacionTasasDetalle/>));
+        await act( async () => render(<ActualizacionTasasDetalle 
+            setIsPantallaPrincipal={setIsPantallaPrincipal}
+            details={details} setdetails={setdetails} />));
     })
 
     test('select cant pages', async () =>  {
 
        
-        await act( async () => render(<ActualizacionTasasDetalle/>));
+        await act( async () => render(<ActualizacionTasasDetalle setIsPantallaPrincipal={setIsPantallaPrincipal}
+            details={details} setdetails={setdetails} />));
 
         await selectEvent.select(screen.getByLabelText('Cantidad de registros'), '20')
         

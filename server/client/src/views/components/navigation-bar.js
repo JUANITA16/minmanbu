@@ -29,6 +29,10 @@ export default function NavigationBar() {
         {
             name: "Actualización tasas",
             url: `${base}/ui-actualizacion-tasas`
+        },
+        {
+            name: "Generación contabilidad Dominus",
+            url: `${base}/generacion-contabilidad`
         }
     ])
 
