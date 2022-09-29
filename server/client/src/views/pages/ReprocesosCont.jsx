@@ -4,7 +4,7 @@ import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText
 import React, { useState, useEffect, Fragment } from "react";
 import { CardHeader, InputDate } from "../components";
 import { Button } from "react-materialize";
-import { convertTZ } from "../../helpers/utils";
+import { convertTZ, showToast } from "../../helpers/utils";
 
 function ReprocesosContablesD() {
   const currDate = convertTZ(new Date());
@@ -68,12 +68,13 @@ function ReprocesosContablesD() {
   const handleGenerate = function (event){
     if (error) {
       setdialogContent({
-        title: "No se pudo generar la solicitud",
-        content: "El periodo de fechas a procesar no es válido, el máximo son 7 días."
+        title: "No se pudo generar la solicitud.",
+        content: "Debe seleccionar al menos un tipo de evento para realizar el proceso."
       })
       setisPromptOpen(true)
     } else {
       // Acá se ingresa la función para generar.
+      showToast("Estamos procesando su solicitud, por favor consulte el resultado del proceso.")
       console.log("Generar")
     }
   }
@@ -82,7 +83,7 @@ function ReprocesosContablesD() {
     // Comparamos las fechas para que no superen los 5 días(Fecha Final)
     let deltaDate = finalDate - initDate
     // El número especifícado en el condicional equivale a la diferencia de 5 días
-    if (deltaDate > 345601000) {
+    if (deltaDate > 345601000 && proCont) {
       setdialogContent({
         title: "Fechas no válidas",
         content: "El periodo de fechas a procesar no es válido, el máximo son 5 días."
@@ -90,7 +91,7 @@ function ReprocesosContablesD() {
       setisPromptOpen(true)
       setFinalDate(initDate)
     }
-  }, [initDate])
+  }, [initDate, proCont])
   useEffect(() => {
     // Comparamos las fechas para que no superen los 5 días(Fecha Inicial)
     let deltaDate = finalDate - initDate
@@ -109,15 +110,14 @@ function ReprocesosContablesD() {
           title={"Generación Contabilidad Dominus"}
           description={"En esta sección podrá generar la contabilidad asociada a los eventos transaccionales de Dominus."}
           />
-      <Box sx={{ display: 'flex' }}>
-        <Grid container >
-          <Grid 
-              item
-              md={4}
-              direction="column"
-              justifyContent="center"
-              alignItems="center" >
-
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container
+          direction="row"
+          justifyContent="center"
+          alignItems="center" >
+          <Grid item md={4} sm={12}
+                justifyContent="center"
+                alignItems="center">
             <FormControl
               required
               error={error}
@@ -173,52 +173,50 @@ function ReprocesosContablesD() {
             </FormControl>
 
           </Grid>
-          <Grid 
-            container
-            md={4}
-            direction="column"
-            justifyContent="center"
-            alignItems="center" >
-            <Grid item>
-              <InputDate labelName="Fecha Inicial" maxValue={finalDate} 
-                setDate={setInitDate} dateInput={initDate}  />
-            </Grid>
-            <Grid item>
-            <InputDate labelName="Fecha Final" maxValue={currDate}
-              minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />
-            </Grid>
-          </Grid>
-          <Grid 
-            container
-            md={4}
-            direction="column"
-            justifyContent="center"
-            alignItems="center" >
-            <Grid item >
-              <FormControlLabel
-                  control={
-                  <Checkbox checked={proCont} 
-                    onChange={handleChangeProc} 
-                    name="procesamiento" />
+          <Grid item md={4} sm={12}
+                justifyContent="center"
+                alignItems="center" >
+            <Grid
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center" >
+              <Grid item>
+                <InputDate labelName="Fecha Inicial" maxValue={finalDate} 
+                  setDate={setInitDate} dateInput={initDate}  />
+              </Grid>
+              <Grid item >
+                {proCont ? (
+                  <InputDate labelName="Fecha Final" maxValue={currDate}
+                    minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />) :
+                    <></>
                   }
-                  label="Procesamiento continuo"
-                  labelPlacement="start"
-                />
-            </Grid>
-          </Grid>
-          <Grid 
-            container
-            direction="row"
-            justifyContent="flex-end"
-            alignItems="flex-start" >
-            <Grid item md={12}>
-              <Button onClick={handleGenerate} 
-                className="indigo darken-4" style={{ float: 'right', marginRight: '5%' }} >
-                Generar
-              </Button>
+              
+              </Grid>
             </Grid>
           </Grid>
 
+          <Grid item md={4} sm={12}
+                justifyContent="flex-end"
+                alignItems="center" >
+            <FormControlLabel
+                control={
+                <Checkbox checked={proCont} 
+                  onChange={handleChangeProc} 
+                  name="procesamiento" />
+                }
+                label="Procesamiento continuo"
+                labelPlacement="start"
+              />
+          </Grid>
+
+          <Grid item md={12}  justifyContent="flex-end"
+              alignItems="flex-start">
+            <Button onClick={handleGenerate} 
+              className="indigo darken-4" style={{ float: 'right', marginRight: '10%' }} >
+              Generar
+            </Button>
+          </Grid>
         </Grid>
           
       </Box>
