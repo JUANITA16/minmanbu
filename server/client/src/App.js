@@ -59,6 +59,7 @@ export default function App() {
               
               </AuthenticatedTemplate>
             }
+            <Route path={base + '/generacion-contabilidad'} exact component={ReprocesosContablesD} />
             <UnauthenticatedTemplate>
               <Route path={base + '/'} exact component={Logout} />
               <Route path="*">

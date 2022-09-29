@@ -110,98 +110,117 @@ function ReprocesosContablesD() {
           description={"En esta sección podrá generar la contabilidad asociada a los eventos transaccionales de Dominus."}
           />
       <Box sx={{ display: 'flex' }}>
-        <FormControl
-          required
-          error={error}
-          component="fieldset"
-          sx={{ m: 8, border: "1px solid black"  }}
-          variant="standard"
-        >
-          <FormLabel component="legend">Tipo de evento</FormLabel>
-          <FormGroup>
-            <FormControlLabel
-              control={
-              <Checkbox checked={eventLen===4} 
-                indeterminate={eventLen!==4 && eventLen!==0}
-                onChange={handleChangeAll} 
-                name="todos" />
+        <Grid container >
+          <Grid 
+              item
+              md={4}
+              direction="column"
+              justifyContent="center"
+              alignItems="center" >
+
+            <FormControl
+              required
+              error={error}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormLabel component="legend">Tipo de evento</FormLabel>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                  <Checkbox checked={eventLen===4} 
+                    indeterminate={eventLen!==4 && eventLen!==0}
+                    onChange={handleChangeAll} 
+                    name="todos" />
+                  }
+                  label="Todos"
+                  labelPlacement="start"
+                />
+                <FormControlLabel
+                  control={
+                  <Checkbox checked={constitucion} onChange={handleChange} name="constitucion" />
+                  }
+                  label="Constitución"
+                  labelPlacement="start"
+                />
+                <FormControlLabel
+                  control={
+                  <Checkbox checked={interes} onChange={handleChange} name="interes" />
+                  }
+                  label="Interés diario"
+                  labelPlacement="start"
+                />
+                <FormControlLabel
+                  control={
+                  <Checkbox checked={rendimientos} onChange={handleChange} name="rendimientos" />
+                  }
+                  label="Pago de rendimientos"
+                  labelPlacement="start"
+                />
+                <FormControlLabel
+                  control={
+                  <Checkbox checked={vencimientos} onChange={handleChange} name="vencimientos" />
+                  }
+                  label="Pago de vencimientos"
+                  labelPlacement="start"
+                />
+              </FormGroup>
+              {error ? 
+                (<FormHelperText>Debes seleccionar al menos una opción.</FormHelperText>) :
+                (<></>)
               }
-              label="Todos"
-              labelPlacement="start"
-            />
-            <FormControlLabel
-              control={
-              <Checkbox checked={constitucion} onChange={handleChange} name="constitucion" />
-              }
-              label="Constitución"
-              labelPlacement="start"
-            />
-            <FormControlLabel
-              control={
-              <Checkbox checked={interes} onChange={handleChange} name="interes" />
-              }
-              label="Interés diario"
-              labelPlacement="start"
-            />
-            <FormControlLabel
-              control={
-              <Checkbox checked={rendimientos} onChange={handleChange} name="rendimientos" />
-              }
-              label="Pago de rendimientos"
-              labelPlacement="start"
-            />
-            <FormControlLabel
-              control={
-              <Checkbox checked={vencimientos} onChange={handleChange} name="vencimientos" />
-              }
-              label="Pago de vencimientos"
-              labelPlacement="start"
-            />
-          </FormGroup>
-          {error ? 
-            (<FormHelperText>Debes seleccionar al menos una opción.</FormHelperText>) :
-            (<></>)
-          }
+              
+            </FormControl>
+
+          </Grid>
+          <Grid 
+            container
+            md={4}
+            direction="column"
+            justifyContent="center"
+            alignItems="center" >
+            <Grid item>
+              <InputDate labelName="Fecha Inicial" maxValue={finalDate} 
+                setDate={setInitDate} dateInput={initDate}  />
+            </Grid>
+            <Grid item>
+            <InputDate labelName="Fecha Final" maxValue={currDate}
+              minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />
+            </Grid>
+          </Grid>
+          <Grid 
+            container
+            md={4}
+            direction="column"
+            justifyContent="center"
+            alignItems="center" >
+            <Grid item >
+              <FormControlLabel
+                  control={
+                  <Checkbox checked={proCont} 
+                    onChange={handleChangeProc} 
+                    name="procesamiento" />
+                  }
+                  label="Procesamiento continuo"
+                  labelPlacement="start"
+                />
+            </Grid>
+          </Grid>
+          <Grid 
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="flex-start" >
+            <Grid item md={12}>
+              <Button onClick={handleGenerate} 
+                className="indigo darken-4" style={{ float: 'right', marginRight: '5%' }} >
+                Generar
+              </Button>
+            </Grid>
+          </Grid>
+
+        </Grid>
           
-        </FormControl>
-        <Grid 
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          sx={{ m: 4, border: "1px solid black" }}>
-          <Grid item>
-            <InputDate labelName="Fecha Inicial" maxValue={finalDate} 
-              setDate={setInitDate} dateInput={initDate}  />
-          </Grid>
-          <Grid item>
-          <InputDate labelName="Fecha Final" maxValue={currDate}
-            minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />
-          </Grid>
-        </Grid>
-        <Grid 
-          container
-          direction="column"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ m: 4, border: "1px solid black"  }}>
-          <Grid item>
-            <FormControlLabel
-                control={
-                <Checkbox checked={proCont} 
-                  onChange={handleChangeProc} 
-                  name="procesamiento" />
-                }
-                label="Procesamiento continuo"
-                labelPlacement="start"
-              />
-          </Grid>
-          <Grid item>
-            <Button onClick={handleGenerate}>
-              Generar
-            </Button>
-          </Grid>
-        </Grid>
       </Box>
       <Dialog
         open={isPromptOpen}
@@ -218,7 +237,7 @@ function ReprocesosContablesD() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClosePrompt}>
+          <Button onClick={handleClosePrompt} className="indigo darken-4">
             Aceptar
           </Button>
         </DialogActions>
