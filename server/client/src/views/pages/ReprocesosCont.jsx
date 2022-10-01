@@ -328,7 +328,6 @@ function ReprocesosContablesD() {
               <ExcelColumn label="Grupo datos Dominus" value="data_group" />
             </ExcelSheet>
           </ExcelFile>
-
         </Col>
       </Row>
       <Dialog
