@@ -311,27 +311,26 @@ function ReprocesosContablesD() {
       {/* Renderizado de la tabla */}
       {renderTable()}
       <Row>
-            <Col s={12} m={12} className="input-field m0">
-              <ExcelFile
-                element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
-                filename="Resultado de creación Plano SAP">
-                <ExcelSheet data={tableData} name="Resultados">
-                  <ExcelColumn label="Consecutivo" value="id" />
-                  <ExcelColumn label="Fecha ejecución" value="date_process" />
-                  <ExcelColumn label="Usuario" value="user" />
-                  <ExcelColumn label="Fecha del registro" value="date_event" />
-                  <ExcelColumn label="Detalle" value="detailed" />
-                  <ExcelColumn label="Valor" value="value" />
-                  <ExcelColumn label="Tipo proceso" value="type_process " />
-                  <ExcelColumn label="Cod. estado" value="status_code" />
-                  <ExcelColumn label="Estado" value="status" />
-                  <ExcelColumn label="Grupo datos Dominus" value="data_group" />
-                </ExcelSheet>
-    
-              </ExcelFile>
-    
-            </Col>
-        </Row>
+        <Col s={12} m={12} className="input-field m0">
+          <ExcelFile
+            element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+            filename="Resultado-ProcesoContable">
+            <ExcelSheet data={tableData} name="Resultados">
+              <ExcelColumn label="Consecutivo" value="id" />
+              <ExcelColumn label="Fecha ejecución" value="date_process" />
+              <ExcelColumn label="Usuario" value="user" />
+              <ExcelColumn label="Fecha del registro" value="date_event" />
+              <ExcelColumn label="Detalle" value="detailed" />
+              <ExcelColumn label="Valor" value="value" />
+              <ExcelColumn label="Tipo proceso" value="type_process" />
+              <ExcelColumn label="Cod. estado" value="status_code" />
+              <ExcelColumn label="Estado" value="status" />
+              <ExcelColumn label="Grupo datos Dominus" value="data_group" />
+            </ExcelSheet>
+          </ExcelFile>
+
+        </Col>
+      </Row>
       <Dialog
         open={isPromptOpen}
         onClose={handleClosePrompt}

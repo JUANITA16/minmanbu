@@ -71,7 +71,7 @@ function ReprTable({ tableData }) {
             <td>{data.id}</td>
             <td>{data.date_process}</td>
             <td>{data.user}</td>
-            <td>{data.process_type}</td>
+            <td>{data.type_process}</td>
             <td>{data.status_code}</td>
             <td>{data.status}</td>
 
