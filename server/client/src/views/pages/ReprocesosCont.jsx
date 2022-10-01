@@ -3,8 +3,9 @@ import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText
         DialogContentText, DialogTitle, Grid } from "@mui/material";
 import React, { useState, useEffect, Fragment } from "react";
 import { CardHeader, InputDate } from "../components";
-import { Button, Row, Col, CollapsibleItem, Collapsible } from "react-materialize";
+import { Button, Row, Col, CollapsibleItem, Icon, Collapsible } from "react-materialize";
 import { convertTZ, showToast } from "../../helpers/utils";
+import ReactExport from 'react-export-excel';
 
 function ReprocesosContablesD() {
 
