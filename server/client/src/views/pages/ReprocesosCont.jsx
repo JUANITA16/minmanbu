@@ -6,6 +6,7 @@ import { CardHeader, InputDate } from "../components";
 import { Button, Row, Col, CollapsibleItem, Icon, Collapsible } from "react-materialize";
 import { convertTZ, showToast } from "../../helpers/utils";
 import ReactExport from 'react-export-excel';
+import ReprTable from "../components/ReprocesosTable";
 
 function ReprocesosContablesD() {
 
@@ -146,6 +147,11 @@ function ReprocesosContablesD() {
     }
   }, [finalDate])
 
+  // Carga de la tabla
+  useEffect(() => {
+    setTable(<ReprTable tableData={tableData} />)
+  }, [tableData])
+  
 
   function renderTable() {
     return table
@@ -278,7 +284,7 @@ function ReprocesosContablesD() {
               <Row>
                 <Col s={12} m={6} l={6} xl={6}>
                   <InputDate labelName="Fecha Inicial" maxValue={endDate} 
-                    setDate={setEndDate} dateInput={startDate}  />
+                    setDate={setStartDate} dateInput={startDate}  />
                 </Col>
                 <Col s={12} m={6} l={6} xl={6}  >
                   <InputDate labelName="Fecha Final" maxValue={currDate}
