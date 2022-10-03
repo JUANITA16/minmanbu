@@ -15,7 +15,7 @@ describe('Reprocesos Table', () => {
         const tableData = [ {
             id: "1234",
             date_process: "2022-06-09",
-            user: "Cristian Triana",
+            user: "Cristian Torrejon",
             date_event: "2022-06-01",
             detailed: "detalle1, detalle2, detalle3",
             value: "10000000",
