@@ -20,7 +20,7 @@ function ReprocesosContablesD() {
     type_process: "Continuo",
     status_code: "200",
     status: "Exitoso",
-    data_group: "555566633",
+    data_group: "555566633"
 
   }]
 
