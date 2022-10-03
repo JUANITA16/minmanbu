@@ -66,8 +66,8 @@ class ServerAPI {
     }
 
 
-    sendUpdateRate = async (update_date) => {
-        const url = this.base_url + "/rates?update_date=" + update_date
+    sendUpdateRate = async (update_date,user) => {
+        const url = this.base_url + "/rates?update_date=" + update_date+ "&user="+user
         const config = {
             headers: { Authorization: await getToken()}
         }

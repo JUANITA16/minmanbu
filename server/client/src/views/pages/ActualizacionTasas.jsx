@@ -7,6 +7,7 @@ import ActTable from "../components/ActualizacionTable";
 import ActualizacionTasasDetalle from './ActualizacionTasasDetalle'
 
 import { ServerAPI } from "../../services/server";
+import { useMsal } from "@azure/msal-react";
 
 function ActualizacionTasas() {
   const currDate = convertTZ(new Date());
@@ -24,6 +25,9 @@ function ActualizacionTasas() {
   const [details, setdetails] = useState([])
   const [isPantallaPrincipal, setIsPantallaPrincipal] = useState(true);
   const service = new ServerAPI();
+
+  const { instance } = useMsal();
+  const { userName } = instance.getActiveAccount().idTokenClaims;
 
   function applyFilters(record, filters) {
     let isValid = true
@@ -75,7 +79,7 @@ useEffect(async () => {
   const updateRates = async function (event) {
     event.preventDefault()
     showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
-    let resp = await service.sendUpdateRate(setFormatDate(selDate))
+    let resp = await service.sendUpdateRate(setFormatDate(selDate),userName)
     if (resp && resp.message){
       showToast(resp.message)
     } else {
