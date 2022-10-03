@@ -3,13 +3,38 @@ import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText
         DialogContentText, DialogTitle, Grid } from "@mui/material";
 import React, { useState, useEffect, Fragment } from "react";
 import { CardHeader, InputDate } from "../components";
-import { Button } from "react-materialize";
+import { Button, Row, Col, CollapsibleItem, Icon, Collapsible } from "react-materialize";
 import { convertTZ, showToast } from "../../helpers/utils";
+import ReactExport from 'react-export-excel';
+import ReprTable from "../components/ReprocesosTable";
 
 function ReprocesosContablesD() {
+
+  let testData = [ {
+    id: "1234",
+    date_process: "2022-06-09",
+    user: "Cristian Triana",
+    date_event: "2022-06-01",
+    detailed: "detalle1, detalle2, detalle3",
+    value: "10000000",
+    type_process: "Continuo",
+    status_code: "200",
+    status: "Exitoso",
+    data_group: "555566633"
+
+  }]
+
+  const ExcelFile = ReactExport.ExcelFile;
+  const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+  const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+
   const currDate = convertTZ(new Date());
+  const [startDate, setStartDate] = useState(currDate);
+  const [endDate, setEndDate] = useState(currDate);
   const [initDate, setInitDate] = useState(currDate);
   const [finalDate, setFinalDate] = useState(currDate);
+  const [table, setTable] = useState(<></>);
+  const [tableData, setTableData] = useState(testData);
   const [eventType, seteventType] = useState(
     {
       constitucion: false,
@@ -24,6 +49,8 @@ function ReprocesosContablesD() {
     title: "",
     content: ""
   })
+  const [filtenable, setfiltEnable] = useState(true);
+  const [filterHeader, setFilterHeader] = useState(<p><strong><u>Filtros</u></strong></p>);
 
   const handleChange = function (event) {
     seteventType({
@@ -35,6 +62,20 @@ function ReprocesosContablesD() {
   const handleChangeProc = function (event) {
     setproCont(event.target.checked)
   }
+
+  const handleApplyFilters = async function (event) {
+    setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
+    setfiltEnable(true);
+    setTableData(["Empty"])
+  };
+
+  const handleDeleteFilters = function (event) {
+    setFilterHeader(<p>Filtros</p>);
+    setInitDate(currDate);
+    setFinalDate(currDate);
+    setfiltEnable(false);
+    setTableData(["Empty"])
+  };
 
   const handleChangeAll = function (event) {
     // Cambia el valor de todos los campos.
@@ -105,6 +146,17 @@ function ReprocesosContablesD() {
       setInitDate(finalDate)
     }
   }, [finalDate])
+
+  // Carga de la tabla
+  useEffect(() => {
+    setTable(<ReprTable tableData={tableData} />)
+  }, [tableData])
+  
+
+  function renderTable() {
+    return table
+  }
+
   return (<Fragment>
       <CardHeader 
           title={"Generación Contabilidad Dominus"}
@@ -220,6 +272,64 @@ function ReprocesosContablesD() {
         </Grid>
           
       </Box>
+
+      <Row>
+          <Collapsible accordion={false}>
+              <CollapsibleItem
+              expanded={false}
+              header={filterHeader}
+              icon={<Icon>filter_list</Icon>}
+              node="div"
+              >
+              <Row>
+                <Col s={12} m={6} l={6} xl={6}>
+                  <InputDate labelName="Fecha Inicial" maxValue={endDate} 
+                    setDate={setStartDate} dateInput={startDate}  />
+                </Col>
+                <Col s={12} m={6} l={6} xl={6}  >
+                  <InputDate labelName="Fecha Final" maxValue={currDate}
+                    minValue={startDate} setDate={setEndDate} dateInput={endDate}  />
+                </Col>
+                </Row>
+              <Row>
+                <Col s={12} m={6} l={6} xl={3}>
+                  <Button node="button" small className="indigo darken-4" 
+                    onClick={handleApplyFilters} disabled={filtenable} >
+                    Aplicar filtros
+                  </Button>
+                </Col>
+                <Col s={12} m={6} l={6} xl={3}>
+                  <Button node="button"  small className="indigo darken-4"
+                    onClick={handleDeleteFilters} disabled={!filtenable}>
+                    Borrar filtros
+                  </Button>
+                </Col>
+              </Row>
+            </CollapsibleItem>
+          </Collapsible>  
+      </Row>
+      {/* Renderizado de la tabla */}
+      {renderTable()}
+      <Row>
+        <Col s={12} m={12} className="input-field m0">
+          <ExcelFile
+            element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+            filename="Resultado-ProcesoContable">
+            <ExcelSheet data={tableData} name="Resultados">
+              <ExcelColumn label="Consecutivo" value="id" />
+              <ExcelColumn label="Fecha ejecución" value="date_process" />
+              <ExcelColumn label="Usuario" value="user" />
+              <ExcelColumn label="Fecha del registro" value="date_event" />
+              <ExcelColumn label="Detalle" value="detailed" />
+              <ExcelColumn label="Valor" value="value" />
+              <ExcelColumn label="Tipo proceso" value="type_process" />
+              <ExcelColumn label="Cod. estado" value="status_code" />
+              <ExcelColumn label="Estado" value="status" />
+              <ExcelColumn label="Grupo datos Dominus" value="data_group" />
+            </ExcelSheet>
+          </ExcelFile>
+        </Col>
+      </Row>
       <Dialog
         open={isPromptOpen}
         onClose={handleClosePrompt}
