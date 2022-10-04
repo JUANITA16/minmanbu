@@ -79,7 +79,6 @@ useEffect(async () => {
   const updateRates = async function (event) {
     event.preventDefault()
     showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
-    console.log('updateRates- name: '+name)
     let resp = await service.sendUpdateRate(setFormatDate(selDate),name)
     if (resp && resp.message){
       showToast(resp.message)

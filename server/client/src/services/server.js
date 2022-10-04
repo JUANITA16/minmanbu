@@ -213,6 +213,19 @@ class ServerAPI {
       
         return res;
     }
+
+
+    
+    createDailyInterest = async (date,user,enddate) => {
+        const url = this.base_url + "/daily-interest-dominus?date=" + date+ "&user="+user + "&enddate="+enddate
+        const config = {
+            headers: { Authorization: await getToken()}
+        }
+        const res = await axios.post(url,{},config);
+        const data = await res.data;
+        return data
+    }
+
 }
 
 export {ServerAPI} ;
