@@ -27,7 +27,7 @@ function ActualizacionTasas() {
   const service = new ServerAPI();
 
   const { instance } = useMsal();
-  const { userName } = instance.getActiveAccount().idTokenClaims;
+  const { name } = instance.getActiveAccount().idTokenClaims;
 
   function applyFilters(record, filters) {
     let isValid = true
@@ -79,7 +79,8 @@ useEffect(async () => {
   const updateRates = async function (event) {
     event.preventDefault()
     showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
-    let resp = await service.sendUpdateRate(setFormatDate(selDate),userName)
+    console.log('updateRates- name: '+name)
+    let resp = await service.sendUpdateRate(setFormatDate(selDate),name)
     if (resp && resp.message){
       showToast(resp.message)
     } else {
