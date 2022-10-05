@@ -67,9 +67,7 @@ const NavigationBar = () => {
   const handleClick = function (menuUrl) {
     if (window.location.pathname == menuUrl) {
         window.location.reload()
-    } else {
-      window.location.href = menuUrl
-    }
+    } 
   }
 
   return (
@@ -123,7 +121,9 @@ const NavigationBar = () => {
               <Button
                 key={page.name}
                 onClick={() => {handleClick(page.url)}}
-                sx={{ my: 2, color: 'white', display: 'block', fontFamily: '"Segoe UI"' }}
+                href={page.url}
+                sx={{ my: 2, color: 'white', display: 'block', fontFamily: '"Segoe UI"',
+                      textTransform: 'none' }}
               >
                 {page.name}
               </Button>
