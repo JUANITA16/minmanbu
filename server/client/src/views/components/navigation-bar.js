@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import { Navbar, Icon } from 'react-materialize'
-import { Link } from "react-router-dom";
+import React from "react";
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AppBar, IconButton, Typography, Box, Menu, Toolbar,
@@ -9,12 +7,9 @@ import { AppBar, IconButton, Typography, Box, Menu, Toolbar,
          createTheme,  } from "@mui/material";
 import { useMsal } from "@azure/msal-react";
 
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Products', 'Pricing', 'Blog'];
 const mainTheme = createTheme({
   palette: {
     primary: {
@@ -58,6 +53,7 @@ const NavigationBar = () => {
             url: `${base}/generacion-contabilidad`
         }
     ]
+ 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -72,7 +68,7 @@ const NavigationBar = () => {
     if (window.location.pathname == menuUrl) {
         window.location.reload()
     } else {
-      window.location.assign(menuUrl)
+      window.location.href = menuUrl
     }
   }
 
