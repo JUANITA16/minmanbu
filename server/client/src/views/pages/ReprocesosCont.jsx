@@ -124,7 +124,12 @@ function ReprocesosContablesD() {
       // Acá se ingresa la función para generar.
       showToast("Estamos procesando su solicitud, por favor consulte el resultado del proceso.")
       if(interes){
-        let respInteres = await service.createDailyInterest(setFormatDate(initDate),name,setFormatDate(finalDate))
+        const dataCreate = {
+          "date" : setFormatDate(initDate),
+          "user": name,
+          "enddate":setFormatDate(finalDate)
+        }
+        let respInteres = await service.createDailyInterest(dataCreate)
       }
     }
   }
