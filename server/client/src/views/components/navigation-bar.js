@@ -76,7 +76,7 @@ const NavigationBar = () => {
   <ThemeProvider theme={mainTheme}>
     <AppBar position="static" color="primary" >
       <Container maxWidth="xl" >
-        <Toolbar >
+        <Toolbar disableGutters>
           <img className="brand-logo-img" src='./logo-white.svg' alt="Btg Pactual" />
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, justifyContent: "flex-end" }}>
