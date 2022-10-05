@@ -4,11 +4,18 @@ import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText
 import React, { useState, useEffect, Fragment } from "react";
 import { CardHeader, InputDate } from "../components";
 import { Button, Row, Col, CollapsibleItem, Icon, Collapsible } from "react-materialize";
-import { convertTZ, showToast } from "../../helpers/utils";
+import { convertTZ, showToast, setFormatDate } from "../../helpers/utils";
 import ReactExport from 'react-export-excel';
 import ReprTable from "../components/ReprocesosTable";
 
+import { ServerAPI } from "../../services/server";
+import { useMsal } from "@azure/msal-react";
+
 function ReprocesosContablesD() {
+
+  const { instance } = useMsal();
+  const { name } = instance.getActiveAccount().idTokenClaims;
+  const service = new ServerAPI();
 
   let testData = [ {
     id: "1234",
@@ -106,7 +113,7 @@ function ReprocesosContablesD() {
   // Si ningún evento está seleccionado genera error
   let error =  eventLen === 0;
 
-  const handleGenerate = function (event){
+  const handleGenerate =  async function (event){
     if (error) {
       setdialogContent({
         title: "No se pudo generar la solicitud.",
@@ -115,8 +122,16 @@ function ReprocesosContablesD() {
       setisPromptOpen(true)
     } else {
       // Acá se ingresa la función para generar.
-      showToast("Estamos procesando su solicitud, por favor consulte el resultado del proceso.")
-      console.log("Generar")
+      showToast("Estamos procesando su solicitud.")
+      if(interes){
+        let respInteres = await service.createDailyInterest(setFormatDate(initDate),name,setFormatDate(initDate))
+        if (respInteres && respInteres.status==200){
+          showToast("Proceso finalizado correctamente, por favor consulte los resultado.")
+        } else {
+          showToast("Error al generar asiento.")
+        }
+       
+      }
     }
   }
 
