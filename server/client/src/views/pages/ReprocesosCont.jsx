@@ -122,15 +122,9 @@ function ReprocesosContablesD() {
       setisPromptOpen(true)
     } else {
       // Acá se ingresa la función para generar.
-      showToast("Estamos procesando su solicitud.")
+      showToast("Estamos procesando su solicitud, por favor consulte el resultado del proceso.")
       if(interes){
-        let respInteres = await service.createDailyInterest(setFormatDate(initDate),name,setFormatDate(initDate))
-        if (respInteres && respInteres.status==200){
-          showToast("Proceso finalizado correctamente, por favor consulte los resultado.")
-        } else {
-          showToast("Error al generar asiento.")
-        }
-       
+        let respInteres = await service.createDailyInterest(setFormatDate(initDate),name,setFormatDate(finalDate))
       }
     }
   }
