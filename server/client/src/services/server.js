@@ -217,7 +217,7 @@ class ServerAPI {
     requestReprocess = async (reqBody) => {
 
         try {
-            const url = this.base_url + "/tblCosifAccounting"
+            const url = this.base_url + "/reprocess"
             const config = {
                 headers: { Authorization: await getToken() }
             }
