@@ -51,7 +51,7 @@ const authConfig = async() => {
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             },
             dailyInterest: {
-                path: "/daily-interest-dominus",
+                path: "/reprocess",
                 methods:[ "POST" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             },

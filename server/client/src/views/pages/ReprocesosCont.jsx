@@ -57,6 +57,15 @@ function ReprocesosContablesD() {
     content: ""
   })
   const [filtenable, setfiltEnable] = useState(true);
+  
+  // Respuestas de cada reproceso
+  const [reproResponses, setReproResponses] = useState({
+    constitucion: '',
+    interes: '',
+    vencimientos_capital: '',
+    vencimientos_gmf: ''
+  })
+
   const [filterHeader, setFilterHeader] = useState(<p><strong><u>Filtros</u></strong></p>);
 
   const handleChange = function (event) {
@@ -68,6 +77,7 @@ function ReprocesosContablesD() {
 
   const handleChangeProc = function (event) {
     setproCont(event.target.checked)
+    setFinalDate(initDate)
   }
 
   const handleApplyFilters = async function (event) {
@@ -123,13 +133,24 @@ function ReprocesosContablesD() {
     } else {
       // Acá se ingresa la función para generar.
       showToast("Estamos procesando su solicitud, por favor consulte el resultado del proceso.")
-      if(interes){
-        const dataCreate = {
-          "date" : setFormatDate(initDate),
-          "user": name,
-          "enddate":setFormatDate(finalDate)
-        }
-        let respInteres = await service.createDailyInterest(dataCreate)
+      const requestBody = {
+        "date" : setFormatDate(initDate),
+        "user": name,
+        "enddate":setFormatDate(finalDate)
+      }
+      if(interes) {
+        requestBody["event_type"] = "interes"
+        let respInteres = await service.requestReprocess(requestBody)
+      }
+      if (constitucion) {
+        requestBody["event_type"] = "constitucion"
+        let respConstitucion = await service.requestReprocess(requestBody)
+      }
+      if (vencimientos) {
+        requestBody["event_type"] = "vencimientos_capital"
+        let respVenCapital = await service.requestReprocess(requestBody)
+        requestBody["event_type"] = "vencimientos_gmf"
+        let respVenGMF = await service.requestReprocess(requestBody)
       }
     }
   }

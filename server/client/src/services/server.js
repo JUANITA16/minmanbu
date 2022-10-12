@@ -214,17 +214,21 @@ class ServerAPI {
         return res;
     }
 
+    requestReprocess = async (reqBody) => {
 
-    
-    createDailyInterest = async (dataCreate) => {
-        const url = this.base_url+ "/daily-interest-dominus"
-        const config = {
-            headers: {Authorization: await getToken()}
-        }
-        const res = await axios.post(url,dataCreate,config);
-        return res
+        try {
+            const url = this.base_url + "/reprocess"
+            const config = {
+                headers: { Authorization: await getToken() }
+            }
+            const res = await axios.post(url, reqBody, config)
+            return res;
+       } catch (error) {
+            console.info("ERROR Table: ", error.response)
+            return setError("Error obteniendo la tabla.", error.response);
+       }
+        
     }
-
 }
 
 export {ServerAPI} ;
