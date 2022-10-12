@@ -231,7 +231,7 @@ class ServerAPI {
     }
 
     getReprocessResult = async (initial_date, final_date) => {
-        const url = this.base_url + "/reprocess-table"
+        const url = this.base_url + "/reprocess"
         const config = {
             headers: { Authorization: await getToken()},
              params: {initial_date, final_date}
