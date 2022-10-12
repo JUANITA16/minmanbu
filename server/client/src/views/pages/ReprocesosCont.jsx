@@ -77,6 +77,7 @@ function ReprocesosContablesD() {
 
   const handleChangeProc = function (event) {
     setproCont(event.target.checked)
+    setFinalDate(initDate)
   }
 
   const handleApplyFilters = async function (event) {
@@ -140,20 +141,16 @@ function ReprocesosContablesD() {
       if(interes) {
         requestBody["event_type"] = "interes"
         let respInteres = await service.requestReprocess(requestBody)
-        console.log(respInteres)
       }
       if (constitucion) {
         requestBody["event_type"] = "constitucion"
         let respConstitucion = await service.requestReprocess(requestBody)
-        console.log(respConstitucion)
       }
       if (vencimientos) {
         requestBody["event_type"] = "vencimientos_capital"
         let respVenCapital = await service.requestReprocess(requestBody)
-        console.log(respVenCapital)
         requestBody["event_type"] = "vencimientos_gmf"
         let respVenGMF = await service.requestReprocess(requestBody)
-        console.log(respVenGMF)
       }
     }
   }
