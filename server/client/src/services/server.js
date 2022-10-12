@@ -229,6 +229,17 @@ class ServerAPI {
        }
         
     }
+
+    getReprocessResult = async (initial_date, final_date) => {
+        const url = this.base_url + "/reprocess-table"
+        const config = {
+            headers: { Authorization: await getToken()},
+             params: {initial_date, final_date}
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    }
 }
 
 export {ServerAPI} ;

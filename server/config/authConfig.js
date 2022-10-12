@@ -55,6 +55,11 @@ const authConfig = async() => {
                 methods:[ "POST" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             },
+            reprocessTable: {
+                path: "/reprocess-table",
+                methods:[ "GET" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
         }
     }
 }
