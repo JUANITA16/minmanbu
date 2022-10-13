@@ -52,9 +52,9 @@ const authConfig = async() => {
             },
             dailyInterest: {
                 path: "/reprocess",
-                methods:[ "POST" ],
+                methods:[ "GET", "POST" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
-            },
+            }
         }
     }
 }

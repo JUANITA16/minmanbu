@@ -17,20 +17,6 @@ function ReprocesosContablesD() {
   const { name } = instance.getActiveAccount().idTokenClaims;
   const service = new ServerAPI();
 
-  let testData = [ {
-    id: "1234",
-    date_process: "2022-06-09",
-    user: "Cristian Triana",
-    date_event: "2022-06-01",
-    detailed: "detalle1, detalle2, detalle3",
-    value: "10000000",
-    type_process: "Continuo",
-    status_code: "200",
-    status: "Exitoso",
-    data_group: "555566633"
-
-  }]
-
   const ExcelFile = ReactExport.ExcelFile;
   const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
@@ -41,7 +27,7 @@ function ReprocesosContablesD() {
   const [initDate, setInitDate] = useState(currDate);
   const [finalDate, setFinalDate] = useState(currDate);
   const [table, setTable] = useState(<></>);
-  const [tableData, setTableData] = useState(testData);
+  const [tableData, setTableData] = useState([]);
   const [eventType, seteventType] = useState(
     {
       constitucion: false,
@@ -56,8 +42,23 @@ function ReprocesosContablesD() {
     title: "",
     content: ""
   })
-  const [filtenable, setfiltEnable] = useState(true);
-  
+  const [filtenable, setfiltEnable] = useState(false);
+   
+  const getdbData = async function (from_date, to_date) {
+    let resp = [];
+    try {
+      resp = await service.getReprocessResult(from_date, to_date);
+      if (resp.length===0) {
+        return ["Empty"]
+      } else {
+        return resp
+      }
+    } catch (error) {
+      alert("Error Cargando tabla")
+      return resp;
+    }
+  }
+
   // Respuestas de cada reproceso
   const [reproResponses, setReproResponses] = useState({
     constitucion: '',
@@ -83,15 +84,17 @@ function ReprocesosContablesD() {
   const handleApplyFilters = async function (event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
-    setTableData(["Empty"])
+    let resp = await getdbData(setFormatDate(startDate), setFormatDate(endDate))
+    setTableData(resp)
   };
 
-  const handleDeleteFilters = function (event) {
+  const handleDeleteFilters = async function (event) {
     setFilterHeader(<p>Filtros</p>);
-    setInitDate(currDate);
-    setFinalDate(currDate);
+    setStartDate(currDate);
+    setEndDate(currDate);
     setfiltEnable(false);
-    setTableData(["Empty"])
+    let resp = await getdbData(setFormatDate(currDate), setFormatDate(currDate))
+    setTableData(resp)
   };
 
   const handleChangeAll = function (event) {
@@ -181,6 +184,11 @@ function ReprocesosContablesD() {
       setInitDate(finalDate)
     }
   }, [finalDate])
+  
+  useEffect(async () => {
+    let resp = await getdbData(setFormatDate(startDate), setFormatDate(endDate))
+    setTableData(resp)
+  }, [])
 
   // Carga de la tabla
   useEffect(() => {
