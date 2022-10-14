@@ -28,7 +28,7 @@ function ReprocesosContablesD() {
   const [finalDate, setFinalDate] = useState(currDate);
   const [table, setTable] = useState(<></>);
   const [tableData, setTableData] = useState([]);
-  const [isloading, setIsloading] = useState(true);
+  const [isloading, setIsloading] = useState(false);
   const [eventType, seteventType] = useState(
     {
       constitucion: false,
@@ -126,7 +126,7 @@ function ReprocesosContablesD() {
   const handleReprResponse = function (eventType, response) {
     // verificamos que la respuesta contenga mensaje, si no contiene la ejecución fue errónea.
     let message = response.data.message ? response.data.message : response.detail
-    setReproResponses([...reproResponses, eventType + message])
+    setReproResponses( reproResponses => [...reproResponses, eventType + message])
   }
 
   const handleGenerate =  async function (event){
@@ -338,7 +338,7 @@ function ReprocesosContablesD() {
             </Button>
           </Grid>
         </Grid>
-        {isloading ? <Grid item xs={12}><LinearProgress /></Grid> : <></>}  
+        {isloading ? <Grid paddingTop={4} item xs={12}><LinearProgress /></Grid> : <></>}  
       </Box>
 
       <Row>
