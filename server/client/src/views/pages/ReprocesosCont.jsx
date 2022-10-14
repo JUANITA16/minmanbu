@@ -1,6 +1,6 @@
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, 
         FormLabel, Dialog, DialogActions, DialogContent, 
-        DialogContentText, DialogTitle, Grid } from "@mui/material";
+        DialogContentText, DialogTitle, Grid, List, ListItem, ListItemText, LinearProgress } from "@mui/material";
 import React, { useState, useEffect, Fragment } from "react";
 import { CardHeader, InputDate } from "../components";
 import { Button, Row, Col, CollapsibleItem, Icon, Collapsible } from "react-materialize";
@@ -14,7 +14,7 @@ import { useMsal } from "@azure/msal-react";
 function ReprocesosContablesD() {
 
   const { instance } = useMsal();
-  const { name } = instance.getActiveAccount().idTokenClaims;
+  const { name } = instance.getActiveAccount()?.idTokenClaims;
   const service = new ServerAPI();
 
   const ExcelFile = ReactExport.ExcelFile;
@@ -28,6 +28,7 @@ function ReprocesosContablesD() {
   const [finalDate, setFinalDate] = useState(currDate);
   const [table, setTable] = useState(<></>);
   const [tableData, setTableData] = useState([]);
+  const [isloading, setIsloading] = useState(false);
   const [eventType, seteventType] = useState(
     {
       constitucion: false,
@@ -42,6 +43,7 @@ function ReprocesosContablesD() {
     title: "",
     content: ""
   })
+  const [dialogExtContent, setdialogExtContent] = useState(<></>)
   const [filtenable, setfiltEnable] = useState(false);
    
   const getdbData = async function (from_date, to_date) {
@@ -60,12 +62,7 @@ function ReprocesosContablesD() {
   }
 
   // Respuestas de cada reproceso
-  const [reproResponses, setReproResponses] = useState({
-    constitucion: '',
-    interes: '',
-    vencimientos_capital: '',
-    vencimientos_gmf: ''
-  })
+  const [reproResponses, setReproResponses] = useState([])
 
   const [filterHeader, setFilterHeader] = useState(<p><strong><u>Filtros</u></strong></p>);
 
@@ -78,7 +75,6 @@ function ReprocesosContablesD() {
 
   const handleChangeProc = function (event) {
     setproCont(event.target.checked)
-    setFinalDate(initDate)
   }
 
   const handleApplyFilters = async function (event) {
@@ -118,6 +114,8 @@ function ReprocesosContablesD() {
 
   const handleClosePrompt = function (event){
     setisPromptOpen(false)
+    setIsloading(false)
+    setReproResponses([])
   }
   
   // Definimos las variables y recorremos la lista para ver cuantas han sido seleccionadas
@@ -125,6 +123,12 @@ function ReprocesosContablesD() {
   const eventLen = [constitucion, interes, rendimientos, vencimientos].filter((v) => v).length
   // Si ningún evento está seleccionado genera error
   let error =  eventLen === 0;
+
+  const handleReprResponse = function (eventType, response) {
+    // verificamos que la respuesta contenga mensaje, si no contiene la ejecución fue errónea.
+    let message = response.data.message ? response.data.message : response.detail
+    setReproResponses( reproResponses => [...reproResponses, eventType + message])
+  }
 
   const handleGenerate =  async function (event){
     if (error) {
@@ -136,28 +140,50 @@ function ReprocesosContablesD() {
     } else {
       // Acá se ingresa la función para generar.
       showToast("Estamos procesando su solicitud, por favor consulte el resultado del proceso.")
+      let endDate = setFormatDate(initDate)
+      setdialogContent({
+        title: "Estado de cada reproceso contable",
+        content: "A continuación verá el estado de cada reproceso contable."
+      })
+
+      // inicio animación de carga
+      setIsloading(true)
+
+      if (proCont) {
+        endDate = setFormatDate(finalDate)
+      } 
       const requestBody = {
         "date" : setFormatDate(initDate),
         "user": name,
-        "enddate":setFormatDate(finalDate)
+        "enddate": endDate
       }
+
+      // Procedemos a verificar qué opciones fueron seleccionadas para ejecutar
+      // la respectiva api. También se añade a la lista de mensajes el mensaje correspondiente.
       if(interes) {
         requestBody["event_type"] = "interes"
         let respInteres = await service.requestReprocess(requestBody)
+        handleReprResponse("Interés diario: ", respInteres)
       }
       if (constitucion) {
         requestBody["event_type"] = "constitucion"
         let respConstitucion = await service.requestReprocess(requestBody)
+        handleReprResponse("Constitución: ", respConstitucion)
       }
       if (vencimientos) {
         requestBody["event_type"] = "vencimientos_capital"
         let respVenCapital = await service.requestReprocess(requestBody)
+        handleReprResponse("Vencimientos Capital: ", respVenCapital)
         requestBody["event_type"] = "vencimientos_gmf"
         let respVenGMF = await service.requestReprocess(requestBody)
+        handleReprResponse("Vencimientos GMF: ", respVenGMF)
       }
+      // Fin animación de carga y apertura de ventana de resultados
+      setIsloading(false)
+      setisPromptOpen(true)
     }
   }
-
+  
   useEffect(() => {
     // Comparamos las fechas para que no superen los 5 días(Fecha Final)
     let deltaDate = finalDate - initDate
@@ -313,7 +339,7 @@ function ReprocesosContablesD() {
             </Button>
           </Grid>
         </Grid>
-          
+        {isloading ? <Grid paddingTop={4} item xs={12}><LinearProgress /></Grid> : <></>}  
       </Box>
 
       <Row>
@@ -386,6 +412,16 @@ function ReprocesosContablesD() {
           <DialogContentText id="alert-dialog-description">
             {dialogContent.content}
           </DialogContentText>
+          <List>
+            {reproResponses.map((reproceso) => (
+              <ListItem>
+                <ListItemText  
+                  primary={reproceso}
+                />
+              </ListItem>
+            ))}
+          </List>
+          
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClosePrompt} className="indigo darken-4">
