@@ -1,6 +1,6 @@
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, 
         FormLabel, Dialog, DialogActions, DialogContent, 
-        DialogContentText, DialogTitle, Grid, List, ListItem, ListItemText } from "@mui/material";
+        DialogContentText, DialogTitle, Grid, List, ListItem, ListItemText, LinearProgress } from "@mui/material";
 import React, { useState, useEffect, Fragment } from "react";
 import { CardHeader, InputDate } from "../components";
 import { Button, Row, Col, CollapsibleItem, Icon, Collapsible } from "react-materialize";
@@ -28,6 +28,7 @@ function ReprocesosContablesD() {
   const [finalDate, setFinalDate] = useState(currDate);
   const [table, setTable] = useState(<></>);
   const [tableData, setTableData] = useState([]);
+  const [isloading, setIsloading] = useState(true);
   const [eventType, seteventType] = useState(
     {
       constitucion: false,
@@ -123,7 +124,8 @@ function ReprocesosContablesD() {
   let error =  eventLen === 0;
 
   const handleReprResponse = function (eventType, response) {
-    let message = response.message ? response.message : response.detail
+    // verificamos que la respuesta contenga mensaje, si no contiene la ejecución fue errónea.
+    let message = response.data.message ? response.data.message : response.detail
     setReproResponses([...reproResponses, eventType + message])
   }
 
@@ -142,6 +144,10 @@ function ReprocesosContablesD() {
         title: "Estado de cada reproceso contable",
         content: "A continuación verá el estado de cada reproceso contable."
       })
+
+      // inicio animación de carga
+      setIsloading(true)
+
       if (proCont) {
         endDate = setFormatDate(finalDate)
       } 
@@ -150,6 +156,9 @@ function ReprocesosContablesD() {
         "user": name,
         "enddate": endDate
       }
+
+      // Procedemos a verificar qué opciones fueron seleccionadas para ejecutar
+      // la respectiva api. También se añade a la lista de mensajes el mensaje correspondiente.
       if(interes) {
         requestBody["event_type"] = "interes"
         let respInteres = await service.requestReprocess(requestBody)
@@ -168,6 +177,8 @@ function ReprocesosContablesD() {
         let respVenGMF = await service.requestReprocess(requestBody)
         handleReprResponse("Vencimientos GMF: ", respVenGMF)
       }
+      // Fin animación de carga y apertura de ventana de resultados
+      setIsloading(true)
       setisPromptOpen(true)
     }
   }
@@ -327,7 +338,7 @@ function ReprocesosContablesD() {
             </Button>
           </Grid>
         </Grid>
-          
+        {isloading ? <Grid item xs={12}><LinearProgress /></Grid> : <></>}  
       </Box>
 
       <Row>
