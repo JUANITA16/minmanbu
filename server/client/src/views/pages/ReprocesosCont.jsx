@@ -114,6 +114,7 @@ function ReprocesosContablesD() {
 
   const handleClosePrompt = function (event){
     setisPromptOpen(false)
+    setIsloading(false)
     setReproResponses([])
   }
   
@@ -178,7 +179,7 @@ function ReprocesosContablesD() {
         handleReprResponse("Vencimientos GMF: ", respVenGMF)
       }
       // Fin animación de carga y apertura de ventana de resultados
-      setIsloading(true)
+      setIsloading(false)
       setisPromptOpen(true)
     }
   }
