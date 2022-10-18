@@ -6,8 +6,14 @@ import { CardHeader } from "../components";
 import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
 import ModalConfiguracionHomologacion from "./ModalHomologacion";
+import ReactExport from 'react-export-excel';
 
 const HomoloView = function ({goBack, dbData, edits, setEdits}) {
+  
+  const ExcelFile = ReactExport.ExcelFile;
+  const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+  const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
   const [tableData, setTableData] = useState(dbData);
@@ -127,9 +133,9 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
                   Borrar filtros
                 </Button>
               </Col>
-      </Row>
-  </CollapsibleItem>
-    </Collapsible>
+            </Row>
+          </CollapsibleItem>
+        </Collapsible>
       </Row>
       <Modal
       open={open}
@@ -153,6 +159,21 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
         </Box>
       </Modal>
       {renderTable()}
+      <Row>
+        <Col s={12} m={12} className="input-field m0">
+          <ExcelFile
+            element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+            filename="HomologacionCuentas-SAP">
+            <ExcelSheet data={tableData} name="Resultados">
+              <ExcelColumn label="Número de cuenta" value="accounting_account" />
+              <ExcelColumn label="Número cuenta COSIF" value="cosif" />
+              <ExcelColumn label="Centro de costos" value="costcenteraccounting" />
+              <ExcelColumn label="Fecha creacion" value="creationdate" />
+              <ExcelColumn label="Fecha actualizacion" value="updatedate" />
+            </ExcelSheet>
+          </ExcelFile>
+        </Col>
+      </Row>
     </Fragment>
   )
 };
