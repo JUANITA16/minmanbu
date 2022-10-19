@@ -384,6 +384,7 @@ export default function ConfiguracionContableGeneral() {
                                 <ExcelColumn label="Cuenta débito GMF" value="debittaxaccountgmf" />
                                 <ExcelColumn label="Cuenta crédito GMF" value="credittaxaccountgmf" />
                                 <ExcelColumn label="Tipo emisión" value="producttypedescription" />
+                                <ExcelColumn label="Codigo tipo emisión" value="producttypemaestrosunicos" />
                                 <ExcelColumn label="Fecha de creación" value="creationdate" />
                                 <ExcelColumn label="Fecha de actualización" value="updatedate" />
                             </ExcelSheet>
