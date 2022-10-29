@@ -270,7 +270,6 @@ export default function ModalConfiguracionContableGeneral(props) {
                     }
                 );
                 if (mensajeRespuesta.status === 200 && mensajeRespuesta.data){
-                    console.log('mensajeRespuesta: '+ JSON.stringify(mensajeRespuesta))
                     if(mensajeRespuesta.data.message=='emision-exist'){
                         msjError('El tipo de emisión ya se encuentra registrado.');
                         isReloadTable=false;
