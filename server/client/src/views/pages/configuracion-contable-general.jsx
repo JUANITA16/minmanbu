@@ -8,12 +8,18 @@ import ConfiguracionContable from "./configuracion-contable";
 import { toast } from 'react-toastify';
 import { ServerAPI } from "../../services/server";
 import Modal from '@mui/material/Modal';
+import Dialog from '@mui/material/Dialog';
 import Box from '@mui/material/Box';
 import ReactExport from 'react-export-excel';
+import { useMsal } from "@azure/msal-react";
 
 export default function ConfiguracionContableGeneral() {
   
     const service = new ServerAPI();
+
+    
+    const { instance } = useMsal();
+    const { name }  = instance.getActiveAccount().idTokenClaims;
 
     const ExcelFile = ReactExport.ExcelFile;
     const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -35,6 +41,7 @@ export default function ConfiguracionContableGeneral() {
 
     const [infoModal,setInfoModal]=useState()
     const [emisionEditComponent,setEmisionEditComponent]=useState([])
+    const [productsType,setProductsType]=useState([])
 
     const [openModal, setOpenModal] = React.useState(false);
 
@@ -246,7 +253,17 @@ export default function ConfiguracionContableGeneral() {
                         credittaxaccountinterest={contenido.credittaxaccountinterest}
                         debittaxaccountinterest={contenido.debittaxaccountinterest} 
                         producttypedescription={contenido.producttypedescription} 
-                        producttypemaestrosunicos={contenido.producttypemaestrosunicos} />
+                        producttypemaestrosunicos={contenido.producttypemaestrosunicos} 
+                        
+                        credittaxaccountemission={contenido.credittaxaccountemission} 
+                        debittaxaccountemission={contenido.debittaxaccountemission} 
+                        credittaxaccountinterestpaymet={contenido.credittaxaccountinterestpaymet} 
+                        debittaxaccountinterestpaymet={contenido.debittaxaccountinterestpaymet} 
+                        credittaxaccountcapitalpaymet={contenido.credittaxaccountcapitalpaymet} 
+                        debittaxaccountcapitalpaymet={contenido.debittaxaccountcapitalpaymet} 
+                        credittaxaccountgmf={contenido.credittaxaccountgmf} 
+                        debittaxaccountgmf={contenido.debittaxaccountgmf} 
+                        />
                         
                     })}
                 </tbody>);
@@ -271,45 +288,45 @@ export default function ConfiguracionContableGeneral() {
         }
     }
 
+    const getProducts = async function () {
+        try {
+            var productAux =[]
+            let resp = await service.getAllAndFiltersTypeProduct("", "")
+            resp.forEach(element =>{
+                const item ={ value: element.producttypedescription, label: element.producttypedescription, product_number:element.producttypemaestrosunicos}
+                productAux.push(item)
+            } );
+            setProductsType(productAux)
+        } catch (error) {
+            alert("Error Cargando Productos")
+        }
+    }
     
     useEffect(() => {
+        getProducts()
         reloadTableMain(cantPaginasSelect,emision);
         document.title = title
     }, [cantPaginasSelect]);
 
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 1100,
-        bgcolor: 'background.paper',
-        boxShadow: 24,
-        p: 4,
-      };
-    
     const renderElement = () => {
         return isGeneral ? (
             <React.Fragment>
-                <Modal
-                open={openModal}
-                onClose={() => setOpenModal(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+                <Dialog
+                    open={openModal}
+                    onClose={() => setOpenModal(false)}
                 >
-                    <Box sx={style}>
-                        <ModalConfiguracionContableGeneral
-                            title={titleModal} 
-                            description={descriptionModal} 
-                            reloadTableMain={reloadTableMain}
-                            setOpenModal ={setOpenModal} 
-                            emisiones ={emisionEditComponent} 
-                            info = {infoModal}
-                            tipoProceso={tipoProceso}
-                            cantPaginas ={cantPaginasSelect}
-                            />
-                    </Box>
-                </Modal>
+                    <ModalConfiguracionContableGeneral
+                        title={titleModal} 
+                        description={descriptionModal} 
+                        reloadTableMain={reloadTableMain}
+                        setOpenModal ={setOpenModal} 
+                        emisiones ={productsType} 
+                        info = {infoModal}
+                        tipoProceso={tipoProceso}
+                        cantPaginas ={cantPaginasSelect}
+                        user ={name}
+                        />
+                </Dialog>
                 <div>
                     <Row>
                         <Col s={6} m={2}>

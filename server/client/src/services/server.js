@@ -157,8 +157,8 @@ class ServerAPI {
 
     
     
-    updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
-        const url = this.base_url + "/taxaprodt/" + idRow
+    updateItemConfiguracionGeneral = async (dataToUpdate,idRow,producttypedescriptionEdit) => {
+        const url = this.base_url + "/taxaprodt/" + idRow+"/"+producttypedescriptionEdit
         
         const config = {
             headers: { Authorization: await getToken() }
@@ -240,6 +240,20 @@ class ServerAPI {
         const data = await res.data;
         return data
     }
+
+    getAllAndFiltersTypeProduct = async (producttypemaestrosunicos, producttypedescription) => {
+        
+        const url = this.base_url + "/typeproduct"
+        const config = {
+            headers: { Authorization: await getToken() },
+            params: {producttypemaestrosunicos, producttypedescription}
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    };
+
+
 }
 
 export {ServerAPI} ;
