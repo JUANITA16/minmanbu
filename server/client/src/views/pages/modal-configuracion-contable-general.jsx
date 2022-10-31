@@ -548,15 +548,18 @@ export default function ModalConfiguracionContableGeneral(props) {
                     </Col>
                 </Row>
             </Stack>
-            <Stack direction="row" spacing={0.5} >
-                <Button node="button" small className="indigo darken-4" onClick={handleSubmit}>
-                    Guardar
-                </Button>
-                <br />
-                <Button node="button" small  className="indigo darken-4" onClick={goToConfiguracionGeneral} >
-                    Cancelar
-                </Button>
-            </Stack>
+            <div style={{margin:"12px"}}>
+                <Stack direction="row" spacing={0.5} >
+                    <Button node="button" small className="indigo darken-4" onClick={handleSubmit}>
+                        Guardar
+                    </Button>
+                    <br />
+                    <Button node="button" small  className="indigo darken-4" onClick={goToConfiguracionGeneral} >
+                        Cancelar
+                    </Button>
+                </Stack>
+            </div>
+            
 
             <Modal
                 open={openModalNotificacion}
