@@ -53,7 +53,13 @@ describe('ConfiguracionContableGeneral', () => {
                         "debittaxaccount": "13",
                         "producttypedescription": "NO APLICA",
                         "creationdate": "2022-06-10T09:05:15-05",
-                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2"
+                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2",
+                        "debittaxaccountemission": "510220",
+                        "credittaxaccountemission": "210705",
+                        "debittaxaccountinterestpaymet": "210705",
+                        "credittaxaccountinterestpaymet": "510220",
+                        "debittaxaccountcapitalpaymet": "210705",
+                        "credittaxaccountcapitalpaymet": "510220",
                     }
                 ]
             })
@@ -113,7 +119,13 @@ describe('ConfiguracionContableGeneral', () => {
                         "debittaxaccount": "13",
                         "producttypedescription": "NO APLICA",
                         "creationdate": "2022-06-10T09:05:15-05",
-                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2"
+                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2",
+                        "debittaxaccountemission": "510220",
+                        "credittaxaccountemission": "210705",
+                        "debittaxaccountinterestpaymet": "210705",
+                        "credittaxaccountinterestpaymet": "510220",
+                        "debittaxaccountcapitalpaymet": "210705",
+                        "credittaxaccountcapitalpaymet": "510220",
                     }
                 ]
             })
@@ -143,7 +155,13 @@ describe('ConfiguracionContableGeneral', () => {
                         "debittaxaccount": "13",
                         "producttypedescription": "NO APLICA",
                         "creationdate": "2022-06-10T09:05:15-05",
-                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2"
+                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2",
+                        "debittaxaccountemission": "510220",
+                        "credittaxaccountemission": "210705",
+                        "debittaxaccountinterestpaymet": "210705",
+                        "credittaxaccountinterestpaymet": "510220",
+                        "debittaxaccountcapitalpaymet": "210705",
+                        "credittaxaccountcapitalpaymet": "510220",
                     }
                 ]
             })
@@ -200,7 +218,13 @@ describe('ConfiguracionContableGeneral', () => {
                         "debittaxaccount": "13",
                         "producttypedescription": "NO APLICA",
                         "creationdate": "2022-06-10T09:05:15-05",
-                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2"
+                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2",
+                        "debittaxaccountemission": "510220",
+                        "credittaxaccountemission": "210705",
+                        "debittaxaccountinterestpaymet": "210705",
+                        "credittaxaccountinterestpaymet": "510220",
+                        "debittaxaccountcapitalpaymet": "210705",
+                        "credittaxaccountcapitalpaymet": "510220",
                     }
                 ]
             })
@@ -231,7 +255,13 @@ describe('ConfiguracionContableGeneral', () => {
                         "debittaxaccount": "13",
                         "producttypedescription": "NO APLICA",
                         "creationdate": "2022-06-10T09:05:15-05",
-                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2"
+                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2",
+                        "debittaxaccountemission": "510220",
+                        "credittaxaccountemission": "210705",
+                        "debittaxaccountinterestpaymet": "210705",
+                        "credittaxaccountinterestpaymet": "510220",
+                        "debittaxaccountcapitalpaymet": "210705",
+                        "credittaxaccountcapitalpaymet": "510220",
                     }
                 ]
             })

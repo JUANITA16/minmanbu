@@ -54,6 +54,11 @@ const authConfig = async() => {
                 path: "/reprocess",
                 methods:[ "GET", "POST" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
+            typeproduct: {
+                path: "/typeproduct",
+                methods:[ "GET" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             }
         }
     }
