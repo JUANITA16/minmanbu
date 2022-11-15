@@ -3,6 +3,8 @@ import { CardHeader } from "../components/index";
 import { Col, Button } from 'react-materialize'
 import ConfiguracionContableGeneral from "./configuracion-contable-general";
 import ConfiguracionHomologacion from "./configuracion-homologacion";
+import ConfiguracionTipoEmision from "./configuracion-tipo-emision";
+
 export default function ConfiguracionContable() {
   
     const title = "Configuración contable"
@@ -21,6 +23,12 @@ export default function ConfiguracionContable() {
         );
     };
     
+    async function goToTipoEmision (event) {
+        setPantallaVisible(
+            <ConfiguracionTipoEmision />
+        );
+    };
+    
     useEffect(() => {
         setPantallaVisible(
             <div>
@@ -33,6 +41,11 @@ export default function ConfiguracionContable() {
                 <Col s={12} m={6} className="input-field date text-left">
                     <Button node="button" small className="indigo darken-4" onClick={goToHomologacion} >
                         Configuración homologacíon
+                    </Button>
+                </Col>
+                <Col s={12} m={6} className="input-field date text-left">
+                    <Button node="button" small className="indigo darken-4" onClick={goToTipoEmision} >
+                        Configuración tipo emisión
                     </Button>
                 </Col>
             </div>
