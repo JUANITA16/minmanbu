@@ -32,7 +32,7 @@ function ActualizacionTasas() {
   const service = new ServerAPI();
 
   const { instance } = useMsal();
-  const { name } = "user-test"//instance.getActiveAccount().idTokenClaims;
+  const { name } = instance.getActiveAccount().idTokenClaims;
 
   const fileInputRef = useRef(null);
   function applyFilters(record, filters) {
