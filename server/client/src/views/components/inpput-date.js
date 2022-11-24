@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 export default function InputDate(props) {
   const [date, setCurrentDate] = useState(convertTZ(new Date()));
-  const { setDate,dateInput, labelName, maxValue, minValue } = props;
+  const { setDate,dateInput, labelName, maxValue, minValue,isDisabled } = props;
 
   function handleDate(selectDate) {
     selectDate = selectDate ? selectDate : date;
@@ -30,6 +30,7 @@ export default function InputDate(props) {
         dateFormat='yyyy-MM-dd'
         maxDate={maxValue ? maxValue : convertTZ(new Date())}
         minDate={minValue}
+        disabled={isDisabled}
       />
     </React.Fragment>
   );
