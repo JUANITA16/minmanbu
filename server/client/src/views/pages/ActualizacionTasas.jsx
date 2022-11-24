@@ -32,7 +32,7 @@ function ActualizacionTasas() {
   const service = new ServerAPI();
 
   const { instance } = useMsal();
-  const { name } = instance.getActiveAccount().idTokenClaims;
+  const { name } = "user-test"//instance.getActiveAccount().idTokenClaims;
 
   const fileInputRef = useRef(null);
   function applyFilters(record, filters) {
@@ -190,8 +190,6 @@ useEffect(async () => {
           :null
         }
         <Col s={12} m={12}>
-          <Button node="button" style={{ float: 'right' }} 
-        <Button node="button" style={{ float: 'right' }} 
           <Button node="button" style={{ float: 'right' }} 
             className="indigo darken-4" onClick={updateRates}>
             Ejecutar
