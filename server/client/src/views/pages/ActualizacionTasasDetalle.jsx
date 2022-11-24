@@ -30,19 +30,21 @@ export default function ActualizacionTasasDetalle(props) {
     const ExcelSheet = ExportExcel.ExcelSheet;
     const ExcelColumn = ExportExcel.ExcelColumn;
 
-  console.log(props)
     const TableBodyDetalle = ({details}) => {
         return (
           <tr>
             <td  style={{minWidth: 20, maxWidth: 100 , textAlign: "center" }}>
-              {details.id}
+              {props.isCuentaCorriente? details.account_number:details.id}
             </td >
             <td style={{minWidth: 10, maxWidth: 50 ,  textAlign: "center" }}>
               {details.statusCode}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 150 , textAlign: "center" , wordBreak:"break-all" }}>
-              {details.status}
-            </td>
+            {
+                props.isCuentaCorriente? null:
+                <td style={{ minWidth: 10, maxWidth: 150 , textAlign: "center" , wordBreak:"break-all" }}>
+                    {details.status}
+                </td>
+            }
             <td style={{ minWidth: 10, maxWidth: 250, wordBreak:"break-all"}}>
               {details.detail}
             </td>
@@ -102,9 +104,17 @@ export default function ActualizacionTasasDetalle(props) {
                 */
                 setTableHeaderDetalle(<thead>
                     <tr>
-                    <th data-field="id " style={{ textAlign: "center" }}>Id</th>
+                    {
+                        props.isCuentaCorriente?
+                        <th data-field="nroCuenta " style={{ textAlign: "center" }}>Nro. Cuenta</th>
+                        :<th data-field="id " style={{ textAlign: "center" }}>Id</th>
+                    }
                     <th data-field="statusCode" style={{ textAlign: "center" }}>  Cod. Estado </th>
-                    <th data-field="status" style={{ textAlign: "center" }}> Estado </th>
+                    {
+                        props.isCuentaCorriente?
+                        null:
+                        <th data-field="status" style={{ textAlign: "center" }}> Estado </th>
+                    }
                     <th data-field="detail" style={{ textAlign: "center" }}> Detalle </th>
                     </tr>
                 </thead>);
@@ -115,24 +125,26 @@ export default function ActualizacionTasasDetalle(props) {
                 setPaginationFooterDetalle(
                     <TableFooterPaginationDetalle />
                 );
-                /*setExportaDetalle(
-                    <Row>
-                    <Col s={12} m={12} className="input-field m0">
-                        <ExcelFile
-                        element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
-                        filename="Detalle-Actualizacion_Tasas">
-                        <ExcelSheet data={contentTableDetalle} name="Detalles">
-                            <ExcelColumn label="Id" value="rowId" />
-                            <ExcelColumn label="Cod.Estado" value="codeStatus" />
-                            <ExcelColumn label="Estado" value="status" />
-                            <ExcelColumn label="Detalle" value="detail" />
-                        </ExcelSheet>
-            
-                        </ExcelFile>
-            
-                    </Col>
-                    </Row>
-                )
+                if (props.isCuentaCorriente){
+                    setExportaDetalle(
+                        <Row>
+                            <Col s={12} m={12} className="input-field m0">
+                                <ExcelFile
+                                    element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+                                    filename="Detalle-Actualizacion_Tasas">
+                                    <ExcelSheet data={contentTableDetalle} name="Detalles">
+                                        <ExcelColumn label="Nro. Cuenta" value="account_number" />
+                                        <ExcelColumn label="Cod.Estado" value="statusCode" />
+                                        <ExcelColumn label="Detalle" value="detail" />
+                                    </ExcelSheet>
+                                </ExcelFile>
+                            </Col>
+                        </Row>
+                    )
+                }else{
+                    setExportaDetalle(null);
+                }
+                /*
             }else {
             toast.error("No se encuentra en proceso ningún registro.");
             setTableDetalleRender(null);
