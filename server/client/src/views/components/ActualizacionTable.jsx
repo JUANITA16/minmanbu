@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 import Select from 'react-select'
 import { showToast } from "../../helpers/utils";
 
-function ActTable({setIsPantallaPrincipal, tableData, setdetails}) {
+function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorriente}) {
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
@@ -78,6 +78,9 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails}) {
             <td>{data.id}</td>
             <td>{data.date_process}</td>
             <td>{data.user}</td>
+            {
+              isCuentaCorriente ? <td>Execution-test</td> : ''
+            }
             <td><Button small onClick={handleDetails} 
                   className="indigo darken-4"
                   value={JSON.stringify({
@@ -90,7 +93,7 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails}) {
             </td>
         </tr>)}));
     }
-  }, [visibleData]);
+  }, [visibleData,isCuentaCorriente]);
 
 
   return (
@@ -112,6 +115,9 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails}) {
             <th>Consecutivo </th>
             <th>Fecha ejecución</th>
             <th>Usuario</th>
+            {
+              isCuentaCorriente ? <th>Estado de Ejecución</th> : ''
+            }
             <th>Detalles</th>
           </tr>
         </thead>

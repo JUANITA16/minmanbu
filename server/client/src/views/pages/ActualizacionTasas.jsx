@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment,useRef } from "react";
 import { Col, Row, CollapsibleItem, Icon, Collapsible, Button } from "react-materialize";
 import { CardHeader, InputDate } from "../components";
 import Select from 'react-select'
@@ -24,11 +24,17 @@ function ActualizacionTasas() {
   const [dbData, setDbData] = useState([]);
   const [details, setdetails] = useState([])
   const [isPantallaPrincipal, setIsPantallaPrincipal] = useState(true);
+  const [tipoProducto, setTipoProducto] = useState("1");
+  const [nameFileSelected, setNameFileSelected] = useState("Ningún archivo seleccionado.");
+  const [selectedFile, setSelectedFile] = useState();
+  const [isSelected, setIsSelected] = useState(false);
+  
   const service = new ServerAPI();
 
   const { instance } = useMsal();
   const { name } = instance.getActiveAccount().idTokenClaims;
 
+  const fileInputRef = useRef(null);
   function applyFilters(record, filters) {
     let isValid = true
     return isValid
@@ -51,6 +57,19 @@ function ActualizacionTasas() {
   const onTextChange = function (event) {
     setConsecutivo(event.target.value)
   };
+  
+  const onChangeTipoProducto = function (event) {
+    setTipoProducto(event.value)
+    if(event.value=='3'){
+      setSelDate(convertTZ(new Date()))
+    }else{
+      setSelectedFile('');
+      setNameFileSelected('Ningún archivo seleccionado.');
+      setIsSelected(false);
+    }
+    
+  };
+
   
   const getdbData = async function (from_date, to_date) {
     let resp = [];
@@ -87,13 +106,47 @@ useEffect(async () => {
     }
   }
 
+  
+  const valideFileType = function (fileType, fileName) {
+    let validTypes = [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "text/csv"
+    ];
+    let validExtensions = ["xlsx", "xls", "csv"];
+    let nameArray = fileName.split(".")
+    
+    if (validExtensions.includes(nameArray[nameArray.length -1]) & 
+        validTypes.includes(fileType) & !(fileName.startsWith("="))) {
+      return true
+    } else {
+      return false
+    }
+
+  };
+
+  
+  const changeFileSelected = (event) => {
+    event.preventDefault()
+    if (valideFileType(event.target.files[0].type, event.target.files[0].name)) {
+      setSelectedFile(event.target.files[0]);
+      setNameFileSelected(event.target.files[0].name);
+      setIsSelected(true);
+    } else {
+      setSelectedFile("");
+      setNameFileSelected("El archivo es inválido. Por favor subir un archivo .xlsx, .xls o .csv");
+      setIsSelected(false);
+    }
+
+  };
+
   function renderTable() {
     return table
   }
   useEffect( function () {
     setTable(<ActTable tableData={tableData} setdetails={setdetails}
-                setIsPantallaPrincipal={setIsPantallaPrincipal}/>)
-  } ,[isPantallaPrincipal, tableData])
+                setIsPantallaPrincipal={setIsPantallaPrincipal} isCuentaCorriente={tipoProducto=='3'}/>)
+  } ,[isPantallaPrincipal, tableData, tipoProducto])
 
   return isPantallaPrincipal ? (
     <Fragment>
@@ -103,18 +156,45 @@ useEffect(async () => {
         <Col s={"6"} m={"3"}>
           <label className="active">Tipo Producto</label>
           <Select className="basic-single" defaultValue={{value: 1, label: 'CDT'}}
-            options={[{value: 1, label: 'CDT'}, {value: 2, label: 'Bonos'}]}/>
+            options={[{value: 1, label: 'CDT'}, {value: 2, label: 'Bonos'},{value: 3, label: 'Cuenta Corriente'}]}
+            onChange={onChangeTipoProducto}/>
         </Col>
         <Col s={"6"} m={"9"}>
           <InputDate labelName="Fecha" maxValue={currDate} 
-            minValue={minDate} setDate={setSelDate} dateInput={selDate}  />
+            minValue={minDate} setDate={setSelDate} dateInput={selDate} isDisabled ={tipoProducto=='3'} />
         </Col>
       </Row>
       <Row>
-        <Button node="button" style={{ float: 'right' }} 
-          className="indigo darken-4" onClick={updateRates}>
-          Ejecutar
-        </Button>
+        {tipoProducto=='3'?
+          <div>
+            <Col s={12} m={3} >
+              <input
+                id="file-upload"
+                name="file"
+                type="file"
+                onChange={changeFileSelected}
+                style={{ display: 'none' }}
+                ref={fileInputRef}
+              />
+              <Button node="button"  className="indigo darken-4" onClick={() => fileInputRef.current.click()}>
+                Seleccionar archivo
+              </Button>
+            </Col>
+
+            <Col s={12} m={9}>
+              <p>
+                {nameFileSelected}
+              </p>
+            </Col>
+          </div>
+          :null
+        }
+        <Col s={12} m={12}>
+          <Button node="button" style={{ float: 'right' }} 
+            className="indigo darken-4" onClick={updateRates}>
+            Ejecutar
+          </Button>
+        </Col>
       </Row>
       <Row>
         <Collapsible accordion={false}>
