@@ -241,7 +241,7 @@ useEffect(async () => {
       {renderTable()}
     </Fragment>
   ): (<ActualizacionTasasDetalle setIsPantallaPrincipal={setIsPantallaPrincipal}
-        details={details} setdetails={setdetails} />)
+        details={details} setdetails={setdetails}  isCuentaCorriente={tipoProducto=='3'}/>)
   }
 
 export default ActualizacionTasas;
