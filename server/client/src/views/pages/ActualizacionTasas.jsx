@@ -28,12 +28,12 @@ function ActualizacionTasas() {
   const [nameFileSelected, setNameFileSelected] = useState("Ningún archivo seleccionado.");
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
-  
+  const [defaultValueProd, setDefaultValueProd] = useState({value: 1, label: 'CDT'})
   const service = new ServerAPI();
 
   const { instance } = useMsal();
   const { name } = instance.getActiveAccount().idTokenClaims;
-
+  const optionsProducts = [{value: 1, label: 'CDT'}, {value: 2, label: 'Bonos'},{value: 3, label: 'Cuenta Corriente'}]
   const fileInputRef = useRef(null);
   function applyFilters(record, filters) {
     let isValid = true
@@ -143,7 +143,9 @@ useEffect(async () => {
   function renderTable() {
     return table
   }
-  useEffect( function () {
+  useEffect( 
+    function () {
+    setDefaultValueProd(optionsProducts[tipoProducto-1])
     setTable(<ActTable tableData={tableData} setdetails={setdetails}
                 setIsPantallaPrincipal={setIsPantallaPrincipal} isCuentaCorriente={tipoProducto=='3'}/>)
   } ,[isPantallaPrincipal, tableData, tipoProducto])
@@ -155,8 +157,8 @@ useEffect(async () => {
       <Row>
         <Col s={"6"} m={"3"}>
           <label className="active">Tipo Producto</label>
-          <Select className="basic-single" defaultValue={{value: 1, label: 'CDT'}}
-            options={[{value: 1, label: 'CDT'}, {value: 2, label: 'Bonos'},{value: 3, label: 'Cuenta Corriente'}]}
+          <Select className="basic-single" defaultValue={defaultValueProd}
+            options={optionsProducts}
             onChange={onChangeTipoProducto}/>
         </Col>
         <Col s={"6"} m={"9"}>
