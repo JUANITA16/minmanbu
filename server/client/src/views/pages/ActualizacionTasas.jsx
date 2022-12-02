@@ -110,7 +110,7 @@ useEffect(async () => {
         }else{
           const dataUpdateCC={
             "file_content":base64File,
-            "user_upload":"user-test"
+            "user_upload":name
           }
           let resp = await service.uploadFileUpdateRate(dataUpdateCC)
           if(resp.status === 200){
