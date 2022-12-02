@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment,useRef } from "react";
 import { Col, Row, CollapsibleItem, Icon, Collapsible, Button } from "react-materialize";
 import { CardHeader, InputDate } from "../components";
 import Select from 'react-select'
-import { convertTZ, setFormatDate, showToast } from "../../helpers/utils";
+import { convertTZ, setFormatDate, showToast,toBase64 } from "../../helpers/utils";
 import ActTable from "../components/ActualizacionTable";
 import ActualizacionTasasDetalle from './ActualizacionTasasDetalle'
 
@@ -28,6 +28,7 @@ function ActualizacionTasas() {
   const [nameFileSelected, setNameFileSelected] = useState("Ningún archivo seleccionado.");
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
+  const [isDisabledEjecutar, setIsDisabledEjecutar] = useState(false);
   const [defaultValueProd, setDefaultValueProd] = useState({value: 1, label: 'CDT'})
   const service = new ServerAPI();
 
@@ -61,10 +62,12 @@ function ActualizacionTasas() {
   const onChangeTipoProducto = function (event) {
     setTipoProducto(event.value)
     if(event.value=='3'){
+      setIsDisabledEjecutar(true)
       setSelDate(convertTZ(new Date()))
     }else{
+      setIsDisabledEjecutar(false)
       setSelectedFile('');
-      setNameFileSelected('Ningún archivo seleccionado.');
+      setNameFileSelected("Ningún archivo seleccionado.");
       setIsSelected(false);
     }
     
@@ -97,47 +100,76 @@ useEffect(async () => {
 
   const updateRates = async function (event) {
     event.preventDefault()
-    showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
-    let resp = await service.sendUpdateRate(setFormatDate(selDate),name)
-    if (resp && resp.message){
-      showToast(resp.message)
-    } else {
-      showToast("Error en la solicitud.")
+    if(tipoProducto=='3'){
+      setIsDisabledEjecutar(true)
+      if (isSelected) {
+        showToast('Cargando archivo...')
+        const base64File = await toBase64(selectedFile).catch(e => Error(e));
+        if (base64File instanceof Error) {
+          showToast("Error al subir archivo.");
+        }else{
+          const dataUpdateCC={
+            "file_content":base64File,
+            "user_upload":name
+          }
+          let resp = await service.uploadFileUpdateRate(dataUpdateCC)
+          if(resp.status === 200){
+            showToast(resp.data.message)
+          }else{
+            showToast("Ocurrió un error al cargar archivo")
+          }
+        }
+      }
+      setNameFileSelected("Ningún archivo seleccionado.")
+      setSelectedFile("");
+      setIsSelected(false);
+    }else{
+      showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
+      let resp = await service.sendUpdateRate(setFormatDate(selDate),name)
+      if (resp && resp.message){
+        showToast(resp.message)
+      } else {
+        showToast("Error en la solicitud.")
+      }
     }
   }
 
   
   const valideFileType = function (fileType, fileName) {
-    let validTypes = [
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.ms-excel",
-      "text/csv"
-    ];
-    let validExtensions = ["xlsx", "xls", "csv"];
-    let nameArray = fileName.split(".")
-    
-    if (validExtensions.includes(nameArray[nameArray.length -1]) & 
-        validTypes.includes(fileType) & !(fileName.startsWith("="))) {
-      return true
-    } else {
-      return false
+    let validTypes ="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    let expresionRegularExcel = /^[-\w\s]+\.xlsx$/
+    if (validTypes!=fileType){
+      return 1;
+    }else if ( !fileName.match(expresionRegularExcel)){
+     return 2; 
+    }else{
+      return 0;
     }
-
   };
 
   
   const changeFileSelected = (event) => {
     event.preventDefault()
-    if (valideFileType(event.target.files[0].type, event.target.files[0].name)) {
-      setSelectedFile(event.target.files[0]);
-      setNameFileSelected(event.target.files[0].name);
-      setIsSelected(true);
-    } else {
-      setSelectedFile("");
-      setNameFileSelected("El archivo es inválido. Por favor subir un archivo .xlsx, .xls o .csv");
-      setIsSelected(false);
+    if(!nameFileSelected){
+      setIsDisabledEjecutar(true)
     }
-
+    if(event.target.files[0]){
+      let codeValidate = valideFileType(event.target.files[0].type, event.target.files[0].name)
+      if (codeValidate==0) {
+        setIsDisabledEjecutar(false)
+        setSelectedFile(event.target.files[0]);
+        setNameFileSelected(event.target.files[0].name);
+        setIsSelected(true);
+      } else {
+        setSelectedFile("");
+        setIsSelected(false);
+        if (codeValidate==1){
+          setNameFileSelected("Tipo de archivo no válido. Por favor subir un archivo .xlsx");
+        }else{
+          setNameFileSelected("Nombre de archivo no válido. Por favor subir uno correcto");
+        }
+      }
+    }
   };
 
   function renderTable() {
@@ -193,7 +225,7 @@ useEffect(async () => {
         }
         <Col s={12} m={12}>
           <Button node="button" style={{ float: 'right' }} 
-            className="indigo darken-4" onClick={updateRates}>
+            className="indigo darken-4" onClick={updateRates}  disabled={isDisabledEjecutar}>
             Ejecutar
           </Button>
         </Col>
