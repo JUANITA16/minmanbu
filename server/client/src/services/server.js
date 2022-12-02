@@ -76,6 +76,14 @@ class ServerAPI {
         return data
     }
 
+    uploadFileUpdateRate = async (dataUpdateCC) => {
+        const url = this.base_url + "/upload-cc"
+        const config = {
+            headers: { Authorization: await getToken()}
+        }
+        const res = await axios.post(url,dataUpdateCC,config);
+        return res
+    }
 
     getRatesData = async (initial_date, final_date) => {
         const url = this.base_url + "/rates"
