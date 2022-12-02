@@ -43,9 +43,12 @@ export const toBase64 = file => new Promise((resolve, reject) => {
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = () => {
+    //Elimina la palabra data
     let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
+    //Valida si la cantidad de caracteres no es un múltiplo de 4
     if ((encoded.length % 4) > 0) {
-      encoded += '='.repeat(4 - (encoded.length % 4));
+        //Concatena al final de encoded el símbolo de igual "=" las veces que sea necesario
+        encoded += '='.repeat(4 - (encoded.length % 4));
     }
     resolve(encoded);
   };
