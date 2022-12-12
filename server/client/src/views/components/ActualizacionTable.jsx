@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 import Select from 'react-select'
 import { showToast } from "../../helpers/utils";
 
-function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorriente}) {
+function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorriente,getdbDataRatesUpdate}) {
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
@@ -25,10 +25,17 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
     setVisibleData(tableData.slice(page*maxResults, maxResults*(page + 1)))
   };
   
-  const handleDetails = function (event){
+
+  const handleDetails = async function (event){
     event.preventDefault()
-    setdetails( (prevVal) => [...prevVal, JSON.parse(event.target.value)]
-    )
+    if(isCuentaCorriente){   
+      let valueJson =JSON.parse(event.target.value)   
+      const items  = await getdbDataRatesUpdate("client&file#"+valueJson.id,valueJson.date_process,valueJson.date_process)
+      setdetails(items)
+    }else{
+      setdetails( (prevVal) => [...prevVal, JSON.parse(event.target.value)]
+      )
+    }
     setIsPantallaPrincipal(false)
 
   };
@@ -87,7 +94,8 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
                     id: data.id,
                     statusCode: data.status_code,
                     status: data.status,
-                    detail: data.detailed
+                    detail: data.detailed,
+                    date_process: data.date_process
                   })} >
               Detalles</Button>
             </td>

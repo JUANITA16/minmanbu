@@ -269,36 +269,76 @@ class ServerAPI {
         // }
         // const res = await axios.get(url, config);
         // return res
-        const resp_exitoso = {
-            'status': 200 ,
-            'data': [
-                {
-                    'id':'1',
-                    'date_process':'date1',
-                    'status_code':'code1',
-                    'status':'status1',
-                    'user':'user1'
-                },
-                {
-                    'id':'2',
-                    'date_process':'date2',
-                    'status_code':'code2',
-                    'status':'status2',
-                    'user':'user2'
-                },
-                {
-                    'id':'3',
-                    'date_process':'date3',
-                    'status_code':'code3',
-                    'status':'status3',
-                    'user':'user3'
+        let resp_exitoso=null
+        let resp_error=null
+        if(type_item=='file'){
+            resp_exitoso = {
+                'status': 200 ,
+                'data': [
+                    {
+                        'id':'1',
+                        'date_process':'date1',
+                        'status_code':'code1',
+                        'status':'status1',
+                        'user':'user1'
+                    },
+                    {
+                        'id':'2',
+                        'date_process':'date2',
+                        'status_code':'code2',
+                        'status':'status2',
+                        'user':'user2'
+                    },
+                    {
+                        'id':'3',
+                        'date_process':'date3',
+                        'status_code':'code3',
+                        'status':'status3',
+                        'user':'user3'
+                    }
+                ]
+            }
+            resp_error = {
+                'status': 500 ,
+                'data': {
+                    'message':"Ocurrió un error-test-file"
                 }
-            ]
-        }
-        const resp_error = {
-            'status': 500 ,
-            'data': {
-                'message':"Ocurrió un error-test"
+            }
+        }else{
+            resp_exitoso = {
+                'status': 200 ,
+                'data': [
+                    {
+                        'id':'ida',
+                        'account_number':'accna',
+                        'statusCode':'codea',
+                        'detail':'detaila'
+                    },
+                    {
+                        'id':'idb',
+                        'account_number':'accnb',
+                        'statusCode':'codeb',
+                        'detail':'detailb'
+                    },
+                    {
+                        'id':'idc',
+                        'account_number':'accnc',
+                        'statusCode':'codec',
+                        'detail':'detailc'
+                    },
+                    {
+                        'id':'idd',
+                        'account_number':'accnd',
+                        'statusCode':'coded',
+                        'detail':'detaild'
+                    }
+                ]
+            }
+            resp_error = {
+                'status': 500 ,
+                'data': {
+                    'message':"Ocurrió un error-test"
+                }
             }
         }
         return resp_exitoso;

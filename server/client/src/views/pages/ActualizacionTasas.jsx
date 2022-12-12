@@ -88,10 +88,10 @@ function ActualizacionTasas() {
   }
 
   
-  const getdbDataRatesUpdate = async function (from_date, to_date) {
+  const getdbDataRatesUpdate = async function (type_item,from_date, to_date) {
     let respData = [];
     try {
-      const responseRatesUpdate =  await service.getRatesUpdate("file",from_date, to_date);
+      const responseRatesUpdate =  await service.getRatesUpdate(type_item,from_date, to_date);
       respData = await responseRatesUpdate.data;
       if (responseRatesUpdate.status === 200 && respData.length>0){
         return respData
@@ -108,11 +108,9 @@ function ActualizacionTasas() {
 
 const getDataByProduct = async function (productType,initialDate,finalDateIn) {
   if (productType==3){
-    console.log('se invoca a la api update')
-    let resp = await getdbDataRatesUpdate(setFormatDate(initialDate), setFormatDate(finalDateIn))
+    let resp = await getdbDataRatesUpdate("file",setFormatDate(initialDate), setFormatDate(finalDateIn))
     setDbData(resp)
   }else{
-    console.log('se invoca a la api actual')
     let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn))
     setDbData(resp)
   }
@@ -207,7 +205,7 @@ useEffect(async () => {
     function () {
     setDefaultValueProd(optionsProducts[tipoProducto-1])
     setTable(<ActTable tableData={tableData} setdetails={setdetails}
-                setIsPantallaPrincipal={setIsPantallaPrincipal} isCuentaCorriente={tipoProducto=='3'}/>)
+                setIsPantallaPrincipal={setIsPantallaPrincipal} isCuentaCorriente={tipoProducto=='3'} getdbDataRatesUpdate={getdbDataRatesUpdate}/>)
   } ,[isPantallaPrincipal, tableData, tipoProducto])
 
   return isPantallaPrincipal ? (
