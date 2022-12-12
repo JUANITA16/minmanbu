@@ -261,6 +261,49 @@ class ServerAPI {
         return data
     };
 
+    getRatesUpdate = async (type_item,initial_date, final_date) => {
+        // const url = this.base_url + "/rates-update"
+        // const config = {
+        //     headers: { Authorization: await getToken()},
+        //      params: {type_item,initial_date, final_date}
+        // }
+        // const res = await axios.get(url, config);
+        // return res
+        const resp_exitoso = {
+            'status': 200 ,
+            'data': [
+                {
+                    'id':'1',
+                    'date_process':'date1',
+                    'status_code':'code1',
+                    'status':'status1',
+                    'user':'user1'
+                },
+                {
+                    'id':'2',
+                    'date_process':'date2',
+                    'status_code':'code2',
+                    'status':'status2',
+                    'user':'user2'
+                },
+                {
+                    'id':'3',
+                    'date_process':'date3',
+                    'status_code':'code3',
+                    'status':'status3',
+                    'user':'user3'
+                }
+            ]
+        }
+        const resp_error = {
+            'status': 500 ,
+            'data': {
+                'message':"Ocurrió un error-test"
+            }
+        }
+        return resp_exitoso;
+    }
+
 
 }
 

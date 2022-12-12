@@ -64,6 +64,11 @@ const authConfig = async() => {
                 path: "/upload-cc",
                 methods:[ "POST" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
+            rates_update: {
+                path: "/rates-update",
+                methods:[ "GET" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             }
         }
     }

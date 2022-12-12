@@ -36,30 +36,27 @@ function ActualizacionTasas() {
   const { name } = instance.getActiveAccount().idTokenClaims;
   const optionsProducts = [{value: 1, label: 'CDT'}, {value: 2, label: 'Bonos'},{value: 3, label: 'Cuenta Corriente'}]
   const fileInputRef = useRef(null);
-  function applyFilters(record, filters) {
-    let isValid = true
-    return isValid
-  };
+
   const handleApplyFilters = async function (event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
     setTableData([])
-    let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
-    setDbData(resp)
+    getDataByProduct(tipoProducto,initDate, finalDate)
   };
 
-  const handleDeleteFilters = function (event) {
+  const handleDeleteFilters = async function (event) {
     setFilterHeader(<p>Filtros</p>);
     setInitDate(currDate);
     setFinalDate(currDate);
     setConsecutivo("");
     setfiltEnable(false);
+    getDataByProduct(tipoProducto,currDate,currDate)
   };
   const onTextChange = function (event) {
     setConsecutivo(event.target.value)
   };
   
-  const onChangeTipoProducto = function (event) {
+  const onChangeTipoProducto = async function (event) {
     setTipoProducto(event.value)
     if(event.value=='3'){
       setIsDisabledEjecutar(true)
@@ -70,7 +67,8 @@ function ActualizacionTasas() {
       setNameFileSelected("Ningún archivo seleccionado.");
       setIsSelected(false);
     }
-    
+    getDataByProduct(event.value,initDate, finalDate)
+
   };
 
   
@@ -89,9 +87,39 @@ function ActualizacionTasas() {
     }
   }
 
-useEffect(async () => {
-    let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
+  
+  const getdbDataRatesUpdate = async function (from_date, to_date) {
+    let respData = [];
+    try {
+      const responseRatesUpdate =  await service.getRatesUpdate("file",from_date, to_date);
+      respData = await responseRatesUpdate.data;
+      if (responseRatesUpdate.status === 200 && respData.length>0){
+        return respData
+      }else{
+        alert(respData.message)
+        return ["Empty"]
+      }
+      
+    } catch (error) {
+      alert("Error Cargando tabla")
+      return respData;
+    }
+  }
+
+const getDataByProduct = async function (productType,initialDate,finalDateIn) {
+  if (productType==3){
+    console.log('se invoca a la api update')
+    let resp = await getdbDataRatesUpdate(setFormatDate(initialDate), setFormatDate(finalDateIn))
     setDbData(resp)
+  }else{
+    console.log('se invoca a la api actual')
+    let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn))
+    setDbData(resp)
+  }
+}
+
+useEffect(async () => {
+  getDataByProduct(tipoProducto,initDate, finalDate)
   }, [])
 
   useEffect(() => {

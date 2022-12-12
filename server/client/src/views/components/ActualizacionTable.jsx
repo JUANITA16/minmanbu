@@ -79,7 +79,7 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
             <td>{data.date_process}</td>
             <td>{data.user}</td>
             {
-              isCuentaCorriente ? <td>Execution-test</td> : ''
+              isCuentaCorriente ? <td>{data.status}</td> : ''
             }
             <td><Button small onClick={handleDetails} 
                   className="indigo darken-4"
