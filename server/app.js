@@ -18,7 +18,15 @@ const setUp = async() => {
     app.use(cors(corsOptions));
     app.use(bodyparser.urlencoded({ extended: false }));
     app.use(bodyparser.json({limit: '6mb'})); // Limite del body que procesa una lambda en AWS
-    
+
+    app.use(function (error, req, res, next) {
+        if (error instanceof SyntaxError) {
+          sendError(400, "Ocurrió un error no esperado");
+        } else {
+          next();
+        }
+    });
+
     app.use(helmet());
     app.use(helmet.contentSecurityPolicy());
     app.use(
