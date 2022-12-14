@@ -21,7 +21,7 @@ const setUp = async() => {
 
     app.use(function (error, req, res, next) {
         if (error instanceof SyntaxError) {
-          sendError(400, "Ocurrió un error no esperado");
+          res.status(400).send("Ocurrió un error no esperado");
         } else {
           next();
         }
