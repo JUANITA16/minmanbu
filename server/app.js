@@ -21,9 +21,7 @@ const setUp = async() => {
 
     app.use(function (error, req, res, next) {
         if (error instanceof SyntaxError) {
-          res.status(400).send("Ocurrió un error no esperado");
-        } else {
-          next();
+          res.status(400).send("Cuerpo de la petición incorrecto");
         }
     });
 
