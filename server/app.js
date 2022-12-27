@@ -3,6 +3,7 @@ const cors = require("cors");
 const helmet = require('helmet');
 const bodyparser = require('body-parser');
 const path = require("path");
+const csrf = require("csurf");
 require('dotenv').config(); // Load environment variables from .env file
 
 
@@ -16,6 +17,7 @@ const setUp = async() => {
         optionsSuccessStatus: 200 
     }
     app.use(cors(corsOptions));
+    app.use(csrf())
     app.use(bodyparser.urlencoded({ extended: false }));
     app.use(bodyparser.json({limit: '6mb'})); // Limite del body que procesa una lambda en AWS
 
