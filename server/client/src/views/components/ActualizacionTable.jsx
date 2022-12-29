@@ -78,13 +78,20 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
         <tr key={"Empty"}>
           <td> No se encontraron registros.</td>
         </tr>);
-    } else {
+    } else if(visibleData[0]==='Reload') {
+      setTableBody([]);
+      setIsloading(true)
+    }else {
       setTableBody(visibleData.map( (data) => {
         return (
           <tr key={data.id}>
             <td>{data.id}</td>
-            <td>{data.date_process}</td>
-            <td>{data.user}</td>
+            {
+              isCuentaCorriente ? <td>{data.execution_date}</td> : <td>{data.date_process}</td>
+            }
+            {
+              isCuentaCorriente ? <td>{data.user_name}</td> : <td>{data.user}</td>
+            }
             {
               isCuentaCorriente ? <td>{data.status}</td> : ''
             }

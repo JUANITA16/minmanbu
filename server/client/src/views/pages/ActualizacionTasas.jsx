@@ -88,15 +88,14 @@ function ActualizacionTasas() {
   }
 
   
-  const getdbDataRatesUpdate = async function (type_item,from_date, to_date) {
+  const getdbDataRatesUpdate = async function (from_date, to_date) {
     let respData = [];
     try {
-      const responseRatesUpdate =  await service.getRatesUpdate(type_item,from_date, to_date);
+      const responseRatesUpdate =  await service.getRatesUpdate("","",from_date, to_date);
       respData = await responseRatesUpdate.data;
       if (responseRatesUpdate.status === 200 && respData.length>0){
         return respData
       }else{
-        alert(respData.message)
         return ["Empty"]
       }
       
@@ -107,8 +106,9 @@ function ActualizacionTasas() {
   }
 
 const getDataByProduct = async function (productType,initialDate,finalDateIn) {
+  setDbData(["Reload"])
   if (productType==3){
-    let resp = await getdbDataRatesUpdate("file",setFormatDate(initialDate), setFormatDate(finalDateIn))
+    let resp = await getdbDataRatesUpdate(setFormatDate(initialDate), setFormatDate(finalDateIn))
     setDbData(resp)
   }else{
     let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn))
