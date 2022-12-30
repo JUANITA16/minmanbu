@@ -261,6 +261,16 @@ class ServerAPI {
         return data
     };
 
+    getRatesUpdate = async (process_date,file_id, initial_date, final_date) => {
+        const url = this.base_url + "/rates-update"
+        const config = {
+            headers: { Authorization: await getToken()},
+             params: {process_date,file_id,initial_date, final_date}
+        }
+        const res = await axios.get(url, config);
+        return res
+    }
+
 
 }
 

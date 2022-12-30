@@ -37,7 +37,6 @@ function MyTable({tableData, setEdits}) {
   };
   
   const handleEdit = function (event){
-      console.log('Abrir modal editar')
     // setInfoModal(JSON.parse(event.target.value))
     // setOpen(true);
   };
