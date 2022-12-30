@@ -37,7 +37,7 @@ export default function ActualizacionTasasDetalle(props) {
               {props.isCuentaCorriente? details.account_number:details.id}
             </td >
             <td style={{minWidth: 10, maxWidth: 50 ,  textAlign: "center" }}>
-              {details.statusCode}
+              {details.status_code}
             </td>
             {
                 props.isCuentaCorriente? null:
@@ -46,7 +46,7 @@ export default function ActualizacionTasasDetalle(props) {
                 </td>
             }
             <td style={{ minWidth: 10, maxWidth: 250, wordBreak:"break-all"}}>
-              {details.detail}
+              {props.isCuentaCorriente? details.message:details.detail}
             </td>
           </tr>
         )
@@ -134,8 +134,8 @@ export default function ActualizacionTasasDetalle(props) {
                                     filename="Detalle-Actualizacion_Tasas">
                                     <ExcelSheet data={contentTableDetalle} name="Detalles">
                                         <ExcelColumn label="Nro. Cuenta" value="account_number" />
-                                        <ExcelColumn label="Cod.Estado" value="statusCode" />
-                                        <ExcelColumn label="Detalle" value="detail" />
+                                        <ExcelColumn label="Cod.Estado" value="status_code" />
+                                        <ExcelColumn label="Detalle" value="message" />
                                     </ExcelSheet>
                                 </ExcelFile>
                             </Col>
