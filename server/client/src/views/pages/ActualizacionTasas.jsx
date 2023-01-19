@@ -72,10 +72,10 @@ function ActualizacionTasas() {
   };
 
   
-  const getdbData = async function (from_date, to_date) {
+  const getdbData = async function (from_date, to_date, consecutive) {
     let resp = [];
     try {
-      resp = await service.getRatesData(from_date, to_date);
+      resp = await service.getRatesData(from_date, to_date, consecutive);
       if (resp.length===0) {
         return ["Empty"]
       } else {
@@ -111,7 +111,7 @@ const getDataByProduct = async function (productType,initialDate,finalDateIn) {
     let resp = await getdbDataRatesUpdate("","",setFormatDate(initialDate), setFormatDate(finalDateIn))
     setDbData(resp)
   }else{
-    let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn))
+    let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn), consecutivo)
     setDbData(resp)
   }
 }

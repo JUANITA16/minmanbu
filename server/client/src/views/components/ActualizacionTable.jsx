@@ -101,7 +101,7 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
             <td><Button small onClick={handleDetails} 
                   className="indigo darken-4"
                   value={JSON.stringify({
-                    id: data.consecutive,
+                    consecutive: data.consecutive,
                     type: data.type,
                     status_code: data.status_code,
                     status: data.status,
