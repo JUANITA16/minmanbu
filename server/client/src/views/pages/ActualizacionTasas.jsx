@@ -54,6 +54,7 @@ function ActualizacionTasas() {
   };
   const onTextChange = function (event) {
     setConsecutivo(event.target.value)
+    console.log(consecutivo)
   };
   
   const onChangeTipoProducto = async function (event) {
@@ -111,7 +112,7 @@ const getDataByProduct = async function (productType,initialDate,finalDateIn,con
     let resp = await getdbDataRatesUpdate("","",setFormatDate(initialDate), setFormatDate(finalDateIn))
     setDbData(resp)
   }else{
-    let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn), consecutivo)
+    let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn), consecutivo="")
     setDbData(resp)
   }
 }
@@ -276,7 +277,7 @@ useEffect(async () => {
               <Col s={12} m={6} l={6} xl={6}  >
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
-                    id="numConsecutivo" value={consecutivo} pattern="[0-9]*"/>
+                    id="numConsecutivo" value={consecutivo}/>
                   <label htmlFor="numConsecutivo" >Consecutivo de Ejecución</label>
                 </div>
               </Col>
