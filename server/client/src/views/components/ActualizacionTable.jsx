@@ -85,10 +85,10 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
     }else {
       setTableBody(visibleData.map( (data) => {
         var date_process =  isCuentaCorriente ? data.execution_date : data.date_process
-        
+        var my_id = isCuentaCorriente ? data.id : data.consecutive
         return (
-          <tr key={data.consecutive}>
-            <td>{data.consecutive}</td>
+          <tr key={my_id}>
+            <td>{my_id}</td>
               
               <td>{date_process}</td> 
             
@@ -101,7 +101,7 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
             <td><Button small onClick={handleDetails} 
                   className="indigo darken-4"
                   value={JSON.stringify({
-                    consecutive: data.consecutive,
+                    id: my_id,
                     type: data.type,
                     status_code: data.status_code,
                     status: data.status,
