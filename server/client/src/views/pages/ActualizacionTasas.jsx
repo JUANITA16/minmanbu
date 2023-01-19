@@ -41,7 +41,7 @@ function ActualizacionTasas() {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
     setTableData([])
-    getDataByProduct(tipoProducto,initDate, finalDate)
+    getDataByProduct(tipoProducto,initDate, finalDate,consecutivo)
   };
 
   const handleDeleteFilters = async function (event) {
@@ -50,7 +50,7 @@ function ActualizacionTasas() {
     setFinalDate(currDate);
     setConsecutivo("");
     setfiltEnable(false);
-    getDataByProduct(tipoProducto,currDate,currDate)
+    getDataByProduct(tipoProducto,currDate,currDate,consecutivo)
   };
   const onTextChange = function (event) {
     setConsecutivo(event.target.value)
@@ -67,7 +67,7 @@ function ActualizacionTasas() {
       setNameFileSelected("Ningún archivo seleccionado.");
       setIsSelected(false);
     }
-    getDataByProduct(event.value,initDate, finalDate)
+    getDataByProduct(event.value,initDate, finalDate,consecutivo)
 
   };
 
@@ -105,7 +105,7 @@ function ActualizacionTasas() {
     }
   }
 
-const getDataByProduct = async function (productType,initialDate,finalDateIn) {
+const getDataByProduct = async function (productType,initialDate,finalDateIn,consecutivo) {
   setDbData(["Reload"])
   if (productType==3){
     let resp = await getdbDataRatesUpdate("","",setFormatDate(initialDate), setFormatDate(finalDateIn))
@@ -117,7 +117,7 @@ const getDataByProduct = async function (productType,initialDate,finalDateIn) {
 }
 
 useEffect(async () => {
-  getDataByProduct(tipoProducto,initDate, finalDate)
+  getDataByProduct(tipoProducto,initDate, finalDate, consecutivo)
   }, [])
 
   useEffect(() => {
