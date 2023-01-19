@@ -276,7 +276,7 @@ useEffect(async () => {
               </Col>
               <Col s={12} m={6} l={6} xl={6}  >
                 <div className="input-field">
-                  <input type="text" className="valid" onChange={onTextChange}
+                  <input type="text" onChange={onTextChange}
                     id="numConsecutivo" value={consecutivo}/>
                   <label htmlFor="numConsecutivo" >Consecutivo de Ejecución</label>
                 </div>

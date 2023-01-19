@@ -34,7 +34,7 @@ export default function ActualizacionTasasDetalle(props) {
         return (
           <tr>
             <td  style={{minWidth: 20, maxWidth: 100 , textAlign: "center" }}>
-              {props.isCuentaCorriente? details.account_number:details.id}
+              {props.isCuentaCorriente? details.account_number:details.consecutive}
             </td >
             <td style={{minWidth: 10, maxWidth: 50 ,  textAlign: "center" }}>
               {details.status_code}
