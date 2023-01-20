@@ -13,7 +13,7 @@ export default function App() {
   const base = process.env.PUBLIC_URL;
   const { instance } = useMsal();
   const user = instance.getActiveAccount()?.idTokenClaims
-
+  console.log("Test log!!!!!")
   return (
     <Section className="blue-grey lighten-5 p0">
       <Router>
