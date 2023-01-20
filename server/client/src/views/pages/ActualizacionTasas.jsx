@@ -212,8 +212,8 @@ useEffect(async () => {
 
   return isPantallaPrincipal ? (
     <Fragment>
-      <CardHeader title={"Actualización Masiva de Tasas"}
-        description={"En esta sección podrá realizar el proceso de actualización de tasas de forma masiva."} />
+      <CardHeader title={"Actualización Masiva de Tasas 2 - Prueba"}
+        description={"En esta sección podrá realizar el proceso de actualización de tasas 2 de forma masiva."} />
       <Row>
         <Col s={"6"} m={"3"}>
           <label className="active">Tipo Producto</label>
