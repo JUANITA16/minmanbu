@@ -86,6 +86,12 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
       setTableBody(visibleData.map( (data) => {
         var date_process =  isCuentaCorriente ? data.execution_date : data.date_process
         var my_id = isCuentaCorriente ? data.id : data.consecutive
+        
+        console.log("##TABLA - data, iscuenta, consec")
+        console.log(data)
+        console.log(isCuentaCorriente)
+        console.log(data.consecutive)
+
         return (
           <tr key={my_id}>
             <td>{my_id}</td>

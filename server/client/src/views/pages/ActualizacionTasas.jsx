@@ -114,6 +114,7 @@ const getDataByProduct = async function (productType,initialDate,finalDateIn,con
   }else{
     let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn), consecutivo="")
     setDbData(resp)
+    console.log(resp)
   }
 }
 
