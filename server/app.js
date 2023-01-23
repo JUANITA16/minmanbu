@@ -87,6 +87,7 @@ const setUp = async() => {
     /* SERVER SIDE ####################################################################### */
     // - To health check endpoint
     app.get( process.env.SERVER_BASE_PATH + "/healthCheck", async (req, res) => {
+        console.log("Health Check")
         res.json({ 
             api: "Minmambu front", 
             message: "Health OK!"
