@@ -17,7 +17,7 @@ const setUp = async() => {
         optionsSuccessStatus: 200 
     }
     app.use(cors(corsOptions));
-    app.use(csrf())
+    //app.use(csrf())
     app.use(bodyparser.urlencoded({ extended: false }));
     app.use(bodyparser.json({limit: '6mb'})); // Limite del body que procesa una lambda en AWS
 
