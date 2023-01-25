@@ -41,7 +41,7 @@ function ActualizacionTasas() {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
     setTableData([])
-    getDataByProduct(tipoProducto,initDate, finalDate)
+    getDataByProduct(tipoProducto,initDate, finalDate,consecutivo)
   };
 
   const handleDeleteFilters = async function (event) {
@@ -50,7 +50,7 @@ function ActualizacionTasas() {
     setFinalDate(currDate);
     setConsecutivo("");
     setfiltEnable(false);
-    getDataByProduct(tipoProducto,currDate,currDate)
+    getDataByProduct(tipoProducto,currDate,currDate,consecutivo)
   };
   const onTextChange = function (event) {
     setConsecutivo(event.target.value)
@@ -67,15 +67,15 @@ function ActualizacionTasas() {
       setNameFileSelected("Ningún archivo seleccionado.");
       setIsSelected(false);
     }
-    getDataByProduct(event.value,initDate, finalDate)
+    getDataByProduct(event.value,initDate, finalDate,consecutivo)
 
   };
 
   
-  const getdbData = async function (from_date, to_date) {
+  const getdbData = async function (from_date, to_date, consecutive) {
     let resp = [];
     try {
-      resp = await service.getRatesData(from_date, to_date);
+      resp = await service.getRatesData(from_date, to_date, consecutive);
       if (resp.length===0) {
         return ["Empty"]
       } else {
@@ -88,10 +88,10 @@ function ActualizacionTasas() {
   }
 
   
-  const getdbDataRatesUpdate = async function (from_date, to_date) {
+  const getdbDataRatesUpdate = async function(process_date,file_id,from_date, to_date) {
     let respData = [];
     try {
-      const responseRatesUpdate =  await service.getRatesUpdate("","",from_date, to_date);
+      const responseRatesUpdate =  await service.getRatesUpdate(process_date,file_id,from_date, to_date);
       respData = await responseRatesUpdate.data;
       if (responseRatesUpdate.status === 200 && respData.length>0){
         return respData
@@ -105,19 +105,19 @@ function ActualizacionTasas() {
     }
   }
 
-const getDataByProduct = async function (productType,initialDate,finalDateIn) {
+const getDataByProduct = async function (productType,initialDate,finalDateIn,consecutivo) {
   setDbData(["Reload"])
   if (productType==3){
-    let resp = await getdbDataRatesUpdate(setFormatDate(initialDate), setFormatDate(finalDateIn))
+    let resp = await getdbDataRatesUpdate("","",setFormatDate(initialDate), setFormatDate(finalDateIn))
     setDbData(resp)
   }else{
-    let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn))
+    let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn), consecutivo)
     setDbData(resp)
   }
 }
 
 useEffect(async () => {
-  getDataByProduct(tipoProducto,initDate, finalDate)
+  getDataByProduct(tipoProducto,initDate, finalDate, consecutivo)
   }, [])
 
   useEffect(() => {
@@ -275,8 +275,8 @@ useEffect(async () => {
               </Col>
               <Col s={12} m={6} l={6} xl={6}  >
                 <div className="input-field">
-                  <input type="text" className="valid" onChange={onTextChange}
-                    id="numConsecutivo" value={consecutivo} pattern="[0-9]*"/>
+                  <input type="text" onChange={onTextChange}
+                    id="numConsecutivo" value={consecutivo}/>
                   <label htmlFor="numConsecutivo" >Consecutivo de Ejecución</label>
                 </div>
               </Col>

@@ -85,11 +85,11 @@ class ServerAPI {
         return res
     }
 
-    getRatesData = async (initial_date, final_date) => {
+    getRatesData = async (initial_date, final_date, consecutive) => {
         const url = this.base_url + "/rates"
         const config = {
             headers: { Authorization: await getToken()},
-            params: {initial_date, final_date}
+            params: {initial_date, final_date, consecutive}
         }
         const res = await axios.get(url, config);
         const data = await res.data;

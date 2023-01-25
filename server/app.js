@@ -17,7 +17,7 @@ const setUp = async() => {
         optionsSuccessStatus: 200 
     }
     app.use(cors(corsOptions));
-    app.use(csrf())
+    //app.use(csrf())
     app.use(bodyparser.urlencoded({ extended: false }));
     app.use(bodyparser.json({limit: '6mb'})); // Limite del body que procesa una lambda en AWS
 
@@ -87,6 +87,7 @@ const setUp = async() => {
     /* SERVER SIDE ####################################################################### */
     // - To health check endpoint
     app.get( process.env.SERVER_BASE_PATH + "/healthCheck", async (req, res) => {
+        console.log("Health Check")
         res.json({ 
             api: "Minmambu front", 
             message: "Health OK!"

@@ -28,9 +28,10 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
 
   const handleDetails = async function (event){
     event.preventDefault()
-    if(isCuentaCorriente){   
-      let valueJson =JSON.parse(event.target.value)   
-      const items  = await getdbDataRatesUpdate("client&file#"+valueJson.id,valueJson.date_process,valueJson.date_process)
+    if(isCuentaCorriente){
+      let valueJson =JSON.parse(event.target.value)
+      var splitDateProcess = valueJson.date_process.split('T')
+      const items  = await getdbDataRatesUpdate(splitDateProcess[0], valueJson.type, "", "")
       setdetails(items)
     }else{
       setdetails( (prevVal) => [...prevVal, JSON.parse(event.target.value)]
@@ -83,12 +84,16 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
       setIsloading(true)
     }else {
       setTableBody(visibleData.map( (data) => {
+        var date_process =  isCuentaCorriente ? data.execution_date : data.date_process
+        var my_id = isCuentaCorriente ? data.id : data.consecutive
+        
+
         return (
-          <tr key={data.id}>
-            <td>{data.id}</td>
-            {
-              isCuentaCorriente ? <td>{data.execution_date}</td> : <td>{data.date_process}</td>
-            }
+          <tr key={my_id}>
+            <td>{my_id}</td>
+              
+              <td>{date_process}</td> 
+            
             {
               isCuentaCorriente ? <td>{data.user_name}</td> : <td>{data.user}</td>
             }
@@ -98,11 +103,12 @@ function ActTable({setIsPantallaPrincipal, tableData, setdetails,isCuentaCorrien
             <td><Button small onClick={handleDetails} 
                   className="indigo darken-4"
                   value={JSON.stringify({
-                    id: data.id,
-                    statusCode: data.status_code,
+                    id: my_id,
+                    type: data.type,
+                    status_code: data.status_code,
                     status: data.status,
                     detail: data.detailed,
-                    date_process: data.date_process
+                    date_process: date_process
                   })} >
               Detalles</Button>
             </td>
