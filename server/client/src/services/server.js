@@ -85,7 +85,7 @@ class ServerAPI {
         return res
     }
 
-    getRatesData = async (initial_date, final_date, consecutive="") => {
+    getRatesData = async (initial_date, final_date, consecutive) => {
         const url = this.base_url + "/rates"
         const config = {
             headers: { Authorization: await getToken()},

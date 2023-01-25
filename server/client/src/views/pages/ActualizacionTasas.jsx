@@ -112,7 +112,7 @@ const getDataByProduct = async function (productType,initialDate,finalDateIn,con
     let resp = await getdbDataRatesUpdate("","",setFormatDate(initialDate), setFormatDate(finalDateIn))
     setDbData(resp)
   }else{
-    let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn), consecutivo="")
+    let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn), consecutivo)
     setDbData(resp)
     console.log(resp)
   }
@@ -212,8 +212,8 @@ useEffect(async () => {
 
   return isPantallaPrincipal ? (
     <Fragment>
-      <CardHeader title={"Actualización Masiva de Tasas 2 - Prueba"}
-        description={"En esta sección podrá realizar el proceso de actualización de tasas 2 de forma masiva."} />
+      <CardHeader title={"Actualización Masiva de Tasas"}
+        description={"En esta sección podrá realizar el proceso de actualización de tasas de forma masiva."} />
       <Row>
         <Col s={"6"} m={"3"}>
           <label className="active">Tipo Producto</label>
