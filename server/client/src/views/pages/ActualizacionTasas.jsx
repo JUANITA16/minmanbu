@@ -54,7 +54,6 @@ function ActualizacionTasas() {
   };
   const onTextChange = function (event) {
     setConsecutivo(event.target.value)
-    console.log(consecutivo)
   };
   
   const onChangeTipoProducto = async function (event) {
@@ -114,7 +113,6 @@ const getDataByProduct = async function (productType,initialDate,finalDateIn,con
   }else{
     let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn), consecutivo)
     setDbData(resp)
-    console.log(resp)
   }
 }
 
