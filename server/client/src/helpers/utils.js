@@ -68,13 +68,13 @@ export function convertMessageError(message){
             if(!(statusCode=='1' || statusCode=='2')){
                 if(obj.hasOwnProperty('update_rate_content')){
                     msgObj=obj.update_rate_content
-                    new_message.push(msgObj.replace('Error -','Error en update_rate_content:'))
+                    new_message.push(msgObj.replace('Error -','Error en Tasa de Interés:'))
                 }else if(obj.hasOwnProperty('state_content')){
                     msgObj=obj.state_content
                     new_message.push(msgObj.replace('Error -','Error en Estado Cuenta:'))
                 }else if(obj.hasOwnProperty('tax_content')){
                     msgObj=obj.tax_content
-                    new_message.push(msgObj.replace('Error -','Error en tax_content:'))
+                    new_message.push(msgObj.replace('Error -','Error en Impuesto Retención:'))
                 }else if(obj.hasOwnProperty('iva_content')){
                     msgObj=obj.iva_content
                     new_message.push(msgObj.replace('Error -','Error en Exento Iva:'))
