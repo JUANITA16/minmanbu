@@ -54,3 +54,47 @@ export const toBase64 = file => new Promise((resolve, reject) => {
   };
   reader.onerror = error => reject(error);
 });
+
+export function convertMessageError(message){
+    var new_message=[]
+    try{
+        message = message.replace(/[']+/g,'\"')
+        const objMessage = JSON.parse(message)
+        var statusCode
+        var msgObj=''
+        objMessage.forEach(obj=>{
+            statusCode =obj.status_code 
+            statusCode = statusCode.toString()[0]
+            if(!(statusCode=='1' || statusCode=='2')){
+                if(obj.hasOwnProperty('update_rate_content')){
+                    msgObj=obj.update_rate_content
+                    new_message.push(msgObj.replace('Error -','Error en Tasa de Interés:'))
+                }else if(obj.hasOwnProperty('state_content')){
+                    msgObj=obj.state_content
+                    new_message.push(msgObj.replace('Error -','Error en Estado Cuenta:'))
+                }else if(obj.hasOwnProperty('tax_content')){
+                    msgObj=obj.tax_content
+                    new_message.push(msgObj.replace('Error -','Error en Impuesto Retención:'))
+                }else if(obj.hasOwnProperty('iva_content')){
+                    msgObj=obj.iva_content
+                    new_message.push(msgObj.replace('Error -','Error en Exento Iva:'))
+                }else if(obj.hasOwnProperty('gmf_content')){
+                    msgObj=obj.gmf_content
+                    new_message.push(msgObj.replace('Error -','Error en Exento GMF:'))
+                }else if(obj.hasOwnProperty('less_content')){
+                    msgObj=obj.less_content
+                    new_message.push(msgObj.replace('Error -','Error en Consecutivo Less:'))
+                }else if(obj.hasOwnProperty('max_withdrawal_content')){
+                    msgObj=obj.max_withdrawal_content
+                    new_message.push(msgObj.replace('Error -','Error en Monto máximo de retiro:'))
+                }else if(obj.hasOwnProperty('message')){
+                    new_message.push(obj.message)
+                }
+            }
+        })
+    }catch(error){
+        new_message=[]
+        new_message.push(message)
+    }
+    return new_message
+}
