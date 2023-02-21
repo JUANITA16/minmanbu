@@ -58,7 +58,7 @@ export const toBase64 = file => new Promise((resolve, reject) => {
 export function convertMessageError(message){
     var new_message=[]
     try{
-        message = message.replaceAll('\'','\"')
+        message = message.replace(/[']+/g,'\"')
         const objMessage = JSON.parse(message)
         var statusCode
         var msgObj=''
@@ -93,6 +93,7 @@ export function convertMessageError(message){
             }
         })
     }catch(error){
+        new_message=[]
         new_message.push(message)
     }
     return new_message
