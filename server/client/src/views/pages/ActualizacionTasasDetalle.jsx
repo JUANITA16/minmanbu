@@ -4,7 +4,7 @@ import { Row, Col, Button,Icon, Table } from 'react-materialize'
 import { toast } from 'react-toastify';
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
-
+import { convertMessageError } from "../../helpers/utils";
 
 import ExportExcel from 'react-export-excel'
 
@@ -46,7 +46,9 @@ export default function ActualizacionTasasDetalle(props) {
                 </td>
             }
             <td style={{ minWidth: 10, maxWidth: 250, wordBreak:"break-all"}}>
-              {props.isCuentaCorriente? details.message:details.detail}
+              {props.isCuentaCorriente? convertMessageError(details.message).map((m)=>(
+                  <p>{m}</p>
+              )):details.detail}
             </td>
           </tr>
         )
