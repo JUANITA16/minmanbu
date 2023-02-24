@@ -27,7 +27,8 @@ variables:
     value: $(Build.BuildNumber)
 
 stages:
-- stage: ${{ variables.environment }}
+- stage: create-repo-${{ variables.environment }}
+  displayName: Create Repository ${{ variables.environment }}
   jobs:
     - job: create_repo
       displayName: Create Image Repository
@@ -60,6 +61,51 @@ stages:
             s3BucketName: '$(cfBucketName)'
             templateParametersFile: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
             tags: '$(tags)'     
+- stage: testing-${{ variables.environment }}
+  displayName: Unit Testing ${{ variables.environment }}
+  jobs:
+    - job: unit_testing_client
+      displayName: Tests Client
+      pool: "BTG Colombia - Azure DepOPS" # agent pool
+      variables:
+      - group: ${{ variables.infra_variable_group }}
+      - group: ${{ variables.service_variable_group }}
+      steps:
+        - task: CmdLine@2
+          displayName: 'Run npm i & Run Test'
+          inputs:
+            script: |
+              npm install 
+              npm run test:coverage
+            workingDirectory: '$(System.DefaultWorkingDirectory)/server/client'
+        - task: SonarQubePrepare@5
+          displayName: 'Prepare analysis on SonarQube'
+          inputs:
+            SonarQube: 'Sonar Qube'
+            scannerMode: 'CLI'
+            configMode: 'manual'
+            cliProjectKey: 'pasivos-procesos-minmambu-client'
+            cliProjectName: 'pasivos-procesos-minmambu-client'
+            cliSources: '$(System.DefaultWorkingDirectory)/server/client'
+            extraProperties: |
+              sonar.branch.name=$(Build.SourceBranchName)
+              sonar.exclusions='**/node_modules/**, **/src/index.js'
+              sonar.javascript.lcov.reportPaths=$(System.DefaultWorkingDirectory)/server/client/coverage/lcov.info
+              sonar.javascript.exclusions='**/node_modules/**, **/src/index.js'
+              sonar.test.inclusions='**/**/__tests__/**/*.test.*'
+        - task: SonarQubeAnalyze@4
+          displayName: 'Run Code Analysis'
+        - task: SonarQubePublish@5
+          displayName: 'Publish Code Analysis'
+          inputs:
+            pollingTimeoutSec: '300'
+        # - task: sonar-buildbreaker@8
+        #   displayName: 'Sonar Breaker'
+        #   inputs:
+        #     SonarQube: 'Sonar Qube'
+- stage: build-push-${{ variables.environment }}
+  displayName: Update Image ${{ variables.environment }}
+  jobs:
     - job: build_docker_image
       displayName: Build & Push Docker Image
       pool: "BTG Colombia - Azure DepOPS" # agent pool
