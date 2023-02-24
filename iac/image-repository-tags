@@ -1,4 +1,4 @@
-Ambiente:$(stage)
+Ambiente=$(stage)
 Disponibilidad=$(disponibilidad)
 Celula=$(celula)
 Despliegue=$(despliegue)
