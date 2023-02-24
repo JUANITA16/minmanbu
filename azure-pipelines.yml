@@ -109,7 +109,6 @@ stages:
     - job: build_docker_image
       displayName: Build & Push Docker Image
       pool: "BTG Colombia - Azure DepOPS" # agent pool
-      dependsOn: create_repo
       variables:
       - group: ${{ variables.infra_variable_group }}
       - group: ${{ variables.service_variable_group }}
