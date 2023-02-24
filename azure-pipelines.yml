@@ -64,6 +64,45 @@ stages:
 - stage: testing_${{ variables.environment }}
   displayName: Unit Testing ${{ variables.environment }}
   jobs:
+    - job: unit_testing_server
+      displayName: Tests Server
+      pool: "BTG Colombia - Azure DepOPS" # agent pool
+      variables:
+      - group: ${{ variables.infra_variable_group }}
+      - group: ${{ variables.service_variable_group }}
+      steps:
+        - task: CmdLine@2
+          displayName: 'Run npm i & Run Test'
+          inputs:
+            script: |
+              npm install 
+              npm run test:coverage
+            workingDirectory: '$(System.DefaultWorkingDirectory)/server'
+        - task: SonarQubePrepare@5
+          displayName: 'Prepare analysis on SonarQube'
+          inputs:
+            SonarQube: 'Sonar Qube'
+            scannerMode: 'CLI'
+            configMode: 'manual'
+            cliProjectKey: 'pasivos-procesos-minmambu-server'
+            cliProjectName: 'pasivos-procesos-minmambu-server'
+            cliSources: '$(System.DefaultWorkingDirectory)/server'
+            extraProperties: |
+              sonar.branch.name=$(Build.SourceBranchName)
+              sonar.exclusions='**/client/**, **/node_modules/**, **/coverage/**'
+              sonar.javascript.lcov.reportPaths=$(System.DefaultWorkingDirectory)/server/coverage/lcov.info
+              sonar.javascript.exclusions='**/client/**, **/node_modules/**, **/coverage/**'
+              sonar.test.inclusions='**/**/tests/**/*.test.js'
+        - task: SonarQubeAnalyze@4
+          displayName: 'Run Code Analysis'
+        - task: SonarQubePublish@5
+          displayName: 'Publish Code Analysis'
+          inputs:
+            pollingTimeoutSec: '300'
+        # - task: sonar-buildbreaker@8
+        #   displayName: 'Sonar Breaker'
+        #   inputs:
+        #     SonarQube: 'Sonar Qube'
     - job: unit_testing_client
       displayName: Tests Client
       pool: "BTG Colombia - Azure DepOPS" # agent pool
