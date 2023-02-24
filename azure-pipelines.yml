@@ -27,7 +27,7 @@ variables:
     value: $(Build.BuildNumber)
 
 stages:
-- stage: create-repo-${{ variables.environment }}
+- stage: create_repo_${{ variables.environment }}
   displayName: Create Repository ${{ variables.environment }}
   jobs:
     - job: create_repo
@@ -61,7 +61,7 @@ stages:
             s3BucketName: '$(cfBucketName)'
             templateParametersFile: '$(System.DefaultWorkingDirectory)/iac/image-repository-params.json'
             tags: '$(tags)'     
-- stage: testing-${{ variables.environment }}
+- stage: testing_${{ variables.environment }}
   displayName: Unit Testing ${{ variables.environment }}
   jobs:
     - job: unit_testing_client
@@ -103,7 +103,7 @@ stages:
         #   displayName: 'Sonar Breaker'
         #   inputs:
         #     SonarQube: 'Sonar Qube'
-- stage: build-push-${{ variables.environment }}
+- stage: build_push_${{ variables.environment }}
   displayName: Update Image ${{ variables.environment }}
   jobs:
     - job: build_docker_image
