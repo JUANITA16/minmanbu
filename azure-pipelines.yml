@@ -105,6 +105,7 @@ stages:
         #     SonarQube: 'Sonar Qube'
     - job: unit_testing_client
       displayName: Tests Client
+      dependsOn: unit_testing_server
       pool: "BTG Colombia - Azure DepOPS" # agent pool
       variables:
       - group: ${{ variables.infra_variable_group }}
