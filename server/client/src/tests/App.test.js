@@ -9,6 +9,8 @@ jest.mock("../views/pages/carga-creacion-cuenta-deposito", () => () => <mock-wid
 jest.mock("../views/pages/Logout", () => () => <mock-widget /> );
 jest.mock("../views/pages/configuracion-contable", () => () => <mock-widget /> );
 jest.mock("../views/components/IdleLogout", () => () => <mock-widget /> );
+jest.mock("../views/pages/ActualizacionTasas", () => () => <mock-widget /> );
+jest.mock("../views/pages/ReprocesosCont", () => () => <mock-widget /> );
 
 jest.mock("@azure/msal-react", () => ({
   useMsal: () => ({ 
@@ -39,6 +41,6 @@ describe('App', () => {
           <App /> 
       </Router>
     );
-    expect(screen.getByText(/Mini mambu página principal./i)).toBeInTheDocument();
+    expect(screen.getByText(/MinMambu página principal./i)).toBeInTheDocument();
   });  
 });

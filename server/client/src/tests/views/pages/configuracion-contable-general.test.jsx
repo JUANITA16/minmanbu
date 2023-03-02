@@ -10,7 +10,19 @@ jest.mock("../../../index",()=>({
     getToken: jest.fn().mockResolvedValue("test")
 }))
 jest.mock('../../../services/server');
-
+jest.mock("@azure/msal-react", () => ({
+    useMsal: () => ({ 
+        instance:{ 
+            getActiveAccount: jest.fn()
+            .mockReturnValue(
+                {
+                  idTokenClaims: {name: "test_name"}
+                }
+            )
+        } 
+      })
+    })
+  );
 jest.mock('react-export-excel', () => {
     const originalModule = jest.requireActual('react-export-excel');
     const ExcelFile =  (props) => (<p>Test ExcelFile</p>);
