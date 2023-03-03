@@ -178,6 +178,11 @@ function ReprocesosContablesD() {
         let respVenGMF = await service.requestReprocess(requestBody)
         handleReprResponse("Vencimientos GMF: ", respVenGMF)
       }
+      if (rendimientos){
+        requestBody["event_type"] = "pago_rendimientos"
+        let respRendimientos = await service.requestReprocess(requestBody)
+        handleReprResponse("Pago de rendimientos: ", respRendimientos)
+      }
       // Fin animación de carga y apertura de ventana de resultados
       setIsloading(false)
       setisPromptOpen(true)

@@ -89,16 +89,16 @@ describe('utils', () => {
     });  
     
     test('test convertMessageError ok', () => {
-        const message = "[{'status_code':404, 'update_rate_content': 'Error - Invalid account id or encoded key'}, {'status_code': 404, 'state_content': 'Error - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'tax_content': 'Error - Invalid account id or encoded key'}, {'status_code': 404, 'iva_content': 'Error - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'gmf_content': 'Error - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'less_content': 'Error - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'max_withdrawal_content': 'Error - INVALID_DEPOSIT_ACCOUNT_ID'}]"
+        const message = "[{'status_code':404, 'update_rate_content': 'Error al actualizar - Invalid account id or encoded key'}, {'status_code': 404, 'state_content': 'Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'tax_content': 'Error al actualizar - Invalid account id or encoded key'}, {'status_code': 404, 'iva_content': 'Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'gmf_content': 'Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'less_content': 'Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'max_withdrawal_content': 'Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'}]"
         
         const expected = [
-            'Error en Tasa de Interés: Invalid account id or encoded key',
-            'Error en Estado Cuenta: INVALID_DEPOSIT_ACCOUNT_ID',
-            'Error en Impuesto Retención: Invalid account id or encoded key',
-            'Error en Exento Iva: INVALID_DEPOSIT_ACCOUNT_ID',
-            'Error en Exento GMF: INVALID_DEPOSIT_ACCOUNT_ID',
-            'Error en Consecutivo Less: INVALID_DEPOSIT_ACCOUNT_ID',
-            'Error en Monto máximo de retiro: INVALID_DEPOSIT_ACCOUNT_ID'
+            'Tasa de Interés: Error al actualizar - Invalid account id or encoded key',
+            'Estado Cuenta: Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID',
+            'Impuesto Retención: Error al actualizar - Invalid account id or encoded key',
+            'Exento Iva: Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID',
+            'Exento GMF: Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID',
+            'Consecutivo Less: Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID',
+            'Monto máximo de retiro: Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'
         ]
     
         const result = convertMessageError(message)
