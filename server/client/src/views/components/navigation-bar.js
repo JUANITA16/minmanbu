@@ -47,11 +47,11 @@ const NavigationBar = () => {
         {
             name: "Actualización tasas",
             url: `${base}/ui-actualizacion-tasas`
-        },
-        {
-            name: "Generación contabilidad Dominus",
-            url: `${base}/generacion-contabilidad`
         }
+        // {
+        //     name: "Generación contabilidad Dominus",
+        //     url: `${base}/generacion-contabilidad`
+        // }
     ]
  
   const handleCloseNavMenu = () => {
