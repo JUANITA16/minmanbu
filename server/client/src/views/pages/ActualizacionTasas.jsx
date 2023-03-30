@@ -34,7 +34,7 @@ function ActualizacionTasas() {
 
   const { instance } = useMsal();
   const { name } = instance.getActiveAccount().idTokenClaims;
-  const optionsProducts = [{value: 1, label: 'CDT'}, {value: 2, label: 'Bonos'},{value: 3, label: 'Cuenta Corriente'}]
+  const optionsProducts = [{value: 1, label: 'CDT'}, {value: 2, label: 'Bonos'}] //,{value: 3, label: 'Cuenta Corriente'}]
   const fileInputRef = useRef(null);
 
   const handleApplyFilters = async function (event) {
