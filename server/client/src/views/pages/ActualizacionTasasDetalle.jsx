@@ -4,7 +4,7 @@ import { Row, Col, Button,Icon, Table } from 'react-materialize'
 import { toast } from 'react-toastify';
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
-
+import { convertMessageError } from "../../helpers/utils";
 
 import ExportExcel from 'react-export-excel'
 
@@ -20,7 +20,7 @@ export default function ActualizacionTasasDetalle(props) {
     const [exportaDetalle, setExportaDetalle] = useState();
 
 
-    var contentTableDetalle = []
+    let contentTableDetalle = props.details
     var currentItemsDetalle = [];
     var itemOffsetDetalle;
     var totalPaginasDetalle = 0;
@@ -30,21 +30,25 @@ export default function ActualizacionTasasDetalle(props) {
     const ExcelSheet = ExportExcel.ExcelSheet;
     const ExcelColumn = ExportExcel.ExcelColumn;
 
-
-    const TableBodyDetalle = (props) => {
+    const TableBodyDetalle = ({details}) => {
         return (
           <tr>
             <td  style={{minWidth: 20, maxWidth: 100 , textAlign: "center" }}>
-              {props.rowId}
+              {props.isCuentaCorriente? details.account_number:details.consecutive}
             </td >
             <td style={{minWidth: 10, maxWidth: 50 ,  textAlign: "center" }}>
-              {props.codeStatus}
+              {details.status_code}
             </td>
-            <td style={{ minWidth: 10, maxWidth: 150 , textAlign: "center" , wordBreak:"break-all" }}>
-              {props.status}
-            </td>
+            {
+                props.isCuentaCorriente? null:
+                <td style={{ minWidth: 10, maxWidth: 150 , textAlign: "center" , wordBreak:"break-all" }}>
+                    {details.status}
+                </td>
+            }
             <td style={{ minWidth: 10, maxWidth: 250, wordBreak:"break-all"}}>
-              {props.detail}
+              {props.isCuentaCorriente? convertMessageError(details.message).map((m)=>(
+                  <p>{m}</p>
+              )):details.detail}
             </td>
           </tr>
         )
@@ -81,9 +85,8 @@ export default function ActualizacionTasasDetalle(props) {
         currentItemsDetalle = contentTableDetalle.slice(itemOffsetDetalle, endOffsetDetalle);
         
         setTableDetalleRender(<tbody>
-            {currentItemsDetalle.map((contenido, index) => {
-            return <TableBodyDetalle rowId={contenido.rowId}
-            codeStatus={contenido.codeStatus} status={contenido.status} detail={contenido.detail}  />
+            {currentItemsDetalle.map((details, index) => {
+            return <TableBodyDetalle details={details}  />
             })}
         </tbody>);
     }
@@ -103,37 +106,47 @@ export default function ActualizacionTasasDetalle(props) {
                 */
                 setTableHeaderDetalle(<thead>
                     <tr>
-                    <th data-field="rowId " style={{ textAlign: "center" }}>Id</th>
-                    <th data-field="codeStatus" style={{ textAlign: "center" }}>  Cod. Estado </th>
-                    <th data-field="status" style={{ textAlign: "center" }}> Estado </th>
+                    {
+                        props.isCuentaCorriente?
+                        <th data-field="nroCuenta " style={{ textAlign: "center" }}>Nro. Cuenta</th>
+                        :<th data-field="id " style={{ textAlign: "center" }}>Id</th>
+                    }
+                    <th data-field="statusCode" style={{ textAlign: "center" }}>  Cod. Estado </th>
+                    {
+                        props.isCuentaCorriente?
+                        null:
+                        <th data-field="status" style={{ textAlign: "center" }}> Estado </th>
+                    }
                     <th data-field="detail" style={{ textAlign: "center" }}> Detalle </th>
                     </tr>
                 </thead>);
-                /*
+                
                 addData();
                 totalPaginasDetalle = Math.ceil(contentTableDetalle.length / cantPaginasSelectDetalle);
-                */
+                
                 setPaginationFooterDetalle(
                     <TableFooterPaginationDetalle />
                 );
-                /*setExportaDetalle(
-                    <Row>
-                    <Col s={12} m={12} className="input-field m0">
-                        <ExcelFile
-                        element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
-                        filename="Detalle-Actualizacion_Tasas">
-                        <ExcelSheet data={contentTableDetalle} name="Detalles">
-                            <ExcelColumn label="Id" value="rowId" />
-                            <ExcelColumn label="Cod.Estado" value="codeStatus" />
-                            <ExcelColumn label="Estado" value="status" />
-                            <ExcelColumn label="Detalle" value="detail" />
-                        </ExcelSheet>
-            
-                        </ExcelFile>
-            
-                    </Col>
-                    </Row>
-                )
+                if (props.isCuentaCorriente){
+                    setExportaDetalle(
+                        <Row>
+                            <Col s={12} m={12} className="input-field m0">
+                                <ExcelFile
+                                    element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+                                    filename="Detalle-Actualizacion_Tasas">
+                                    <ExcelSheet data={contentTableDetalle} name="Detalles">
+                                        <ExcelColumn label="Nro. Cuenta" value="account_number" />
+                                        <ExcelColumn label="Cod.Estado" value="status_code" />
+                                        <ExcelColumn label="Detalle" value="message" />
+                                    </ExcelSheet>
+                                </ExcelFile>
+                            </Col>
+                        </Row>
+                    )
+                }else{
+                    setExportaDetalle(null);
+                }
+                /*
             }else {
             toast.error("No se encuentra en proceso ningún registro.");
             setTableDetalleRender(null);
@@ -146,6 +159,7 @@ export default function ActualizacionTasasDetalle(props) {
 
     
     async function changeActualizacionTasas (event) {
+        props.setdetails([])
         props.setIsPantallaPrincipal(true)
     };
 

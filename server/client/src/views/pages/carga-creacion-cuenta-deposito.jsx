@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
 
-import { convertTZ, addDays } from "../../helpers/utils";
+import { convertTZ, addDays,toBase64 } from "../../helpers/utils";
 
 import ExportExcel from 'react-export-excel'
 
@@ -23,7 +23,7 @@ export default function CreacionCuenta() {
   const { instance } = useMsal();
   const { name } = instance.getActiveAccount().idTokenClaims;
   const title = 'Creacion de cuentas masiva';
-  const description = 'En esta sección podrá cargar archivos para la creación de cuenta en forma masiva.';
+  const description = 'En esta sección podrá cargar archivos para la creación de cuentas en forma masiva.';
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
   const [nameFileSelected, setNameFileSelected] = useState("Ningún archivo seleccionado.");
@@ -312,18 +312,6 @@ export default function CreacionCuenta() {
 
   };
 
-  const toBase64 = file => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
-      if ((encoded.length % 4) > 0) {
-        encoded += '='.repeat(4 - (encoded.length % 4));
-      }
-      resolve(encoded);
-    };
-    reader.onerror = error => reject(error);
-  });
 
   // Invoke when user click to request another page.
   async function handlePageClick(event){
@@ -436,7 +424,7 @@ export default function CreacionCuenta() {
     setEndDate(convertTZ(new Date()));
     setIsDisabledButtonFilter(true);
 
-    const dataResultado = await service.getDataTable(startDate, endDate, id, isWeek); //tableService.getDataTable(startDate, endDate, id, isWeek)
+    const dataResultado = await service.getDataDetails(id); //tableService.getDataTable(startDate, endDate, id, isWeek)
     
     if(dataResultado.status===200 ){
       contentTableResultado = dataResultado.data[0].results_per_row;

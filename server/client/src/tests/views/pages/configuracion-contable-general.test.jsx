@@ -10,7 +10,35 @@ jest.mock("../../../index",()=>({
     getToken: jest.fn().mockResolvedValue("test")
 }))
 jest.mock('../../../services/server');
-
+jest.mock("@azure/msal-react", () => ({
+    useMsal: () => ({ 
+        instance:{ 
+            getActiveAccount: jest.fn()
+            .mockReturnValue(
+                {
+                  idTokenClaims: {name: "test_name"}
+                }
+            )
+        } 
+      })
+    })
+  );
+jest.mock('react-export-excel', () => {
+    const originalModule = jest.requireActual('react-export-excel');
+    const ExcelFile =  (props) => (<p>Test ExcelFile</p>);
+    ExcelFile.ExcelSheet = (props) => (<div>Test ExcelSheet</div>);
+    ExcelFile.ExcelColumn = (props) => (<div>Test ExcelSheet</div>);
+    const ReactExport = {
+      ExcelFile
+    }
+    //Mock the default export and named export 'foo'
+    return {
+      __esModule: true,
+      ...originalModule,
+      default: ReactExport
+    };
+  });
+  
 
 afterAll(() => {
     jest.resetAllMocks();
@@ -37,7 +65,13 @@ describe('ConfiguracionContableGeneral', () => {
                         "debittaxaccount": "13",
                         "producttypedescription": "NO APLICA",
                         "creationdate": "2022-06-10T09:05:15-05",
-                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2"
+                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2",
+                        "debittaxaccountemission": "510220",
+                        "credittaxaccountemission": "210705",
+                        "debittaxaccountinterestpaymet": "210705",
+                        "credittaxaccountinterestpaymet": "510220",
+                        "debittaxaccountcapitalpaymet": "210705",
+                        "credittaxaccountcapitalpaymet": "510220",
                     }
                 ]
             })
@@ -97,7 +131,13 @@ describe('ConfiguracionContableGeneral', () => {
                         "debittaxaccount": "13",
                         "producttypedescription": "NO APLICA",
                         "creationdate": "2022-06-10T09:05:15-05",
-                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2"
+                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2",
+                        "debittaxaccountemission": "510220",
+                        "credittaxaccountemission": "210705",
+                        "debittaxaccountinterestpaymet": "210705",
+                        "credittaxaccountinterestpaymet": "510220",
+                        "debittaxaccountcapitalpaymet": "210705",
+                        "credittaxaccountcapitalpaymet": "510220",
                     }
                 ]
             })
@@ -127,7 +167,13 @@ describe('ConfiguracionContableGeneral', () => {
                         "debittaxaccount": "13",
                         "producttypedescription": "NO APLICA",
                         "creationdate": "2022-06-10T09:05:15-05",
-                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2"
+                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2",
+                        "debittaxaccountemission": "510220",
+                        "credittaxaccountemission": "210705",
+                        "debittaxaccountinterestpaymet": "210705",
+                        "credittaxaccountinterestpaymet": "510220",
+                        "debittaxaccountcapitalpaymet": "210705",
+                        "credittaxaccountcapitalpaymet": "510220",
                     }
                 ]
             })
@@ -184,7 +230,13 @@ describe('ConfiguracionContableGeneral', () => {
                         "debittaxaccount": "13",
                         "producttypedescription": "NO APLICA",
                         "creationdate": "2022-06-10T09:05:15-05",
-                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2"
+                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2",
+                        "debittaxaccountemission": "510220",
+                        "credittaxaccountemission": "210705",
+                        "debittaxaccountinterestpaymet": "210705",
+                        "credittaxaccountinterestpaymet": "510220",
+                        "debittaxaccountcapitalpaymet": "210705",
+                        "credittaxaccountcapitalpaymet": "510220",
                     }
                 ]
             })
@@ -215,7 +267,13 @@ describe('ConfiguracionContableGeneral', () => {
                         "debittaxaccount": "13",
                         "producttypedescription": "NO APLICA",
                         "creationdate": "2022-06-10T09:05:15-05",
-                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2"
+                        "taxaccountid": "333a771c518948d7b935271ebbeacfd2",
+                        "debittaxaccountemission": "510220",
+                        "credittaxaccountemission": "210705",
+                        "debittaxaccountinterestpaymet": "210705",
+                        "credittaxaccountinterestpaymet": "510220",
+                        "debittaxaccountcapitalpaymet": "210705",
+                        "credittaxaccountcapitalpaymet": "510220",
                     }
                 ]
             })

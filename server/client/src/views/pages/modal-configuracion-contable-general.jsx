@@ -36,11 +36,39 @@ export default function ModalConfiguracionContableGeneral(props) {
     
     const [producttypedescription, setProducttypedescription] = useState("");
     const [producttypedescriptionError, setProducttypedescriptionError] = useState(false);
+    const [producttypedescriptionEdit, setProducttypedescriptionEdit] = useState("");
     
     const [producttypemaestrosunicos, setProducttypemaestrosunicos] = useState("");
     const [producttypemaestrosunicosValid, setProducttypemaestrosunicosValid] = useState(true);
 
     const [tipoProceso, setTipoProceso] = useState('');
+
+    //Nuevo campos
+    
+    const [credittaxaccountemission, setCredittaxaccountemission] = useState("");
+    const [credittaxaccountemissionValid, setCredittaxaccountemissionValid] = useState(true);
+
+    const [debittaxaccountemission, setDebittaxaccountemission] = useState("");
+    const [debittaxaccountemissionValid, setDebittaxaccountemissionValid] = useState(true);
+     
+    const [credittaxaccountinterestpaymet, setCredittaxaccountinterestpaymet] = useState("");
+    const [credittaxaccountinterestpaymetValid, setCredittaxaccountinterestpaymetValid] = useState(true);
+
+    const [debittaxaccountinterestpaymet, setDebittaxaccountinterestpaymet] = useState("");
+    const [debittaxaccountinterestpaymetValid, setDebittaxaccountinterestpaymetValid] = useState(true);
+
+    const [credittaxaccountcapitalpaymet, setCredittaxaccountcapitalpaymet] = useState("");
+    const [credittaxaccountcapitalpaymetValid, setCredittaxaccountcapitalpaymetValid] = useState(true);
+
+    const [debittaxaccountcapitalpaymet, setDebittaxaccountcapitalpaymet] = useState("");
+    const [debittaxaccountcapitalpaymetValid, setDebittaxaccountcapitalpaymetValid] = useState(true);
+
+    const [credittaxaccountgmf, setCredittaxaccountgmf] = useState("");
+    const [credittaxaccountgmfValid, setCredittaxaccountgmfValid] = useState(true);
+    
+    const [debittaxaccountgmf, setDebittaxaccountgmf] = useState("");
+    const [debittaxaccountgmfValid, setDebittaxaccountgmfValid] = useState(true);
+
 
     const handleChangeCredittaxaccount = (event) =>{
         if(event.target.validity.valid){
@@ -77,8 +105,74 @@ export default function ModalConfiguracionContableGeneral(props) {
         }
     }
 
+    //Nuevo campos
+    
+
+    const handleChangeCredittaxaccountemission = (event) =>{
+        if(event.target.validity.valid){
+            setCredittaxaccountemission(event.target.value)
+            setCredittaxaccountemissionValid(event.target.value!=='');
+        }
+    }
+	
+	
+    const handleChangeDebittaxaccountemission = (event) =>{
+        if(event.target.validity.valid){
+            setDebittaxaccountemission(event.target.value)
+            setDebittaxaccountemissionValid(event.target.value!=='');
+        }
+    }
+	
+    const handleChangeCredittaxaccountinterestpaymet = (event) =>{
+        if(event.target.validity.valid){
+            setCredittaxaccountinterestpaymet(event.target.value)
+            setCredittaxaccountinterestpaymetValid(event.target.value!=='');
+        }
+    }
+	
+    const handleChangeDebittaxaccountinterestpaymet = (event) =>{
+        if(event.target.validity.valid){
+            setDebittaxaccountinterestpaymet(event.target.value)
+            setDebittaxaccountinterestpaymetValid(event.target.value!=='');
+        }
+    }
+	
+	
+    const handleChangeCredittaxaccountcapitalpaymet = (event) =>{
+        if(event.target.validity.valid){
+            setCredittaxaccountcapitalpaymet(event.target.value)
+            setCredittaxaccountcapitalpaymetValid(event.target.value!=='');
+        }
+    }
+	
+	
+    const handleChangeDebittaxaccountcapitalpaymet = (event) =>{
+        if(event.target.validity.valid){
+            setDebittaxaccountcapitalpaymet(event.target.value)
+            setDebittaxaccountcapitalpaymetValid(event.target.value!=='');
+        }
+    }
+	
+	
+    const handleChangeCredittaxaccountgmf = (event) =>{
+        if(event.target.validity.valid){
+            setCredittaxaccountgmf(event.target.value)
+            setCredittaxaccountgmfValid(event.target.value!=='');
+        }
+    }
+	
+	
+    const handleChangeDebittaxaccountgmf = (event) =>{
+        if(event.target.validity.valid){
+            setDebittaxaccountgmf(event.target.value)
+            setDebittaxaccountgmfValid(event.target.value!=='');
+        }
+    }
+
     const onChangeEmision = (event) => {
         const productDescription = event.target.value;
+        const emisionJsonSelect = emisiones.find(element => element.value === productDescription)
+        setProducttypemaestrosunicos(emisionJsonSelect['product_number'])
         setProducttypedescription(productDescription)
         if(productDescription===""){
             setProducttypedescriptionError(true);
@@ -87,9 +181,9 @@ export default function ModalConfiguracionContableGeneral(props) {
         }
     }
 
-    function msjError(){
+    function msjError(msj){
         setOpenModalNotificacion(true);
-        setMensajeWarning('Todos los campos son de diligenciamiento obligatorio.')
+        setMensajeWarning(msj)
         setSeverity('error')
         setOpen(true)
     }
@@ -97,23 +191,48 @@ export default function ModalConfiguracionContableGeneral(props) {
     async function handleSubmit() {
         if (credittaxaccount===""){
             setCredittaxaccountValid(false);
-            msjError();
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
         }else if(debittaxaccount===""){
             setDebittaxaccountValid(false)
-            msjError();
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
         }else if(credittaxaccountinterest===""){
             setCredittaxaccountinterestValid(false);
-            msjError()
+            msjError('Todos los campos son de diligenciamiento obligatorio.')
         }else if(debittaxaccountinterest===""){
             setDebittaxaccountinterestValid(false);
-            msjError()
+            msjError('Todos los campos son de diligenciamiento obligatorio.')
         }else if(producttypedescription===""){
             setProducttypedescriptionError(true)
-            msjError();
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
         }else if(producttypemaestrosunicos===""){
             setProducttypemaestrosunicosValid(false);
-            msjError();
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
+        }else if(credittaxaccountemission===""){
+            setCredittaxaccountemissionValid(false);
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
+        }else if(debittaxaccountemission ===""){
+            setDebittaxaccountemissionValid(false);
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
+        }else if(credittaxaccountinterestpaymet ===""){
+            setCredittaxaccountinterestpaymetValid(false);
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
+        }else if(debittaxaccountinterestpaymet ===""){
+            setDebittaxaccountinterestpaymetValid(false);
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
+        }else if(credittaxaccountcapitalpaymet ===""){
+            setCredittaxaccountcapitalpaymetValid(false);
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
+        }else if(debittaxaccountcapitalpaymet ===""){
+            setDebittaxaccountcapitalpaymetValid(false);
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
+        }else if(credittaxaccountgmf ===""){
+            setCredittaxaccountgmfValid(false);
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
+        }else if(debittaxaccountgmf ===""){
+            setDebittaxaccountgmfValid(false);
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
         }else {
+            var isReloadTable=true;
             const dataSubmit ={
                 "producttypemaestrosunicos": producttypemaestrosunicos,
                 "credittaxaccountinterest": credittaxaccountinterest,
@@ -121,29 +240,50 @@ export default function ModalConfiguracionContableGeneral(props) {
                 "debittaxaccountinterest": debittaxaccountinterest,
                 "debittaxaccount": debittaxaccount,
                 "producttypedescription": producttypedescription,
+                "credittaxaccountemission":credittaxaccountemission,
+                "debittaxaccountemission":debittaxaccountemission,
+                "credittaxaccountinterestpaymet":credittaxaccountinterestpaymet,
+                "debittaxaccountinterestpaymet":debittaxaccountinterestpaymet,
+                "credittaxaccountcapitalpaymet":credittaxaccountcapitalpaymet,
+                "debittaxaccountcapitalpaymet":debittaxaccountcapitalpaymet,
+                "credittaxaccountgmf":credittaxaccountgmf,
+                "debittaxaccountgmf":debittaxaccountgmf,
+                "user":props.user
             }
             if(tipoProceso==='Nuevo'){
                 const responseCreate = await service.createItemConfiguracionGeneral(dataSubmit).then(response => {
                     return response;
                     });
-                if(responseCreate.status===200){
-                    toast.success("Configuración registrada correctamente.");
+                if(responseCreate.status===200 && responseCreate.data){
+                    if(responseCreate.data.message=='emision-exist'){
+                        msjError('El tipo de emisión ya se encuentra registrado.');
+                        isReloadTable=false;
+                    }else{
+                        toast.success("Configuración registrada correctamente.");
+                    }
                 }else{
                     toast.error("Error al registrar configuración.");
                 }
             }else if(tipoProceso==='Editar'){
-                const mensajeRespuesta =  await service.updateItemConfiguracionGeneral(dataSubmit,props.info.taxaccountid).then(response => {
+                const mensajeRespuesta =  await service.updateItemConfiguracionGeneral(dataSubmit,props.info.taxaccountid,producttypedescriptionEdit).then(response => {
                     return response;
                     }
                 );
-                if (mensajeRespuesta.status === 200){
-                    toast.success("Configuración actualizada correctamente.");
+                if (mensajeRespuesta.status === 200 && mensajeRespuesta.data){
+                    if(mensajeRespuesta.data.message=='emision-exist'){
+                        msjError('El tipo de emisión ya se encuentra registrado.');
+                        isReloadTable=false;
+                    }else{
+                        toast.success("Configuración actualizada correctamente.");
+                    }
                 }else{
                     toast.error("Error al actualizar configuración.");
                 }
             }
-            props.reloadTableMain(props.cantPaginas,"0")
-            goToConfiguracionGeneral()
+            if(isReloadTable){
+                props.reloadTableMain(props.cantPaginas,"0")
+                goToConfiguracionGeneral()
+            }
         }
     }
 
@@ -161,9 +301,68 @@ export default function ModalConfiguracionContableGeneral(props) {
 
 
     useEffect(() => {
-        setProducttypedescription(props.info.producttypedescription)
         setTipoProceso(props.tipoProceso)
         setEmisiones(props.emisiones)
+
+        //Valores
+        if (typeof props.info.producttypedescription != 'undefined'){
+            setProducttypedescriptionEdit(props.info.producttypedescription);
+            setProducttypedescription(props.info.producttypedescription)
+        }
+        
+        if (typeof props.info.credittaxaccount != 'undefined'){
+            setCredittaxaccount(props.info.credittaxaccount)
+        }
+
+        if (typeof props.info.debittaxaccount != 'undefined'){
+            setDebittaxaccount(props.info.debittaxaccount)
+        }
+
+        if (typeof props.info.credittaxaccountinterest != 'undefined'){
+            setCredittaxaccountinterest(props.info.credittaxaccountinterest)
+        }
+        
+        if (typeof props.info.debittaxaccountinterest != 'undefined'){
+            setDebittaxaccountinterest(props.info.debittaxaccountinterest)
+        }
+        
+        if (typeof props.info.credittaxaccountemission != 'undefined'){
+            setCredittaxaccountemission(props.info.credittaxaccountemission)
+        }
+
+        if (typeof props.info.debittaxaccountemission != 'undefined'){
+            setDebittaxaccountemission(props.info.debittaxaccountemission)
+        }
+       
+        if (typeof props.info.credittaxaccountinterestpaymet != 'undefined'){
+            setCredittaxaccountinterestpaymet(props.info.credittaxaccountinterestpaymet)
+        }
+        
+        if (typeof props.info.debittaxaccountinterestpaymet != 'undefined'){
+            setDebittaxaccountinterestpaymet(props.info.debittaxaccountinterestpaymet)
+        }
+        
+        if (typeof props.info.credittaxaccountcapitalpaymet != 'undefined'){
+            setCredittaxaccountcapitalpaymet(props.info.credittaxaccountcapitalpaymet)
+        }
+        
+        if (typeof props.info.debittaxaccountcapitalpaymet != 'undefined'){
+            setDebittaxaccountcapitalpaymet(props.info.debittaxaccountcapitalpaymet)
+        }
+        
+        if (typeof props.info.credittaxaccountgmf != 'undefined'){
+            setCredittaxaccountgmf(props.info.credittaxaccountgmf)    
+        }
+
+        if (typeof props.info.debittaxaccountgmf != 'undefined'){
+            setDebittaxaccountgmf(props.info.debittaxaccountgmf)
+        }
+        
+        if (typeof props.info.producttypemaestrosunicos != 'undefined'){
+            setProducttypemaestrosunicos(props.info.producttypemaestrosunicos)
+        }
+        	
+
     }, [props]);
 
     const style = {
@@ -186,82 +385,181 @@ export default function ModalConfiguracionContableGeneral(props) {
                 </Col>
             </Row>
             <Stack direction="row" spacing={0.5} >
-                <div className="input-field-2">
-                    <label className={`${credittaxaccountValid? '':'txt-red'}`}>Cuenta crédito</label>
-                    <input className={`${credittaxaccountValid? 'valid':'invalid'}`} 
-                    onChange={handleChangeCredittaxaccount}
-                    placeholder={props.info.credittaxaccount}
-                    type="text"
-                    pattern="[0-9]*"
-                    value = {credittaxaccount}
-                    />
-                </div>
-                <div className="input-field-2">
-                    <label className={`${debittaxaccountValid? '':'txt-red'}`}>Cuenta débito</label>
-                    <input className={`${debittaxaccountValid? 'valid':'invalid'}`} 
-                    onChange={handleChangeDebittaxaccount}
-                    placeholder={props.info.debittaxaccount}
-                    type="text"
-                    pattern="[0-9]*"
-                    value = {debittaxaccount}
-                    />
-                </div>
-                <div className="input-field-2">
-                    <label className={`${credittaxaccountinterestValid? '':'txt-red'}`}>Cuenta crédito interés</label>
-                    <input className={`${credittaxaccountinterestValid? 'valid':'invalid'}`} 
-                    onChange={handleChangeCredittaxaccountinterest}
-                    placeholder={props.info.credittaxaccountinterest}
-                    type="text"
-                    pattern="[0-9]*"
-                    value = {credittaxaccountinterest}
-                    />
-                </div>
-                <div className="input-field-2">
-                    <label  className={`${debittaxaccountinterestValid? '':'txt-red'}`}>Cuenta débito interés</label>
-                    <input className={`${debittaxaccountinterestValid? 'valid':'invalid'}`} 
-                    onChange={handleChangeDebittaxaccountinterest}
-                    placeholder={props.info.debittaxaccountinterest}
-                    type="text"
-                    pattern="[0-9]*"
-                    value = {debittaxaccountinterest}
-                    />
-                </div>
-                <Col s={10} m={3}>
-                    <label  className={`${producttypedescriptionError? 'txt-red':''}`} >Tipo de emisión</label>
-                    <FormControl variant="standard" error={producttypedescriptionError} sx={{ m: 1, minWidth: 200 , maxWidth: 200}}>
-                        <Select
-                            defaultValue={props.info.producttypedescription}
-                            onChange={onChangeEmision}
-                            sx={{fontSize: 16, border: 'red 5px none'}}
-                            >
-                            {props.emisiones.map((option) => (
-                                <MenuItem key={option.value} value={option.label}>
-                                {option.label}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Col>
-                 <div className="input-field-2">
-                    <label  className={`${producttypemaestrosunicosValid? '':'txt-red'}`}>Código tipo emisión Maestros Únicos</label>
-                    <input  className={`${producttypemaestrosunicosValid? 'valid':'invalid'}`} 
-                    onChange={handleChangeProducttypemaestrosunicos}
-                    placeholder={props.info.producttypemaestrosunicos}
-                    type="text"
-                    pattern="[0-9]*"
-                    value = {producttypemaestrosunicos}
-                    />
-                </div>
+                <Row>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label className={`${credittaxaccountValid? '':'txt-red'}`}>Cuenta crédito retención</label>
+                            <input className={`${credittaxaccountValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeCredittaxaccount}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {credittaxaccount}
+                            />
+                        </div> 
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label className={`${debittaxaccountValid? '':'txt-red'}`}>Cuenta débito retención</label>
+                            <input className={`${debittaxaccountValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeDebittaxaccount}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {debittaxaccount}
+                            />
+                        </div>
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label className={`${credittaxaccountinterestValid? '':'txt-red'}`}>Cuenta crédito interés</label>
+                            <input className={`${credittaxaccountinterestValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeCredittaxaccountinterest}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {credittaxaccountinterest}
+                            />
+                        </div>   
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label  className={`${debittaxaccountinterestValid? '':'txt-red'}`}>Cuenta débito interés</label>
+                            <input className={`${debittaxaccountinterestValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeDebittaxaccountinterest}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {debittaxaccountinterest}
+                            />
+                        </div>
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label  className={`${credittaxaccountemissionValid? '':'txt-red'}`}>Cuenta crédito emisión</label>
+                            <input  className={`${credittaxaccountemissionValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeCredittaxaccountemission}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {credittaxaccountemission}
+                            />
+                        </div>
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label  className={`${debittaxaccountemissionValid? '':'txt-red'}`}>Cuenta débito emisión</label>
+                            <input  className={`${debittaxaccountemissionValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeDebittaxaccountemission}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {debittaxaccountemission}
+                            />
+                        </div>
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label  className={`${credittaxaccountinterestpaymetValid? '':'txt-red'}`}>Cuenta crédito pago interés</label>
+                            <input  className={`${credittaxaccountinterestpaymetValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeCredittaxaccountinterestpaymet}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {credittaxaccountinterestpaymet}
+                            />
+                        </div>
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label  className={`${debittaxaccountinterestpaymetValid? '':'txt-red'}`}>Cuenta débito pago interés</label>
+                            <input  className={`${debittaxaccountinterestpaymetValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeDebittaxaccountinterestpaymet}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {debittaxaccountinterestpaymet}
+                            />
+                        </div>
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label  className={`${credittaxaccountcapitalpaymetValid? '':'txt-red'}`}>Cuenta crédito pago capital</label>
+                            <input  className={`${credittaxaccountcapitalpaymetValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeCredittaxaccountcapitalpaymet}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {credittaxaccountcapitalpaymet}
+                            />
+                        </div>
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label  className={`${debittaxaccountcapitalpaymetValid? '':'txt-red'}`}>Cuenta débito pago capital</label>
+                            <input  className={`${debittaxaccountcapitalpaymetValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeDebittaxaccountcapitalpaymet}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {debittaxaccountcapitalpaymet}
+                            />
+                        </div>
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label  className={`${credittaxaccountgmfValid? '':'txt-red'}`}>Cuenta crédito GMF</label>
+                            <input  className={`${credittaxaccountgmfValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeCredittaxaccountgmf}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {credittaxaccountgmf}
+                            />
+                        </div>
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label  className={`${debittaxaccountgmfValid? '':'txt-red'}`}>Cuenta débito GMF</label>
+                            <input  className={`${debittaxaccountgmfValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeDebittaxaccountgmf}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {debittaxaccountgmf}
+                            />
+                        </div>
+                    </Col>
+                    <Col s={6}>
+                        <label  className={`${producttypedescriptionError? 'txt-red':''}`} >Tipo de emisión</label>
+                        <FormControl variant="standard" error={producttypedescriptionError} sx={{ marginTop: 2}} fullWidth>
+                            <Select
+                                defaultValue={props.info.producttypedescription}
+                                onChange={onChangeEmision}
+                                sx={{fontSize: 16, border: 'red 5px none'}}
+                                >
+                                {props.emisiones.map((option) => (
+                                    <MenuItem key={option.value} value={option.label}>
+                                    {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Col>
+                    <Col s={6}>
+                        <div className="input-field-2">
+                            <label  className={`${producttypemaestrosunicosValid? '':'txt-red'}`}>Código tipo emisión Maestros Únicos</label>
+                            <input  className={`${producttypemaestrosunicosValid? 'valid':'invalid'}`} 
+                            onChange={handleChangeProducttypemaestrosunicos}
+                            type="text"
+                            pattern="[0-9]*"
+                            value = {producttypemaestrosunicos}
+                            disabled="disabled"
+                            />
+                        </div>
+                    </Col>
+                </Row>
             </Stack>
-            <Stack direction="row" spacing={0.5} >
-                <Button node="button" small className="indigo darken-4" onClick={handleSubmit}>
-                    Guardar
-                </Button>
-                <br />
-                <Button node="button" small  className="indigo darken-4" onClick={goToConfiguracionGeneral} >
-                    Cancelar
-                </Button>
-            </Stack>
+            <div style={{margin:"12px"}}>
+                <Stack direction="row" spacing={0.5} >
+                    <Button node="button" small className="indigo darken-4" onClick={handleSubmit}>
+                        Guardar
+                    </Button>
+                    <br />
+                    <Button node="button" small  className="indigo darken-4" onClick={goToConfiguracionGeneral} >
+                        Cancelar
+                    </Button>
+                </Stack>
+            </div>
+            
 
             <Modal
                 open={openModalNotificacion}

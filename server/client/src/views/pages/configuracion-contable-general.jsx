@@ -8,12 +8,23 @@ import ConfiguracionContable from "./configuracion-contable";
 import { toast } from 'react-toastify';
 import { ServerAPI } from "../../services/server";
 import Modal from '@mui/material/Modal';
+import Dialog from '@mui/material/Dialog';
 import Box from '@mui/material/Box';
+import ReactExport from 'react-export-excel';
+import { useMsal } from "@azure/msal-react";
 
 export default function ConfiguracionContableGeneral() {
   
     const service = new ServerAPI();
 
+    
+    const { instance } = useMsal();
+    const { name }  = instance.getActiveAccount().idTokenClaims;
+
+    const ExcelFile = ReactExport.ExcelFile;
+    const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+    const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+  
     const title = "Configuración general"
     const description = "En esta sección podrá realizar la configuración general asociada a los movimientos de CDTs desde Dominus"
     
@@ -30,12 +41,14 @@ export default function ConfiguracionContableGeneral() {
 
     const [infoModal,setInfoModal]=useState()
     const [emisionEditComponent,setEmisionEditComponent]=useState([])
+    const [productsType,setProductsType]=useState([])
 
     const [openModal, setOpenModal] = React.useState(false);
 
     const [titleModal, setTitleModal]=useState('')
     const [descriptionModal, setDescriptionModal] = useState('')
     const [tipoProceso, setTipoProceso] = useState('')
+    const [contentExcel, setContentExcel] = useState([])
 
     var contentTable = []
     var currentItems = [];
@@ -60,10 +73,6 @@ export default function ConfiguracionContableGeneral() {
           <thead>
             <tr>
               <th data-field="id" style={{ textAlign: "center" }} hidden={true}>id</th>
-              <th data-field="cuentaCredito" style={{ textAlign: "center" }}>Cuenta crédito</th>
-              <th data-field="cuentaDebitot" style={{ textAlign: "center"}} >Cuenta débito</th>
-              <th data-field="ccInteres" style={{ textAlign: "center" }} >Cuenta crédito Interés</th>
-              <th data-field="cdInteres" style={{ textAlign: "center" }}>Cuenta débito Interés</th>
               <th data-field="tipoEmision" style={{ textAlign: "center"}}> Tipo emision</th>
               <th data-field="codTipoEmision" style={{ textAlign: "center" }}> Código tipo emisión  </th>
             </tr>
@@ -102,18 +111,6 @@ export default function ConfiguracionContableGeneral() {
           <tr style={{ fontSize: "small" }} >
             <td style={{ textAlign: "center" }} hidden={true}>
               {props.taxaccountid}
-            </td>
-            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
-              {props.credittaxaccount}
-            </td>
-            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
-              {props.debittaxaccount}
-            </td>
-            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
-              {props.credittaxaccountinterest}
-            </td>
-            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
-              {props.debittaxaccountinterest}
             </td>
             <td style={{ minWidth: 10, maxWidth: 230, wordBreak:"break-all"}}>
               {props.producttypedescription}
@@ -246,6 +243,7 @@ export default function ConfiguracionContableGeneral() {
                 setTableHeader(
                     <TableHeader />
                 );
+                setContentExcel(currentItems);
                 setTableRender(<tbody>
                     {currentItems.map((contenido, index) => {
                         return <TableBody 
@@ -255,7 +253,17 @@ export default function ConfiguracionContableGeneral() {
                         credittaxaccountinterest={contenido.credittaxaccountinterest}
                         debittaxaccountinterest={contenido.debittaxaccountinterest} 
                         producttypedescription={contenido.producttypedescription} 
-                        producttypemaestrosunicos={contenido.producttypemaestrosunicos} />
+                        producttypemaestrosunicos={contenido.producttypemaestrosunicos} 
+                        
+                        credittaxaccountemission={contenido.credittaxaccountemission} 
+                        debittaxaccountemission={contenido.debittaxaccountemission} 
+                        credittaxaccountinterestpaymet={contenido.credittaxaccountinterestpaymet} 
+                        debittaxaccountinterestpaymet={contenido.debittaxaccountinterestpaymet} 
+                        credittaxaccountcapitalpaymet={contenido.credittaxaccountcapitalpaymet} 
+                        debittaxaccountcapitalpaymet={contenido.debittaxaccountcapitalpaymet} 
+                        credittaxaccountgmf={contenido.credittaxaccountgmf} 
+                        debittaxaccountgmf={contenido.debittaxaccountgmf} 
+                        />
                         
                     })}
                 </tbody>);
@@ -280,45 +288,45 @@ export default function ConfiguracionContableGeneral() {
         }
     }
 
+    const getProducts = async function () {
+        try {
+            var productAux =[]
+            let resp = await service.getAllAndFiltersTypeProduct("", "")
+            resp.forEach(element =>{
+                const item ={ value: element.producttypedescription, label: element.producttypedescription, product_number:element.producttypemaestrosunicos}
+                productAux.push(item)
+            } );
+            setProductsType(productAux)
+        } catch (error) {
+            alert("Error Cargando Productos")
+        }
+    }
     
     useEffect(() => {
+        getProducts()
         reloadTableMain(cantPaginasSelect,emision);
         document.title = title
     }, [cantPaginasSelect]);
 
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 1100,
-        bgcolor: 'background.paper',
-        boxShadow: 24,
-        p: 4,
-      };
-    
     const renderElement = () => {
         return isGeneral ? (
             <React.Fragment>
-                <Modal
-                open={openModal}
-                onClose={() => setOpenModal(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+                <Dialog
+                    open={openModal}
+                    onClose={() => setOpenModal(false)}
                 >
-                    <Box sx={style}>
-                        <ModalConfiguracionContableGeneral
-                            title={titleModal} 
-                            description={descriptionModal} 
-                            reloadTableMain={reloadTableMain}
-                            setOpenModal ={setOpenModal} 
-                            emisiones ={emisionEditComponent} 
-                            info = {infoModal}
-                            tipoProceso={tipoProceso}
-                            cantPaginas ={cantPaginasSelect}
-                            />
-                    </Box>
-                </Modal>
+                    <ModalConfiguracionContableGeneral
+                        title={titleModal} 
+                        description={descriptionModal} 
+                        reloadTableMain={reloadTableMain}
+                        setOpenModal ={setOpenModal} 
+                        emisiones ={productsType} 
+                        info = {infoModal}
+                        tipoProceso={tipoProceso}
+                        cantPaginas ={cantPaginasSelect}
+                        user ={name}
+                        />
+                </Dialog>
                 <div>
                     <Row>
                         <Col s={6} m={2}>
@@ -372,6 +380,33 @@ export default function ConfiguracionContableGeneral() {
                             {paginationFooter}
                         </Col>
                         
+                    </Row>                    
+                    <Row>
+                        <Col s={12} m={12} className="input-field m0">
+                        <ExcelFile
+                            element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+                            filename="ConfiguracionGeneral-SAP">
+                            <ExcelSheet data={contentExcel} name="Resultados">
+                                <ExcelColumn label="Id" value="taxaccountid" />
+                                <ExcelColumn label="Cuenta débito interes" value="debittaxaccountinterest" />
+                                <ExcelColumn label="Cuenta credito interes" value="credittaxaccountinterest" />
+                                <ExcelColumn label="Cuenta débito retención" value="debittaxaccount" />
+                                <ExcelColumn label="Cuenta crédito retención" value="credittaxaccount" />
+                                <ExcelColumn label="Cuenta débito emisión" value="debittaxaccountemission" />
+                                <ExcelColumn label="Cuenta crédito emisión" value="credittaxaccountemission" />
+                                <ExcelColumn label="Cuenta débito pago interés " value="debittaxaccountinterestpaymet" />
+                                <ExcelColumn label="Cuenta crédito pago interés" value="credittaxaccountinterestpaymet" />
+                                <ExcelColumn label="Cuenta débito pago capital" value="debittaxaccountcapitalpaymet" />
+                                <ExcelColumn label="Cuenta crédito pago capital" value="credittaxaccountcapitalpaymet" />
+                                <ExcelColumn label="Cuenta débito GMF" value="debittaxaccountgmf" />
+                                <ExcelColumn label="Cuenta crédito GMF" value="credittaxaccountgmf" />
+                                <ExcelColumn label="Tipo emisión" value="producttypedescription" />
+                                <ExcelColumn label="Codigo tipo emisión" value="producttypemaestrosunicos" />
+                                <ExcelColumn label="Fecha de creación" value="creationdate" />
+                                <ExcelColumn label="Fecha de actualización" value="updatedate" />
+                            </ExcelSheet>
+                        </ExcelFile>
+                        </Col>
                     </Row>
                 </div>
             </React.Fragment>

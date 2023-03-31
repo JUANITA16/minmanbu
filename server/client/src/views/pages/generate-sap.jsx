@@ -22,7 +22,7 @@ export default function GenerateSap() {
   const { instance } = useMsal();
 
   const title = 'Archivo SAP';
-  const description = 'En esta sección podrá generar el archivo plano por parte de SAP, para generarlo solo debe seleccionar las fechas y enviar la solicitud la cual será generada de forma automatica.';
+  const description = 'En esta sección podrá generar el archivo plano SAP, solo debe seleccionar las fechas y enviar la solicitud la cual será procesada de forma automática.';
   const [startDate, setStartDate] = useState(convertTZ(new Date()));
   const [endDate, setEndDate] = useState(convertTZ(new Date()));
   const [initDate, setInitDate] = useState(currDate);
@@ -67,17 +67,19 @@ export default function GenerateSap() {
         return resp
       }
     } catch (error) {
-      console.error(error);
-      
+      alert("Error Cargando tabla")
       return resp;
     }
   }
 
 
-  useEffect(async () => {
-    document.title = title
-    let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
-    setDbData(resp)
+  useEffect(() => {
+    async function fetchData() {
+      document.title = title
+      let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
+      setDbData(resp)
+    }
+    fetchData()
   }, []);
 
   useEffect(() => {

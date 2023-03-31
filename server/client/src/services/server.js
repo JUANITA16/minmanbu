@@ -7,7 +7,7 @@ class ServerAPI {
 
     generateSAP = async (from, to,user_name) => {
         try{
-            const url = this.base_url + "/sap"
+            const url = this.base_url + "/sap/file/generate"
             const config = {
                 headers: { Authorization: await getToken() },
                 params: { from, to,user_name}
@@ -26,7 +26,7 @@ class ServerAPI {
 
     uploadFile = async (bodyUpload) => {
         try{
-            const url = this.base_url + "/massive" + (bodyUpload.product === "CDT" ? "/cdt" : "/cc");
+            const url = this.base_url + "/massive-acount/upload";
             const config = {
                 headers: { Authorization: await getToken() },
             }
@@ -44,11 +44,10 @@ class ServerAPI {
 
     getSapFiles = async (from_date, to_date) => {
         // const url = this.base_url + "/files";
-        const url = this.base_url + "/files"
-        const reqUrl = "" 
+        const url = this.base_url + "/files/"
         const config = {
             headers: { Authorization: await getToken()},
-            params: {reqUrl, from_date, to_date }
+            params: { from_date, to_date }
         }
         const res = await axios.get(url, config);
         const data = await res.data;
@@ -57,11 +56,9 @@ class ServerAPI {
 
     getSapURL = async (filename) => {
         // const url = this.base_url + "/files";
-        const url = this.base_url + "/files"
-        let reqUrl = "download/" + filename 
+        const url = this.base_url + "/files/download/" + filename
         const config = {
-            headers: { Authorization: await getToken()},
-            params: {reqUrl}
+            headers: { Authorization: await getToken()}
         }
         const res = await axios.get(url, config);
         const data = await res.data;
@@ -69,6 +66,58 @@ class ServerAPI {
     }
 
 
+    sendUpdateRate = async (update_date,user) => {
+        const url = this.base_url + "/rates?update_date=" + update_date+ "&user="+user
+        const config = {
+            headers: { Authorization: await getToken()}
+        }
+        const res = await axios.post(url,{},config);
+        const data = await res.data;
+        return data
+    }
+
+    uploadFileUpdateRate = async (dataUpdateCC) => {
+        const url = this.base_url + "/upload-cc"
+        const config = {
+            headers: { Authorization: await getToken()}
+        }
+        const res = await axios.post(url,dataUpdateCC,config);
+        return res
+    }
+
+    getRatesData = async (initial_date, final_date, consecutive) => {
+        const url = this.base_url + "/rates"
+        const config = {
+            headers: { Authorization: await getToken()},
+            params: {initial_date, final_date, consecutive}
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    }
+
+
+    getDataDetails = async (consecutive) => {
+
+        try{
+            const url = this.base_url + "/mambu/massiveAccounts/results/" + consecutive;
+            const config = {
+                headers: { Authorization: await getToken() }
+            }
+
+            const res = await axios.get(url, config);
+            const data = await res.data;
+            return {
+                status: 200,
+                data
+            };
+        }
+        catch(err){
+            console.info("ERROR Table: ", err.response)
+            return setError("Error obteniendo la tabla.", err.response);
+        }
+    }
+    
     getDataTable = async (startDate, endDate, consecutive,isWeek) => {
         if(isWeek){
             startDate = convertTZ(addDays(new Date(),-7))
@@ -79,13 +128,12 @@ class ServerAPI {
         const end_date = endDate.getFullYear() +'-'+("0"+(endDate.getMonth()+1)).slice(-2) + "-"+ ("0" + endDate.getDate()).slice(-2)+"T24:00:00"
         
         try{
-            const url = this.base_url + "/table";
+            const url = this.base_url + "/mambu/massiveAccounts/results";
             const config = {
                 headers: { Authorization: await getToken() },
                 params: {
                     start_date,
-                    end_date,
-                    consecutive
+                    end_date
                 }
             }
 
@@ -105,7 +153,7 @@ class ServerAPI {
 
     getAllTaxAProdT = async () => {
         
-        const url = this.base_url + "/tax-a-prodt"
+        const url = this.base_url + "/taxaprodt"
         const config = {
             headers: { Authorization: await getToken() },
         }
@@ -117,14 +165,11 @@ class ServerAPI {
 
     
     
-    updateItemConfiguracionGeneral = async (dataToUpdate,idRow) => {
-        const url = this.base_url + "/tax-a-prodt"
+    updateItemConfiguracionGeneral = async (dataToUpdate,idRow,producttypedescriptionEdit) => {
+        const url = this.base_url + "/taxaprodt/" + idRow+"/"+producttypedescriptionEdit
         
         const config = {
-            headers: { Authorization: await getToken() },
-            params: {
-                idRow,
-            }
+            headers: { Authorization: await getToken() }
         }
         const res = await axios.put(url,dataToUpdate,config)
         
@@ -133,7 +178,7 @@ class ServerAPI {
     
     
     createItemConfiguracionGeneral = async (dataCreate) => {
-        const url = this.base_url + "/tax-a-prodt"
+        const url = this.base_url + "/taxaprodt"
         
         const config = {
             headers: { Authorization: await getToken() }
@@ -155,13 +200,10 @@ class ServerAPI {
     };
     
     updateItemConfiguracionHomologacion = async (dataToUpdate,idRow) => {
-        const url = this.base_url + "/tblCosifAccounting"
+        const url = this.base_url + "/tblCosifAccounting/" + idRow
 
         const config = {
-            headers: { Authorization: await getToken() },
-            params: {
-                idRow,
-            }
+            headers: { Authorization: await getToken() }
         }
         const res = await axios.put(url,dataToUpdate,config)
       
@@ -179,6 +221,57 @@ class ServerAPI {
       
         return res;
     }
+
+    requestReprocess = async (reqBody) => {
+
+        try {
+            const url = this.base_url + "/reprocess"
+            const config = {
+                headers: { Authorization: await getToken() }
+            }
+            const res = await axios.post(url, reqBody, config)
+            return res;
+       } catch (error) {
+            console.info("ERROR Table: ", error.response)
+            return setError("Error obteniendo la tabla.", error.response);
+       }
+        
+    }
+
+    getReprocessResult = async (initial_date, final_date) => {
+        const url = this.base_url + "/reprocess"
+        const config = {
+            headers: { Authorization: await getToken()},
+             params: {initial_date, final_date}
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    }
+
+    getAllAndFiltersTypeProduct = async (producttypemaestrosunicos, producttypedescription) => {
+        
+        const url = this.base_url + "/typeproduct"
+        const config = {
+            headers: { Authorization: await getToken() },
+            params: {producttypemaestrosunicos, producttypedescription}
+        }
+        const res = await axios.get(url, config);
+        const data = await res.data;
+        return data
+    };
+
+    getRatesUpdate = async (process_date,file_id, initial_date, final_date) => {
+        const url = this.base_url + "/rates-update"
+        const config = {
+            headers: { Authorization: await getToken()},
+             params: {process_date,file_id,initial_date, final_date}
+        }
+        const res = await axios.get(url, config);
+        return res
+    }
+
+
 }
 
 export {ServerAPI} ;

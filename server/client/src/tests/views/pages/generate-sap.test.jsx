@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/react";
 import { GenerateSap } from "../../../views";
 import { ServerAPI } from "../../../services/server";
-import { act } from 'react-dom/test-utils';
 
 jest.mock("../../../index",()=>({
   getToken: jest.fn().mockResolvedValue("test")

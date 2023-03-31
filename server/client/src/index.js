@@ -26,8 +26,6 @@ msalInstance.addEventCallback( event => {
     msalInstance.setActiveAccount(account);
   }
 
-  if(event.eventType === EventType.LOGIN_FAILURE) console.log(JSON.stringify(event));
-
 });
 
 export const getToken = async () => {

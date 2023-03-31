@@ -15,39 +15,59 @@ const authConfig = async() => {
             loggingLevel: "info"
         },
         accessMatrix: {
-            massive_cc:{
-                path: "/massive/cc",
-                methods:[ "POST" ],
-                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CC" ]
+            massive_acc:{
+                path: "/mambu/",
+                methods:[  "GET" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CC", "MINMAMBU_ROLE_ADMIN_PRODUCT_CDT" ]
             },
-            massive_cdt:{
-                path: "/massive/cdt",
-                methods:[ "POST" ],
-                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CDT" ]
-            },
-            table:{
-                path: "/table",
-                methods:[ "GET" ],
+            mass_file : {
+                path: "/massive-acount/upload",
+                methods:[  "POST" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_PRODUCT_CC", "MINMAMBU_ROLE_ADMIN_PRODUCT_CDT" ]
             },
             sap_files: {
-                path: "/files",
+                path: "/files/",
                 methods:[ "GET" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             },
             sap: {
-                path: "/sap",
+                path: "/sap/file/generate",
                 methods:[ "GET" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             },
             tax_a_prodt: {
-                path: "/tax-a-prodt",
+                path: "/taxaprodt",
                 methods:[ "GET","PUT", "POST"],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             },
             cosif: {
                 path: "/tblCosifAccounting",
                 methods:[ "GET","PUT", "POST" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
+            rates: {
+                path: "/rates",
+                methods:[ "GET", "POST" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
+            reprocess: {
+                path: "/reprocess",
+                methods:[ "GET", "POST" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
+            typeproduct: {
+                path: "/typeproduct",
+                methods:[ "GET" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
+            upload_cc: {
+                path: "/upload-cc",
+                methods:[ "POST" ],
+                roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
+            },
+            rates_update: {
+                path: "/rates-update",
+                methods:[ "GET" ],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             }
         }

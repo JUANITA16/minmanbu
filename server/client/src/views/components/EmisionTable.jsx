@@ -1,22 +1,29 @@
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Modal, Box } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
-import { ServerAPI } from "../../services/server";
 import { Button, Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
 import Select from 'react-select'
-import { showToast } from "../../helpers/utils";
+// import ModalConfiguracionHomologacion from "../pages/ModalHomologacion";
 
-function SapTable({tableData}) {
-
-  const service = new ServerAPI()
+function MyTable({tableData, setEdits}) {
+  
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
   const [isloading, setIsloading] = useState(true);
   const [tableBody, setTableBody] = useState([]);
+//   const [open, setOpen] = useState(false);
+//   const [infoModal, setInfoModal] = useState({
+//     id: "",
+//     producttypedescription: "", 
+//     cosif: "", 
+//     user: ""
+//   })
+//   const modalTitle = "Editar - Configuración homologación"
+//   const modalDescription = "En esta sección podrá realizar la edición de los registros Configuración homologación"
+//   const tipoProceso = "Editar"
 
 
-  
   const totalResults = [
     { value: 5, label: '5' },
     { value: 10, label: '10' },
@@ -29,26 +36,10 @@ function SapTable({tableData}) {
     setVisibleData(tableData.slice(page*maxResults, maxResults*(page + 1)))
   };
   
-  const handleDownload = async function(event){
-    event.preventDefault();
-    let sapFileUrl = ""
-
-    try {
-      sapFileUrl = await service.getSapURL(
-        JSON.parse(event.target.value).filename
-        )
-      if (sapFileUrl.url == "") {
-        showToast(sapFileUrl.message)
-      } else {
-        showToast("Descargando el archivo.")
-        window.open(sapFileUrl.url)
-      }
-    } catch (error) {
-      console.error(error);
-      showToast(sapFileUrl.detail)
-    }
-  }
-
+  const handleEdit = function (event){
+    // setInfoModal(JSON.parse(event.target.value))
+    // setOpen(true);
+  };
 
   const renderLoading = function (isloading){
     if (isloading) {
@@ -62,24 +53,18 @@ function SapTable({tableData}) {
 
   useEffect(function () {
     //Calculate the total of pages using ceil method
-    try {
-      if (Array.isArray(tableData)) {
-        settotalPages(Math.ceil(tableData.length/maxResults));
-        setVisibleData(tableData.slice(0, maxResults));
-      } else {
-        settotalPages(1);
-        setVisibleData(["Empty"]);
-      }
+    if (Array.isArray(tableData)) {
+      settotalPages(Math.ceil(tableData.length/maxResults));
       setVisibleData(tableData.slice(0, maxResults));
-      if (tableData.length >0 ) {
-        setIsloading(false);
-      } else {
-        setIsloading(true)
-      }
-    } catch (error) {
-      showToast("Error cargando la tabla.")
+    } else {
+      settotalPages(1)
+      setVisibleData(["Empty"])
     }
-    
+    if (tableData.length >0 ) {
+      setIsloading(false);
+    } else {
+      setIsloading(true)
+    }
   }, [maxResults, tableData]);
 
   useEffect(function () {
@@ -92,16 +77,16 @@ function SapTable({tableData}) {
       setTableBody(visibleData.map( (data) => {
         return (
           <tr key={data.id}>
-            <td>{data.dateProcess}</td>
-            <td>{data.filename}</td>
-            <td>{data.from_date}</td>
-            <td>{data.file_status}</td>
-            <td>{data.user_name}</td>
+            <td>{data.producttypedescription}</td>
+            <td>{data.producttypemaestrosunicos}</td>
             <td><Button value={JSON.stringify({
-                  filename: data.filename
+                id: data.id,
+                producttypedescription: data.producttypedescription, 
+                producttypemaestrosunicos: data.producttypemaestrosunicos, 
+                user: 'user-test'
                 })}
-                  small onClick={handleDownload} className="indigo darken-4">
-              Descargar</Button>
+              small onClick={handleEdit} className="indigo darken-4">
+              Editar</Button>
             </td>
         </tr>)}));
     }
@@ -118,17 +103,29 @@ function SapTable({tableData}) {
           defaultValue={totalResults[1]} onChange={(event)=>{setmaxResults(event.value)}} />
        </Col>
      </Row>
-    {/* Table generation */}
-    <div> 
+    <div>
+    {/* <Modal
+      open={open}
+      onClose={() => setOpen(false)}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+      >
+        <Box className="modal-style" >
+          <ModalConfiguracionHomologacion
+            title={modalTitle} 
+            description={modalDescription} 
+            setEdits={setEdits}
+            setOpen={setOpen} 
+            info={infoModal}
+            tipoProceso={tipoProceso}
+            />
+        </Box>
+      </Modal> */}
       <Table>
         <thead>
           <tr>
-            <th>Fecha generación</th>
-            <th>Nombre del Archivo</th>
-            <th>Periodo Generación</th>
-            <th>Estado Generación</th>
-            <th>Usuario</th>
-            <th>Descarga</th>
+            <th>Tipo emisión</th>
+            <th>Código tipo emisión</th>
           </tr>
         </thead>
         <tbody>
@@ -155,4 +152,4 @@ function SapTable({tableData}) {
 
 }
 
-export default SapTable
+export default MyTable

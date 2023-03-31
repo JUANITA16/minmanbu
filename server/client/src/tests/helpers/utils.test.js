@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import {setError, setFormatDate, convertTZ, addDays} from '../../helpers/utils'
+import {setError, setFormatDate, convertTZ, addDays,convertMessageError} from '../../helpers/utils'
 
 describe('utils', () => {
     test('test setError without error message', () => {
@@ -87,4 +87,47 @@ describe('utils', () => {
         expect(result).toEqual(expected);
     
     });  
+    
+    test('test convertMessageError ok', () => {
+        const message = "[{'status_code':404, 'update_rate_content': 'Error al actualizar - Invalid account id or encoded key'}, {'status_code': 404, 'state_content': 'Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'tax_content': 'Error al actualizar - Invalid account id or encoded key'}, {'status_code': 404, 'iva_content': 'Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'gmf_content': 'Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'less_content': 'Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'}, {'status_code': 404, 'max_withdrawal_content': 'Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'}]"
+        
+        const expected = [
+            'Tasa de Interés: Error al actualizar - Invalid account id or encoded key',
+            'Estado Cuenta: Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID',
+            'Impuesto Retención: Error al actualizar - Invalid account id or encoded key',
+            'Exento Iva: Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID',
+            'Exento GMF: Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID',
+            'Consecutivo Less: Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID',
+            'Monto máximo de retiro: Error al actualizar - INVALID_DEPOSIT_ACCOUNT_ID'
+        ]
+    
+        const result = convertMessageError(message)
+    
+        expect(result).toEqual(expected);
+    
+    }); 
+    
+    test('test convertMessageError 500', () => {
+        const message = "[{'status_code':500, 'message': 'Error actualizando los datos: Fatal Error'}]"        
+        const expected = [
+            'Error actualizando los datos: Fatal Error'
+        ]
+    
+        const result = convertMessageError(message)
+    
+        expect(result).toEqual(expected);
+    
+    }); 
+    
+    test('test convertMessageError catch', () => {
+        const message = 'Mensaje con errores'
+        const expected = [
+            'Mensaje con errores'
+        ]
+    
+        const result = convertMessageError(message)
+    
+        expect(result).toEqual(expected);
+    
+    }); 
 })
