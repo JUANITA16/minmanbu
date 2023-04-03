@@ -11,7 +11,7 @@ require('dotenv').config(); // Load environment variables from .env file
 const setUp = async() => {
     /* Init express ################################################################### */
     const app = express();
-
+    app.use(hpp());
     // cors
     const corsOptions = {
         origin: process.env.URLORIGIN, 
@@ -21,7 +21,7 @@ const setUp = async() => {
     //app.use(csrf())
     app.use(bodyparser.urlencoded({ extended: false }));
     app.use(bodyparser.json({limit: '6mb'})); // Limite del body que procesa una lambda en AWS
-    app.use(hpp());
+    
     app.use(function (error, req, res, next) {
         if (error instanceof SyntaxError) {
           res.status(400).send("Cuerpo de la petición incorrecto");
