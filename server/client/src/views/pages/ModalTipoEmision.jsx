@@ -77,7 +77,6 @@ export default function ModalTipoEmision(props) {
           return response;
           });
         if (responseCreate.status===200) {
-          console.log(responseCreate)
           if(responseCreate.data.message == 'typeproduct-exist'){
             setOpenModalNotificacion(true);
             setMensajeWarning('El tipo de emisión ya se encuentra registrado')
