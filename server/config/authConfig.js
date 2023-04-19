@@ -57,7 +57,7 @@ const authConfig = async() => {
             },
             typeproduct: {
                 path: "/typeproduct",
-                methods:[ "GET" , "POST"],
+                methods:[ "GET" , "POST", "PUT"],
                 roles:[ "MINMAMBU_ROLE_ADMIN", "MINMAMBU_ROLE_ADMIN_FINANCE"]
             },
             upload_cc: {
