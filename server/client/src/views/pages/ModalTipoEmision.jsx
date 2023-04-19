@@ -93,7 +93,25 @@ export default function ModalTipoEmision(props) {
           goToConfiguracionGeneral()
         }
       } else if (props.tipoProceso==='Editar') {
-        goToConfiguracionGeneral()
+        const responseUpdate = await service.updateTypeProduct(dataSubmit,props.info.id, props.info.producttypedescription).then(response => {
+          return response;
+          });
+        if (responseUpdate.status===200) {
+          if(responseUpdate.data.message == 'typeproduct-exist'){
+            setOpenModalNotificacion(true);
+            setMensajeWarning('El tipo de emisión ya se encuentra registrado')
+            setSeverity('error')
+            setOpen(true)
+            setisLoading(false)
+          }else{
+            toast.success("Configuración actualizada correctamente.");
+            props.setEdits((count) => count+1);
+            goToConfiguracionGeneral()
+          }
+        } else {
+          toast.error("Error al actualizar configuración.");
+          goToConfiguracionGeneral()
+        }
       }
         
     }
