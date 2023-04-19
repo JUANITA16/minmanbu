@@ -12,7 +12,19 @@ jest.mock("../../../index",()=>({
     getToken: jest.fn().mockResolvedValue("test")
 }))
 jest.mock('../../../services/server');
-
+jest.mock("@azure/msal-react", () => ({
+    useMsal: () => ({ 
+        instance:{ 
+            getActiveAccount: jest.fn()
+            .mockReturnValue(
+                {
+                  idTokenClaims: {name: "test_name"}
+                }
+            )
+        } 
+      })
+    })
+  );
 global.M = require('react-materialize');
 global.M = require('materialize-css');
 
@@ -37,7 +49,8 @@ describe('Test Modal tipo emision', () => {
       expect(screen.getByText("Nuevo-test")).toBeInTheDocument();
       expect(screen.getByText("Descripcion-test")).toBeInTheDocument();
     });
-    test('Render page', async () => {
+
+    test('Create emision', async () => {
         await act( async () => render(<ModalTipoEmision title="Nuevo-test"
         description="Descripcion-test" 
         setEdits={setEdits}
@@ -56,5 +69,24 @@ describe('Test Modal tipo emision', () => {
           expect(screen.getByText("Todos los campos son de diligenciamiento obligatorio.")).toBeInTheDocument();
       });
 
+      
+    test('Update emision', async () => {
+        await act( async () => render(<ModalTipoEmision title="Editar-test"
+        description="Descripcion-test-Editar" 
+        setEdits={setEdits}
+        setOpen={setOpen} 
+        info={{
+          id: "123",
+          producttypedescription: "TEST", 
+          producttypemaestrosunicos: "123456",
+          user: "user-test"
+        }}
+        tipoProceso="Editar"
+        />));
+        
+        expect(screen.getByText("Tipo emisión")).toBeInTheDocument();
+        expect(screen.getByText("Descripcion-test-Editar")).toBeInTheDocument();
+        expect(screen.getByText("Editar-test")).toBeInTheDocument();
+      });
 
   })

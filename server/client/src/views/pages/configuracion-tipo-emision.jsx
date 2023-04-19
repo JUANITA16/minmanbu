@@ -73,7 +73,7 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
   }, [dbData])
 
   useEffect(function () {
-    setTable(<MyTable tableData={tableData} setEdits={setEdits}/>)
+    setTable(<MyTable tableData={tableData} setEdits={setEdits} userName={name}/>)
   }, [tableData])
 
   function renderTable() {

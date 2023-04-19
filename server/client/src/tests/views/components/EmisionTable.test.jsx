@@ -3,6 +3,9 @@ import '@testing-library/jest-dom';
 import {render, screen, fireEvent} from '@testing-library/react';
 import MyTable from '../../../views/components/EmisionTable'
 
+jest.mock("../../../index",()=>({
+    getToken: jest.fn().mockResolvedValue("test")
+}))
 
 afterAll(() => {
     jest.resetAllMocks();
@@ -22,9 +25,9 @@ describe('EmisionTable', () => {
             }
         ]
         const setEdits = 0
-
+        const user ="user-test"
         render(
-            <MyTable tableData={tableData} setEdits={setEdits}/>
+            <MyTable tableData={tableData} setEdits={setEdits} userName = {user}/>
         );
 
         expect(screen.getByText(/EMISIONES MENOS DE 6 MESES/i)).toBeInTheDocument();
@@ -33,9 +36,9 @@ describe('EmisionTable', () => {
     test('table empty', () => {
         const tableData = ["Empty"]
         const setEdits = 0
-
+        const user ="user-test"
         render(
-            <MyTable tableData={tableData} setEdits={setEdits}/>
+            <MyTable tableData={tableData} setEdits={setEdits} userName = {user}/>
         );
 
         expect(screen.getByText(/No se encontraron registros./i)).toBeInTheDocument();
@@ -44,9 +47,9 @@ describe('EmisionTable', () => {
     test('setIsLoading true', () => {
         const tableData = []
         const setEdits = 0
-
+        const user ="user-test"
         render(
-            <MyTable tableData={tableData} setEdits={setEdits}/>
+            <MyTable tableData={tableData} setEdits={setEdits} userName = {user}/>
         );
 
         expect(screen.getByRole("progressbar")).toBeInTheDocument();

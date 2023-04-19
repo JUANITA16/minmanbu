@@ -273,6 +273,16 @@ class ServerAPI {
         return res;
     }
 
+    updateTypeProduct = async (dataUpdate,id,producttypedescription) => {
+        const url = this.base_url + "/typeproduct/"+id+"/"+producttypedescription
+
+        const config = {
+            headers: { Authorization: await getToken() }
+        }
+        const res = await axios.put(url,dataUpdate,config)
+      
+        return res;
+    }
 
     getRatesUpdate = async (process_date,file_id, initial_date, final_date) => {
         const url = this.base_url + "/rates-update"
