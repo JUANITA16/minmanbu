@@ -3,26 +3,26 @@ import { Fragment, useEffect, useState } from "react";
 import { Button, Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
 import Select from 'react-select'
-// import ModalConfiguracionHomologacion from "../pages/ModalHomologacion";
+import ModalTipoEmision from "../pages/ModalTipoEmision";
 
-function MyTable({tableData, setEdits}) {
+function MyTable({tableData, setEdits, userName}) {
   
   const [maxResults, setmaxResults] = useState(10);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
   const [isloading, setIsloading] = useState(true);
   const [tableBody, setTableBody] = useState([]);
-//   const [open, setOpen] = useState(false);
-//   const [infoModal, setInfoModal] = useState({
-//     id: "",
-//     producttypedescription: "", 
-//     cosif: "", 
-//     user: ""
-//   })
-//   const modalTitle = "Editar - Configuración homologación"
-//   const modalDescription = "En esta sección podrá realizar la edición de los registros Configuración homologación"
-//   const tipoProceso = "Editar"
+  const [open, setOpen] = useState(false);
+  const [infoModal, setInfoModal] = useState({
+    id: "",
+    producttypedescription: "", 
+    cosif: "", 
+    user: ""
+  })
 
+  const modalTitle = "Editar - Configuración tipo emisión"
+  const modalDescription = "En esta sección podrá realizar la edición de los tipos de emisión asociados a los productos administrados por el banco"
+  const tipoProceso = "Editar"
 
   const totalResults = [
     { value: 5, label: '5' },
@@ -37,8 +37,8 @@ function MyTable({tableData, setEdits}) {
   };
   
   const handleEdit = function (event){
-    // setInfoModal(JSON.parse(event.target.value))
-    // setOpen(true);
+    setInfoModal(JSON.parse(event.target.value))
+    setOpen(true);
   };
 
   const renderLoading = function (isloading){
@@ -83,7 +83,7 @@ function MyTable({tableData, setEdits}) {
                 id: data.id,
                 producttypedescription: data.producttypedescription, 
                 producttypemaestrosunicos: data.producttypemaestrosunicos, 
-                user: 'user-test'
+                user: userName
                 })}
               small onClick={handleEdit} className="indigo darken-4">
               Editar</Button>
@@ -104,14 +104,14 @@ function MyTable({tableData, setEdits}) {
        </Col>
      </Row>
     <div>
-    {/* <Modal
+    <Modal
       open={open}
       onClose={() => setOpen(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       >
         <Box className="modal-style" >
-          <ModalConfiguracionHomologacion
+            <ModalTipoEmision
             title={modalTitle} 
             description={modalDescription} 
             setEdits={setEdits}
@@ -120,7 +120,7 @@ function MyTable({tableData, setEdits}) {
             tipoProceso={tipoProceso}
             />
         </Box>
-      </Modal> */}
+      </Modal>
       <Table>
         <thead>
           <tr>

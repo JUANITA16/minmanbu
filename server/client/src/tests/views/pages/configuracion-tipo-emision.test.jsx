@@ -6,6 +6,19 @@ import ConfiguracionTipoEmision from '../../../views/pages/configuracion-tipo-em
 import { act } from 'react-dom/test-utils';
 
 
+jest.mock("@azure/msal-react", () => ({
+    useMsal: () => ({ 
+        instance:{ 
+            getActiveAccount: jest.fn()
+            .mockReturnValue(
+                {
+                  idTokenClaims: {name: "test_name"}
+                }
+            )
+        } 
+      })
+    })
+  );
 jest.mock("../../../index",()=>({
     getToken: jest.fn().mockResolvedValue("test")
 }))

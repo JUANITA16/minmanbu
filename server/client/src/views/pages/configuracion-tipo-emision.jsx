@@ -5,11 +5,14 @@ import { ServerAPI } from "../../services/server";
 import { CardHeader } from "../components";
 import MyTable from "../components/EmisionTable";
 import ConfiguracionContable from "./configuracion-contable";
-// import ModalConfiguracionHomologacion from "./ModalHomologacion";
+import ModalTipoEmision from "./ModalTipoEmision";
 import ReactExport from 'react-export-excel';
+import { useMsal } from "@azure/msal-react";
 
 const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
   
+  const { instance } = useMsal();
+  const { name } = instance.getActiveAccount().idTokenClaims;
   const ExcelFile = ReactExport.ExcelFile;
   const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
@@ -18,11 +21,11 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
   const [filters, setFilters] = useState({tipoEmision: "", codigoTipoEmision: ""});
   const [tableData, setTableData] = useState(dbData);
   const [table, setTable] = useState(<></>);
-  // const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [filtenable, setfiltEnable] = useState(false)
-  // const modalTitle = "Nuevo - Configuración homologación"
-  // const modalDescription = "En esta sección podrá realizar la creación de un nuevo registro Configuración homologación"
-  // const tipoProceso = "Nuevo"
+  const modalTitle = "Nuevo - Configuración tipo emisión"
+  const modalDescription = "En esta sección podrá realizar la creación de los tipos de emisión asociados a los productos administrados por el banco"
+  const tipoProceso = "Nuevo"
 
   function applyFilters(record, filters) {
     let isValid = true
@@ -51,8 +54,7 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
 
 
   const createNew = function (event) {
-    console.log('Se abre modal nuevo')
-    // setOpen(true)
+    setOpen(true)
   };
 
   const onTextChange = function (event) {
@@ -71,7 +73,7 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
   }, [dbData])
 
   useEffect(function () {
-    setTable(<MyTable tableData={tableData} setEdits={setEdits}/>)
+    setTable(<MyTable tableData={tableData} setEdits={setEdits} userName={name}/>)
   }, [tableData])
 
   function renderTable() {
@@ -133,27 +135,28 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
           </CollapsibleItem>
         </Collapsible>
       </Row>
-      {/* <Modal
+      <Modal
       open={open}
       onClose={() => setOpen(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       >
         <Box className="modal-style" >
-          <ModalConfiguracionHomologacion
+          <ModalTipoEmision
             title={modalTitle} 
             description={modalDescription} 
             setEdits={setEdits}
             setOpen={setOpen} 
             info={{
-              accounting_account: "", 
-              cosif: "", 
-              costcenteraccounting: ""
+              id: "",
+              producttypedescription: "", 
+              producttypemaestrosunicos: "",
+              user: name
             }}
             tipoProceso={tipoProceso}
             />
         </Box>
-      </Modal> */}
+      </Modal>
       {renderTable()}
       <Row>
         <Col s={12} m={12} className="input-field m0">
