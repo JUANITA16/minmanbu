@@ -43,11 +43,11 @@ export default function ConfiguracionContable() {
                         Configuración homologacíon
                     </Button>
                 </Col>
-                <Col s={12} m={6} className="input-field date text-left">
+                {/* <Col s={12} m={6} className="input-field date text-left">
                     <Button node="button" small className="indigo darken-4" onClick={goToTipoEmision} >
                         Configuración tipo emisión
                     </Button>
-                </Col>
+                </Col> */}
             </div>
             
         );
