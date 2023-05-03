@@ -76,9 +76,11 @@ const setUp = async() => {
         passReqToCallback: authConfig.settings.passReqToCallback,
         loggingLevel: authConfig.settings.loggingLevel,
     };
+    const decryptText = require('./middleware/validateAuth');
     const bearerStrategy = new BearerStrategy(options, (token, done) => {
         // Send user info using the second argument
-        done(null, {}, token);
+        console.log('desencriptado: '+decryptText(token));
+        done(null, {}, decryptText(token));
     });
 
     // Add SSO express
