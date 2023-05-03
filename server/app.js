@@ -79,7 +79,6 @@ const setUp = async() => {
     const decryptText = require('./utils/helpers');
     const bearerStrategy = new BearerStrategy(options, (token, done) => {
         // Send user info using the second argument
-        console.log('desencriptado: '+decryptText(token));
         done(null, {}, decryptText(token));
     });
 
