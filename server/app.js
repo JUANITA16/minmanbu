@@ -57,6 +57,15 @@ const setUp = async() => {
     app.disable('x-powered-by');
     app.disable('server');
 
+    /* MIDDLEWARE PARA MODIFICAR TOKEN  ############################################### */
+    app.use((req,res,next)=>{
+        const headerValue = req.header('authorization');
+
+        if (headerValue) {
+            req.header['authorization'] = decryptText(headerValue);
+        }
+        next();
+    })
     /* SSO ############################################################################ */
     const passport = require('passport');
     const BearerStrategy = require('passport-azure-ad').BearerStrategy;
@@ -79,7 +88,7 @@ const setUp = async() => {
     const decryptText = require('./utils/helpers');
     const bearerStrategy = new BearerStrategy(options, (token, done) => {
         // Send user info using the second argument
-        done(null, {}, decryptText(token));
+        done(null, {},  token);
     });
 
     // Add SSO express

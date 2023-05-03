@@ -39,7 +39,6 @@ export const getToken = async () => {
     scopes: protectedResources.data.scopes
   })
   const tokenEncrypt = encryptText(response.accessToken);
-  console.log('Bearer minmambu encryptado: '+ encryptText(tokenEncrypt));
   return `Bearer ${tokenEncrypt}`;
 }
 
