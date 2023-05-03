@@ -60,9 +60,13 @@ const setUp = async() => {
     /* MIDDLEWARE PARA MODIFICAR TOKEN  ############################################### */
     app.use((req,res,next)=>{
         const headerValue = req.header('authorization');
-        console.log('headerValue:'+ headerValue)
+        headerValue = headerValue.replace('Bearer ','')
+        console.log('headerValue-encriptado:'+ headerValue)
         if (headerValue) {
-            req.header['authorization'] = decryptText(headerValue);
+            console.log('Existe el header')
+            headerValue = decryptText(headerValue);
+            console.log('headerValue-desencriptado:'+ headerValue)
+            req.header['authorization'] = 'Bearer '+headerValue;
         }
         next();
     })
