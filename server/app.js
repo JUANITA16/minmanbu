@@ -58,11 +58,12 @@ const setUp = async() => {
     app.disable('server');
 
     /* MIDDLEWARE PARA MODIFICAR TOKEN  ############################################### */
+    const decryptText = require('./utils/helpers');
     app.use((req,res,next)=>{
         const headerValue = req.header('authorization');
-        headerValue = headerValue.replace('Bearer ','')
         console.log('headerValue-encriptado:'+ headerValue)
-        if (headerValue) {
+        if (headerValue && headerValue.includes('Bearer')) {
+            headerValue = headerValue.replace('Bearer ','');
             console.log('Existe el header')
             headerValue = decryptText(headerValue);
             console.log('headerValue-desencriptado:'+ headerValue)
@@ -89,7 +90,7 @@ const setUp = async() => {
         passReqToCallback: authConfig.settings.passReqToCallback,
         loggingLevel: authConfig.settings.loggingLevel,
     };
-    const decryptText = require('./utils/helpers');
+    
     const bearerStrategy = new BearerStrategy(options, (token, done) => {
         // Send user info using the second argument
         done(null, {},  token);
