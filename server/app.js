@@ -76,7 +76,7 @@ const setUp = async() => {
         passReqToCallback: authConfig.settings.passReqToCallback,
         loggingLevel: authConfig.settings.loggingLevel,
     };
-    const decryptText = require('./middleware/validateAuth');
+    const decryptText = require('./utils/helpers');
     const bearerStrategy = new BearerStrategy(options, (token, done) => {
         // Send user info using the second argument
         console.log('desencriptado: '+decryptText(token));

@@ -1,4 +1,3 @@
-const CryptoJs = require("crypto-js");
 
 const routeGuard = (accessMatrix) => {
     return (req, res, next) => {
@@ -23,10 +22,4 @@ const routeGuard = (accessMatrix) => {
     }
 }
 
-const decryptText = (mensajeEncriptado) =>{
-    var clave = "minmambu-key";
-    const bytes = CryptoJs.AES.decrypt(mensajeEncriptado,clave);
-    return bytes.toString(CryptoJs.enc.Utf8);
-}
-
-module.exports = { routeGuard, decryptText};
+module.exports = routeGuard;
