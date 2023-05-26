@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import {render, screen, fireEvent} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import ActualizacionTasasDetalle from '../../../views/pages/ActualizacionTasasDetalle'
 import { act } from 'react-dom/test-utils';
 import selectEvent from 'react-select-event'

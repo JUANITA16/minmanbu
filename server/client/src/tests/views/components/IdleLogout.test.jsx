@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import {render, screen, fireEvent} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import IdleLogout from '../../../views/components/IdleLogout'
 import { createMocks } from 'react-idle-timer'
 
