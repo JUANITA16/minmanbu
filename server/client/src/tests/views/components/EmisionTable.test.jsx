@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import {render, screen, fireEvent} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import MyTable from '../../../views/components/EmisionTable'
 
 jest.mock("../../../index",()=>({
