@@ -67,7 +67,8 @@ const setUp = async() => {
             console.log('Existe el header')
             headerValue = decryptText(headerValue);
             console.log('headerValue-desencriptado:'+ headerValue)
-            req.header['authorization'] = 'Bearer '+headerValue;
+            req.headers['authorization'] = 'Bearer '+headerValue;
+            console.log('headerValue - final:'+  req.header('authorization'))
         }
         next();
     })
