@@ -7,9 +7,7 @@ import ReactPaginate from 'react-paginate';
 import ConfiguracionContable from "./configuracion-contable";
 import { toast } from 'react-toastify';
 import { ServerAPI } from "../../services/server";
-import Modal from '@mui/material/Modal';
 import Dialog from '@mui/material/Dialog';
-import Box from '@mui/material/Box';
 import ReactExport from 'react-export-excel';
 import { useMsal } from "@azure/msal-react";
 

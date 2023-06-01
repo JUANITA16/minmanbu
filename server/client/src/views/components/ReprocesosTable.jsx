@@ -1,6 +1,6 @@
-import { CircularProgress, Modal, Box } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
-import { Button, Col, Icon, Row, Table } from "react-materialize";
+import { Col, Icon, Row, Table } from "react-materialize";
 import ReactPaginate from "react-paginate";
 import Select from 'react-select'
 import { showToast } from "../../helpers/utils";

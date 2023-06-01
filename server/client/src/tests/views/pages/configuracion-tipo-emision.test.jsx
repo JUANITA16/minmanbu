@@ -95,7 +95,7 @@ describe('ConfiguracionTipoEmision', () => {
 
         await act( async () => render(<ConfiguracionTipoEmision/>));
 
-        const button = await screen.getByText(/Retroceder/i)
+        const button = screen.getByText(/Retroceder/i)
         fireEvent.click(button)
         expect(screen.getAllByText(/Configuración contable/i)[0]).toBeInTheDocument();        
     })
@@ -188,7 +188,7 @@ describe('ConfiguracionTipoEmision', () => {
         const inputCuenta = screen.getByLabelText("Tipo emisión")
         fireEvent.change(inputCuenta,{target: {value: 'EMISIONES MENOS DE 6 MESES'}})
 
-        const button = await screen.getByText("Aplicar filtros")
+        const button = screen.getByText("Aplicar filtros")
         fireEvent.click(button)
         const data = screen.queryByText(/552/i)
         expect(data).toEqual(null);
