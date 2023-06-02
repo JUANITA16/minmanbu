@@ -98,5 +98,5 @@ export function convertMessageError(message){
 export function encryptText(textoOriginal){
     var CryptoJs = require("crypto-js");
     var clave = "minmambu-key";
-    return CryptoJs.AES.encrypt(textoOriginal,clave, { mode: CryptoJS.mode.CTR}).toString();
+    return CryptoJs.AES.encrypt(textoOriginal,clave, { mode: CryptoJs.mode.CTR}).toString();
 }
