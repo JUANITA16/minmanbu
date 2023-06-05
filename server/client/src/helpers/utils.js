@@ -95,7 +95,7 @@ export function convertMessageError(message){
     return new_message
 }
 
-export function encryptText(textoOriginal){
+export async function encryptText(textoOriginal){
     var CryptoJs = require("crypto-js");
     const { getSecret } = require('../../../utils/secret');
     //var clave = "minmambu-key";

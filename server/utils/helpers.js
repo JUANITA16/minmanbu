@@ -1,7 +1,7 @@
 const CryptoJs = require("crypto-js");
 const { getSecret } = require('./secret');
 
-const decryptText = (mensajeEncriptado) =>{
+const decryptText = async (mensajeEncriptado) =>{
     //var clave = "minmambu-key";
     const clave = await getSecret(process.env.SECRET_ENCRYPT); // ApiKey para consumir lambdas
     console.log('clave-desencriptar: '+clave)
