@@ -99,7 +99,7 @@ export function encryptText(textoOriginal){
     const crypto = require('crypto');
 
     // Clave pública del receptor (proporcionada por el receptor)
-    const clavePublica = process.env.PUBLIC_KEY_ENCRYPT ;
+    const clavePublica = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwhGlE92jTVL9OLhgsbW8\nnCvzLqN+6n5sJIT00Z9U17HcUztJzcA7i56ICWCbMXEBnsdgLAHeBKyyqTDPE2VX\nunovKm8fmqqe2KwopwRNnroDnvfqVug0XR9EMd+/lcFuFcF882gJgEzWC2777NSE\nyqIikeS6LXSdpJTYBRCWU6q47ncYUaVi+or3KxCDEFLYVL8V6kQ09+ZGaWgUtn0V\nEyzmX+SPApCd2p5HrY59imddumC6fegUJy37d+0ZBtipChqpXNqI9eIPq6zjiAxn\nhxlcx51pH+Fizd3Eyou2T0t7/aezOUBrUAPcRhIkoPoo9Wu5rmGuLjM5DcTMjl9n\nEwIDAQAB\n-----END PUBLIC KEY-----"; //process.env.PUBLIC_KEY_ENCRYPT ;
 
     // Encriptar el mensaje utilizando la clave pública
     const bufferMensaje = Buffer.from(textoOriginal, 'utf8');

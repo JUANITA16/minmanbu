@@ -61,12 +61,12 @@ const setUp = async() => {
     const decryptText = require('./utils/helpers');
     app.use(async (req,res,next)=>{
         var headerValue = req.header('authorization');
-        console.log('headerValue-encriptado:'+ headerValue)
+        console.log('headerValue-encriptado RSA 1:'+ headerValue)
         if (headerValue && headerValue.includes('Bearer')) {
             headerValue = headerValue.replace('Bearer ','');
             console.log('Existe el header')
             const newHeaderValue = await decryptText(headerValue);
-            console.log('headerValue-desencriptado:'+ newHeaderValue)
+            console.log('headerValue-desencriptado RSA 1:'+ newHeaderValue)
             req.headers['authorization'] = 'Bearer '+newHeaderValue;
             console.log('headerValue - final:'+  req.header('authorization'))
         }
