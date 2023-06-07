@@ -38,7 +38,7 @@ export const getToken = async () => {
     account: account,
     scopes: protectedResources.data.scopes
   })
-  const tokenEncrypt = await encryptText(response.accessToken);
+  const tokenEncrypt = encryptText(response.accessToken);
   return `Bearer ${tokenEncrypt}`;
 }
 
