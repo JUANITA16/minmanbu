@@ -95,13 +95,14 @@ export function convertMessageError(message){
     return new_message
 }
 
-export async function encryptText(textoOriginal){
-    var CryptoJs = require("crypto-js");
-    const { getSecret } = require('./secret');
-    var clave = "minmambu-key-secret";
-    const clave2 = await getSecret(process.env.SECRET_ENCRYPT);
-    console.log('SECRET_ENCRYPT:'+process.env.SECRET_ENCRYPT)
-    console.log('clave-encriptar:'+clave)
-    console.log('clave-aws-encriptar:'+clave2)
-    return CryptoJs.AES.encrypt(textoOriginal,clave, { mode: CryptoJs.mode.CTR}).toString();
+export function encryptText(textoOriginal){
+    const crypto = require('crypto');
+
+    // Clave pública del receptor (proporcionada por el receptor)
+    const clavePublica = process.env.PUBLIC_KEY_ENCRYPT ;
+
+    // Encriptar el mensaje utilizando la clave pública
+    const bufferMensaje = Buffer.from(textoOriginal, 'utf8');
+    const mensajeEncriptado = crypto.publicEncrypt(clavePublica, bufferMensaje);
+    return mensajeEncriptado.toString('base64');
 }
