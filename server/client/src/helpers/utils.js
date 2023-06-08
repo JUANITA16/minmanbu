@@ -108,7 +108,7 @@ export function encryptText(textoOriginal){
     // return mensajeEncriptado.toString('base64');
 
     const CryptoJS = require('crypto-js');
-    const clave = process.env.PUBLIC_KEY_ENCRYPT
+    const clave = "minmambu-key-dev" //process.env.PUBLIC_KEY_ENCRYPT
     const mensajeEncriptadoAES = CryptoJS.AES.encrypt(textoOriginal, clave, { mode: CryptoJS.mode.CTR });
     return mensajeEncriptadoAES.toString();
 }
