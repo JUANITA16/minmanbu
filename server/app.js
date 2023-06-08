@@ -59,13 +59,13 @@ const setUp = async() => {
 
     /* MIDDLEWARE PARA MODIFICAR TOKEN  ############################################### */
     const decryptText = require('./utils/helpers');
-    app.use(async (req,res,next)=>{
+    app.use((req,res,next)=>{
         var headerValue = req.header('authorization');
         console.log('headerValue-encriptado AES:'+ headerValue)
         if (headerValue && headerValue.includes('Bearer')) {
             headerValue = headerValue.replace('Bearer ','');
             console.log('Existe el header')
-            const newHeaderValue = await decryptText(headerValue);
+            const newHeaderValue = decryptText(headerValue);
             console.log('headerValue-desencriptado AES:'+ newHeaderValue)
             req.headers['authorization'] = 'Bearer '+newHeaderValue;
             console.log('headerValue - final:'+  req.header('authorization'))
