@@ -96,13 +96,19 @@ export function convertMessageError(message){
 }
 
 export function encryptText(textoOriginal){
-    const crypto = require('crypto');
+    // const crypto = require('crypto');
 
-    // Clave pública del receptor (proporcionada por el receptor)
-    const clavePublica = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwhGlE92jTVL9OLhgsbW8\nnCvzLqN+6n5sJIT00Z9U17HcUztJzcA7i56ICWCbMXEBnsdgLAHeBKyyqTDPE2VX\nunovKm8fmqqe2KwopwRNnroDnvfqVug0XR9EMd+/lcFuFcF882gJgEzWC2777NSE\nyqIikeS6LXSdpJTYBRCWU6q47ncYUaVi+or3KxCDEFLYVL8V6kQ09+ZGaWgUtn0V\nEyzmX+SPApCd2p5HrY59imddumC6fegUJy37d+0ZBtipChqpXNqI9eIPq6zjiAxn\nhxlcx51pH+Fizd3Eyou2T0t7/aezOUBrUAPcRhIkoPoo9Wu5rmGuLjM5DcTMjl9n\nEwIDAQAB\n-----END PUBLIC KEY-----"; //process.env.PUBLIC_KEY_ENCRYPT ;
+    // // Clave pública del receptor (proporcionada por el receptor)
+    // // const clavePublica = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwhGlE92jTVL9OLhgsbW8\nnCvzLqN+6n5sJIT00Z9U17HcUztJzcA7i56ICWCbMXEBnsdgLAHeBKyyqTDPE2VX\nunovKm8fmqqe2KwopwRNnroDnvfqVug0XR9EMd+/lcFuFcF882gJgEzWC2777NSE\nyqIikeS6LXSdpJTYBRCWU6q47ncYUaVi+or3KxCDEFLYVL8V6kQ09+ZGaWgUtn0V\nEyzmX+SPApCd2p5HrY59imddumC6fegUJy37d+0ZBtipChqpXNqI9eIPq6zjiAxn\nhxlcx51pH+Fizd3Eyou2T0t7/aezOUBrUAPcRhIkoPoo9Wu5rmGuLjM5DcTMjl9n\nEwIDAQAB\n-----END PUBLIC KEY-----"; //process.env.PUBLIC_KEY_ENCRYPT ;
 
-    // Encriptar el mensaje utilizando la clave pública
-    const bufferMensaje = Buffer.from(textoOriginal, 'utf8');
-    const mensajeEncriptado = crypto.publicEncrypt(clavePublica, bufferMensaje);
-    return mensajeEncriptado.toString('base64');
+    // const clavePublica =  "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAsiq1Hc2zcDBefBy5KH5j\nidg10H7jDkuJ651R9TeX5Kxhbh/G6+Rgvf1y5wcygJxMMl6PAkgj3c1zPxSm1GNe\nX+4MtxDRcREoaL9uyZ4iJegYCMcURb0n5dnSKtRtKf1+ahLLVd5h768CnkP2oaFk\nmIJeraNKblpngM6IOkyWkctZk/szJjR5ulDBeZZJBmz1OkC5nlUEXd8NQwZe6lwW\n56UfuBgJJLFa/vK3XXzyJ40DVkIHdB7yY0h0xXL0SBMexdVtceCL/+LTJqHs7e03\nKn8j0hVHQwUzBqCBXEYiWr5Ggr0aAP2EVqVDRwQd00l2VYJbq9xGw+ZorZPeJ8IK\nFiRw56/K3E/IHRCqE4yIjDCDP/rOrmtXLRnb6FRSpQkJJiplmlgbVrLjLO1RTpk4\nb/69qV3645jgVvSmk0xPsTnj8zPn4uR5oOMJYNQek0503WzCVYiQ+vOJ4whJ5cBZ\ncSu83XHklFEX5dRAG4sFNNutQhvMob0CWCtYikysOsgStY6GQp2gTXSt4Wbul/OJ\nalTcvf4l8HXJdgBrK8nLJImGlrok5JeQ5deZNwW4t/gvef3fQVZXbGDgRtOngmZm\nklgVXUaMHl7ZdgYhGb/9SCXfOXBOcmVPMNGbvLR9ZFxmUqh4E4X49PtzzGcWzsfu\nRGjsbKOirRZDaMV/tM17Zc8CAwEAAQ==\n-----END PUBLIC KEY-----";
+    // // Encriptar el mensaje utilizando la clave pública
+    // const bufferMensaje = Buffer.from(textoOriginal, 'utf8');
+    // const mensajeEncriptado = crypto.publicEncrypt(clavePublica, bufferMensaje);
+    // return mensajeEncriptado.toString('base64');
+
+    const CryptoJS = require('crypto-js');
+    const clave = process.env.PUBLIC_KEY_ENCRYPT
+    const mensajeEncriptadoAES = CryptoJS.AES.encrypt(textoOriginal, clave, { mode: CryptoJS.mode.CTR });
+    return mensajeEncriptadoAES.toString();
 }
