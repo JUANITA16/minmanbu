@@ -38,8 +38,9 @@ export const getToken = async () => {
     account: account,
     scopes: protectedResources.data.scopes
   })
-  const tokenEncrypt = encryptText(response.accessToken);
-  return `Bearer ${tokenEncrypt}`;
+  //const tokenEncrypt = encryptText(response.accessToken);
+  //return `Bearer ${tokenEncrypt}`;
+  return `Bearer ${response.accessToken}`;
 }
 
 ReactDOM.render(
