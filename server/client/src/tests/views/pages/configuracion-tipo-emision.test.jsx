@@ -4,6 +4,7 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import { ServerAPI } from "../../../services/server";
 import ConfiguracionTipoEmision from '../../../views/pages/configuracion-tipo-emision'
 import { act } from 'react-dom/test-utils';
+import userEvent from '@testing-library/user-event'
 
 
 jest.mock("@azure/msal-react", () => ({
@@ -57,6 +58,7 @@ describe('ConfiguracionTipoEmision', () => {
                         "producttypemaestrosunicos": "550",
                         "user": "USER_POSTMAN_2",
                         "producttypedescription": "EMISIONES MENOS DE 6 MESES",
+                        "producttype": "CDT",
                         "creationdate": "2022-10-25T09:48:29-05:00",
                         "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
                     }
@@ -71,8 +73,8 @@ describe('ConfiguracionTipoEmision', () => {
         expect(screen.getAllByText(/realizar la configuración de los tipos de emisión asociados/i)[0]).toBeInTheDocument();
         expect(screen.getByText(/Retroceder/i)).toBeInTheDocument();
         expect(screen.getByText(/Nuevo/i)).toBeInTheDocument();
-    
         expect(screen.getByText(/550/i)).toBeInTheDocument();
+        expect(screen.getByText(/CDT/i)).toBeInTheDocument();
     })
 
      
@@ -86,6 +88,7 @@ describe('ConfiguracionTipoEmision', () => {
                         "producttypemaestrosunicos": "550",
                         "user": "USER_POSTMAN_2",
                         "producttypedescription": "EMISIONES MENOS DE 6 MESES",
+                        "producttype": "CDT",
                         "creationdate": "2022-10-25T09:48:29-05:00",
                         "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
                     }
@@ -100,7 +103,7 @@ describe('ConfiguracionTipoEmision', () => {
         expect(screen.getAllByText(/Configuración contable/i)[0]).toBeInTheDocument();        
     })
      
-    test('on text change tipo emisiónn', async () =>  {
+    test('on text change tipo emisión', async () =>  {
         
         ServerAPI.mockImplementation(() => ({
             getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(
@@ -110,6 +113,7 @@ describe('ConfiguracionTipoEmision', () => {
                         "producttypemaestrosunicos": "550",
                         "user": "USER_POSTMAN_2",
                         "producttypedescription": "EMISIONES MENOS DE 6 MESES",
+                        "producttype": "CDT",
                         "creationdate": "2022-10-25T09:48:29-05:00",
                         "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
                     },
@@ -118,6 +122,7 @@ describe('ConfiguracionTipoEmision', () => {
                         "producttypemaestrosunicos": "552",
                         "user": "USER_POSTMAN",
                         "producttypedescription": "EMITIDOS IGUAL A 12 MESES Y MENOR DE 18 MESES",
+                        "producttype": "CDT",
                         "creationdate": "2022-10-28T12:56:45-05:00",
                         "id": "f524b50f-aa21-420a-8965-756c105a6f91"
                     }
@@ -142,6 +147,7 @@ describe('ConfiguracionTipoEmision', () => {
                         "producttypemaestrosunicos": "550",
                         "user": "USER_POSTMAN_2",
                         "producttypedescription": "EMISIONES MENOS DE 6 MESES",
+                        "producttype": "CDT",
                         "creationdate": "2022-10-25T09:48:29-05:00",
                         "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
                     },
@@ -150,6 +156,7 @@ describe('ConfiguracionTipoEmision', () => {
                         "producttypemaestrosunicos": "552",
                         "user": "USER_POSTMAN",
                         "producttypedescription": "EMITIDOS IGUAL A 12 MESES Y MENOR DE 18 MESES",
+                        "producttype": "CDT",
                         "creationdate": "2022-10-28T12:56:45-05:00",
                         "id": "f524b50f-aa21-420a-8965-756c105a6f91"
                     }
@@ -162,6 +169,46 @@ describe('ConfiguracionTipoEmision', () => {
         const input = screen.getByLabelText("Código tipo emisión")
         fireEvent.change(input,{target: {value: '12345'}})
         expect(input.value).toEqual('12345')
+    })
+    
+    test('on text change Tipo de producto', async () =>  {
+        
+        ServerAPI.mockImplementation(() => ({
+            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(
+                [
+                    {
+                        "updatedate": "2022-10-25T09:48:29-05:00",
+                        "producttypemaestrosunicos": "550",
+                        "user": "USER_POSTMAN_2",
+                        "producttypedescription": "EMISIONES MENOS DE 6 MESES",
+                        "producttype": "CDT",
+                        "creationdate": "2022-10-25T09:48:29-05:00",
+                        "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
+                    },
+                    {
+                        "updatedate": "2022-10-28T12:56:45-05:00",
+                        "producttypemaestrosunicos": "552",
+                        "user": "USER_POSTMAN",
+                        "producttypedescription": "EMITIDOS IGUAL A 12 MESES Y MENOR DE 18 MESES",
+                        "producttype": "CDT",
+                        "creationdate": "2022-10-28T12:56:45-05:00",
+                        "id": "f524b50f-aa21-420a-8965-756c105a6f91"
+                    }
+                ]
+            )
+        }));
+
+        await act( async () => render(<ConfiguracionTipoEmision/>));
+
+        const selectLabel = /Tipo de producto/i;
+        const selectEl = await screen.findByLabelText(selectLabel);
+
+        userEvent.click(selectEl);
+        const dropdownItem = await screen.findByRole("option", { name: 'CDT' });
+        userEvent.click(dropdownItem);
+
+        const cdtElements = screen.getAllByText('CDT');
+        expect(cdtElements.length).toBeGreaterThan(0);
     })
 
     
@@ -176,6 +223,7 @@ describe('ConfiguracionTipoEmision', () => {
                         "producttypemaestrosunicos": "550",
                         "user": "USER_POSTMAN_2",
                         "producttypedescription": "EMISIONES MENOS DE 6 MESES",
+                        "producttype": "CDT",
                         "creationdate": "2022-10-25T09:48:29-05:00",
                         "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
                     }
@@ -196,6 +244,42 @@ describe('ConfiguracionTipoEmision', () => {
         expect(screen.getByText(/550/i)).toBeInTheDocument();
 
     })
+    
+    test('apply filters Tipo de producto', async () =>  {
+        
+        ServerAPI.mockImplementation(() => ({
+            getAllAndFiltersTypeProduct: jest.fn()
+            .mockResolvedValue(
+                [
+                    {
+                        "updatedate": "2022-10-25T09:48:29-05:00",
+                        "producttypemaestrosunicos": "550",
+                        "user": "USER_POSTMAN_2",
+                        "producttypedescription": "EMISIONES MENOS DE 6 MESES",
+                        "producttype": "CDT",
+                        "creationdate": "2022-10-25T09:48:29-05:00",
+                        "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
+                    }
+                ]
+            )
+        }));
 
+        await act( async () => render(<ConfiguracionTipoEmision/>));
+
+        const selectLabel = /Tipo de producto/i;
+        const selectEl = await screen.findByLabelText(selectLabel);
+
+        userEvent.click(selectEl);
+        const dropdownItem = await screen.findByRole("option", { name: 'CDT' });
+        userEvent.click(dropdownItem);
+
+        const button = screen.getByText("Aplicar filtros")
+        fireEvent.click(button)
+        const data = screen.queryByText(/551/i)
+        expect(data).toEqual(null);
+
+        expect(screen.getByText(/550/i)).toBeInTheDocument();
+
+    })
 
 })

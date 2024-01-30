@@ -3,6 +3,9 @@ import { Button,Row, Col, Divider } from 'react-materialize'
 import { ServerAPI } from "../../services/server";
 import { toast } from 'react-toastify';
 import { Box, Modal, Snackbar, Alert, Stack, LinearProgress, Fade } from "@mui/material";
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 export default function ModalTipoEmision(props) {
 
@@ -16,18 +19,19 @@ export default function ModalTipoEmision(props) {
   
   const [validation, setValidation] = useState({
     producttypedescription: true,
-    producttypemaestrosunicos: true
+    producttypemaestrosunicos: true,
+    producttype: true
   });
   const [values, setValues] = useState({
     producttypedescription: "",
     producttypemaestrosunicos: "",
+    producttype: "",
     user: ""
   });
 
   useEffect(() => {
     setValues(props.info)
   }, [props]); 
-
 
   const handleChange = function (event) {
     var valueEvent = event.target.value;
@@ -43,7 +47,17 @@ export default function ModalTipoEmision(props) {
     }
   }
 
-
+  const handleChangeProductType = function (event) {
+    const productType = event.target.value;
+    setValues((prevValues) => ({
+      ...prevValues,
+      [event.target.name]: productType
+    }));
+    setValidation((prevValues) => ({
+      ...prevValues,
+      [event.target.name]: productType !== ""
+    }))
+  }
 
   function msjError(){
     setOpenModalNotificacion(true);
@@ -65,11 +79,18 @@ export default function ModalTipoEmision(props) {
         producttypemaestrosunicos: false 
       }));
       msjError();
+    }else if(values.producttype==="") {
+      setValidation((prevValues)=>({
+        ...prevValues,
+        producttype: false
+      }))
+      msjError();
     }else {
       setisLoading(true)
       const dataSubmit ={
         "producttypedescription": values.producttypedescription,
         "producttypemaestrosunicos": values.producttypemaestrosunicos,
+        "producttype": values.producttype,
         "user": values.user
       }
       if(props.tipoProceso==='Nuevo'){
@@ -153,7 +174,7 @@ export default function ModalTipoEmision(props) {
               </Col>
             </Row>
             <Row>
-              <Col s={12} m={6} l={8}>
+              <Col s={12} m={4} l={6}>
                 <div className="input-field-2">
                   <label className={`${validation.producttypedescription? '':'txt-red'}`}>Tipo emisión</label>
                   <input className={`${validation.producttypedescription? 'valid':'invalid'}`} 
@@ -164,7 +185,7 @@ export default function ModalTipoEmision(props) {
                   />
                 </div>
               </Col>
-              <Col s={12} m={6} l={4}>
+              <Col s={12} m={4} l={3}>
                 <div className="input-field-2">
                   <label className={`${validation.producttypemaestrosunicos? '':'txt-red'}`}>Código tipo emisión</label>
                   <input className={`${validation.producttypemaestrosunicos? 'valid':'invalid'}`} 
@@ -175,6 +196,26 @@ export default function ModalTipoEmision(props) {
                   id="producttypemaestrosunicos"
                   />
                 </div>
+              </Col>
+              <Col s={12} m={4} l={3}>
+                <label className={`${validation.producttype? '':'txt-red'}`}>Tipo de producto</label>
+                <FormControl variant="standard" sx={{ marginTop: 2}} fullWidth required>
+                  <Select
+                      name="producttype"
+                      className={`${validation.producttype? '':'txt-red'}`}
+                      value={values.producttype}
+                      onChange={handleChangeProductType}
+                      disabled={props.tipoProceso==='Editar'}
+                      sx={{fontSize: 16, border: 'red 5px none'}}
+                      >
+                      <MenuItem key='0' value='CDT'>
+                        CDT
+                      </MenuItem>
+                      <MenuItem key='1' value='BONO'>
+                        BONO
+                      </MenuItem>
+                  </Select>
+                </FormControl>
               </Col>
             </Row>
             <Row>
