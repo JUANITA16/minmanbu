@@ -249,12 +249,12 @@ class ServerAPI {
         return data
     }
 
-    getAllAndFiltersTypeProduct = async (producttypemaestrosunicos, producttypedescription) => {
+    getAllAndFiltersTypeProduct = async (producttypemaestrosunicos, producttypedescription, producttype) => {
         
         const url = this.base_url + "/typeproduct"
         const config = {
             headers: { Authorization: await getToken() },
-            params: {producttypemaestrosunicos, producttypedescription}
+            params: {producttypemaestrosunicos, producttypedescription, producttype}
         }
         const res = await axios.get(url, config);
         const data = await res.data;
