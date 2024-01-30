@@ -7,7 +7,7 @@ export default function Home() {
   const { name } = instance.getActiveAccount().idTokenClaims;
   const base = process.env.PUBLIC_URL;
   const title = 'Inicio';
-  const description = 'Bienvenido ' +name+' a MinMambu página principal.';
+  const description = 'Bienvenido ' +name+' a MinMambu página principal. prueba';
 
   useEffect(() => {
     document.title = title
