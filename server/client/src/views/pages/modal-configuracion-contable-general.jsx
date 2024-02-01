@@ -41,6 +41,8 @@ export default function ModalConfiguracionContableGeneral(props) {
     const [producttypemaestrosunicos, setProducttypemaestrosunicos] = useState("");
     const [producttypemaestrosunicosValid, setProducttypemaestrosunicosValid] = useState(true);
 
+    const [producttype, setProducttype] = useState("");
+
     const [tipoProceso, setTipoProceso] = useState('');
 
     //Nuevo campos
@@ -173,6 +175,7 @@ export default function ModalConfiguracionContableGeneral(props) {
         const productDescription = event.target.value;
         const emisionJsonSelect = emisiones.find(element => element.value === productDescription)
         setProducttypemaestrosunicos(emisionJsonSelect['product_number'])
+        setProducttype(emisionJsonSelect['product_type'])
         setProducttypedescription(productDescription)
         if(productDescription===""){
             setProducttypedescriptionError(true);
@@ -231,6 +234,8 @@ export default function ModalConfiguracionContableGeneral(props) {
         }else if(debittaxaccountgmf ===""){
             setDebittaxaccountgmfValid(false);
             msjError('Todos los campos son de diligenciamiento obligatorio.');
+        }else if(producttype ===""){
+            msjError('Todos los campos son de diligenciamiento obligatorio.');
         }else {
             var isReloadTable=true;
             const dataSubmit ={
@@ -248,6 +253,7 @@ export default function ModalConfiguracionContableGeneral(props) {
                 "debittaxaccountcapitalpaymet":debittaxaccountcapitalpaymet,
                 "credittaxaccountgmf":credittaxaccountgmf,
                 "debittaxaccountgmf":debittaxaccountgmf,
+                "producttype":producttype,
                 "user":props.user
             }
             if(tipoProceso==='Nuevo'){
@@ -281,7 +287,7 @@ export default function ModalConfiguracionContableGeneral(props) {
                 }
             }
             if(isReloadTable){
-                props.reloadTableMain(props.cantPaginas,"0")
+                props.reloadTableMain(props.cantPaginas,"", "")
                 goToConfiguracionGeneral()
             }
         }
@@ -361,7 +367,10 @@ export default function ModalConfiguracionContableGeneral(props) {
         if (typeof props.info.producttypemaestrosunicos != 'undefined'){
             setProducttypemaestrosunicos(props.info.producttypemaestrosunicos)
         }
-        	
+        
+        if (typeof props.info.producttype != 'undefined'){
+            setProducttype(props.info.producttype)
+        }
 
     }, [props]);
 
