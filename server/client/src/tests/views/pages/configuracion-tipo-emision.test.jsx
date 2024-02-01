@@ -201,9 +201,9 @@ describe('ConfiguracionTipoEmision', () => {
         await act( async () => render(<ConfiguracionTipoEmision/>));
 
         const selectLabel = /Tipo de producto/i;
-        const selectEl = await screen.findByLabelText(selectLabel);
+        const selectElement = await screen.findByLabelText(selectLabel);
 
-        userEvent.click(selectEl);
+        userEvent.click(selectElement);
         const dropdownItem = await screen.findByRole("option", { name: 'CDT' });
         userEvent.click(dropdownItem);
 

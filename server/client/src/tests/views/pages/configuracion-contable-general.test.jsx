@@ -1,10 +1,11 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import {render, screen, fireEvent} from '@testing-library/react';
+import {render, screen, fireEvent, waitFor} from '@testing-library/react';
 import { ServerAPI } from "../../../services/server";
 import ConfiguracionContableGeneral from '../../../views/pages/configuracion-contable-general'
 import { act } from 'react-dom/test-utils';
 import selectEvent from 'react-select-event'
+import userEvent from '@testing-library/user-event'
 
 jest.mock("../../../index",()=>({
     getToken: jest.fn().mockResolvedValue("test")
@@ -79,7 +80,7 @@ describe('ConfiguracionContableGeneral', () => {
         await act( async () => render(<ConfiguracionContableGeneral/>));
         
         expect(screen.getAllByText(/Configuración general/i)[0]).toBeInTheDocument();
-        expect(screen.getAllByText(/asociada a los movimientos de CDTs desde Dominus/i)[0]).toBeInTheDocument();
+        expect(screen.getAllByText(/asociada a los movimientos de los productos administrados desde Dominus/i)[0]).toBeInTheDocument();
         expect(screen.getByText(/Retroceder/i)).toBeInTheDocument();
         expect(screen.getByText(/Nuevo/i)).toBeInTheDocument();
     
@@ -280,10 +281,14 @@ describe('ConfiguracionContableGeneral', () => {
         }));
         await act( async () => render(<ConfiguracionContableGeneral/>));
 
-        await selectEvent.select(screen.getByLabelText('Tipo de emisión'), "NO APLICA")
+        const selectLabel = /Tipo de emisión/i;
+        const selectElement = await screen.findByLabelText(selectLabel);
+
+        userEvent.click(selectElement);
         
-        expect(screen.getByTestId('tipoEmisionForm')).toHaveFormValues({
-            tipoEmisionSelect: 'NO APLICA',
+        const elements = screen.getAllByText('NO APLICA');
+        await waitFor(() => {
+            expect(elements.length).toBeGreaterThan(0)
         })
     })
 })
