@@ -250,12 +250,24 @@ class ServerAPI {
     }
 
     getAllAndFiltersTypeProduct = async (producttypemaestrosunicos, producttypedescription, producttype) => {
-        
         const url = this.base_url + "/typeproduct"
+
+        const filters = {}
+        if(producttypedescription !== "") {
+            filters["producttypedescription"] = producttypedescription
+        }
+        if(producttypemaestrosunicos !== "") {
+            filters["producttypemaestrosunicos"] = producttypemaestrosunicos
+        }
+        if(producttype !== "") {
+            filters["producttype"] = producttype
+        }
+
         const config = {
             headers: { Authorization: await getToken() },
-            params: {producttypemaestrosunicos, producttypedescription, producttype}
+            params: filters
         }
+
         const res = await axios.get(url, config);
         const data = await res.data;
         return data
