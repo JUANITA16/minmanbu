@@ -8,10 +8,7 @@ import ConfiguracionContable from "./configuracion-contable";
 import ModalTipoEmision from "./ModalTipoEmision";
 import ReactExport from 'react-export-excel';
 import { useMsal } from "@azure/msal-react";
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
+import ProductTypeFilter from '../components/ProductTypeFilter';
 
 const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
   
@@ -131,25 +128,10 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
                 </div>
               </Col>
               <Col s={12} m={4} l={4} xl={4}>
-                <FormControl variant="standard" sx={{ marginTop: 2}} fullWidth>
-                  <InputLabel id="productTypeLabel">Tipo de producto</InputLabel>
-                  <Select
-                    className="valid"
-                    labelId="productTypeLabel"
-                    name="producttype"
-                    value={filters.producttype}
-                    onChange={onProductTypeChange}
-                    sx={{fontSize: 16, border: 'red 5px none'}}
-                    fullWidth
-                    >
-                    <MenuItem key='0' value='CDT'>
-                      CDT
-                    </MenuItem>
-                    <MenuItem key='1' value='BONO'>
-                      BONO
-                    </MenuItem>
-                  </Select>
-                </FormControl>
+                <ProductTypeFilter
+                  value={filters.producttype}
+                  onChange={onProductTypeChange}
+                />
               </Col>
             </Row>
             <Row>

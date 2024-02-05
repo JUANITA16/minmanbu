@@ -94,10 +94,3 @@ export function convertMessageError(message){
     }
     return new_message
 }
-
-
-export function encryptText(textoOriginal){
-    var CryptoJs = require("crypto-js");
-    const clave = process.env.PUBLIC_KEY_ENCRYPT;
-    return CryptoJs.AES.encrypt(textoOriginal,clave, { mode: CryptoJs.mode.CTR}).toString();
-}
