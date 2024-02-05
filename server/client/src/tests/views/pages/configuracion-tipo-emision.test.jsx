@@ -5,6 +5,7 @@ import { ServerAPI } from "../../../services/server";
 import ConfiguracionTipoEmision from '../../../views/pages/configuracion-tipo-emision'
 import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event'
+import { emisionTypeMock } from '../../__mocks__/mocks'
 
 
 jest.mock("@azure/msal-react", () => ({
@@ -51,19 +52,7 @@ describe('ConfiguracionTipoEmision', () => {
     test('render ConfiguracionTipoEmision with data', async () =>  {
 
         ServerAPI.mockImplementation(() => ({
-            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue( 
-                [
-                    {
-                        "updatedate": "2022-10-25T09:48:29-05:00",
-                        "producttypemaestrosunicos": "550",
-                        "user": "USER_POSTMAN_2",
-                        "producttypedescription": "EMISIONES MENOS DE 6 MESES",
-                        "producttype": "CDT",
-                        "creationdate": "2022-10-25T09:48:29-05:00",
-                        "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
-                    }
-                ]
-            )
+            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue([emisionTypeMock[0]])
         }));
 
         await act( async () => render(<ConfiguracionTipoEmision/>));
@@ -81,19 +70,7 @@ describe('ConfiguracionTipoEmision', () => {
     test('click go to back', async () =>  {
         
         ServerAPI.mockImplementation(() => ({
-            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(
-                [
-                    {
-                        "updatedate": "2022-10-25T09:48:29-05:00",
-                        "producttypemaestrosunicos": "550",
-                        "user": "USER_POSTMAN_2",
-                        "producttypedescription": "EMISIONES MENOS DE 6 MESES",
-                        "producttype": "CDT",
-                        "creationdate": "2022-10-25T09:48:29-05:00",
-                        "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
-                    }
-                ]
-            )
+            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(emisionTypeMock[0])
         }));
 
         await act( async () => render(<ConfiguracionTipoEmision/>));
@@ -106,28 +83,7 @@ describe('ConfiguracionTipoEmision', () => {
     test('on text change tipo emisión', async () =>  {
         
         ServerAPI.mockImplementation(() => ({
-            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(
-                [
-                    {
-                        "updatedate": "2022-10-25T09:48:29-05:00",
-                        "producttypemaestrosunicos": "550",
-                        "user": "USER_POSTMAN_2",
-                        "producttypedescription": "EMISIONES MENOS DE 6 MESES",
-                        "producttype": "CDT",
-                        "creationdate": "2022-10-25T09:48:29-05:00",
-                        "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
-                    },
-                    {
-                        "updatedate": "2022-10-28T12:56:45-05:00",
-                        "producttypemaestrosunicos": "552",
-                        "user": "USER_POSTMAN",
-                        "producttypedescription": "EMITIDOS IGUAL A 12 MESES Y MENOR DE 18 MESES",
-                        "producttype": "CDT",
-                        "creationdate": "2022-10-28T12:56:45-05:00",
-                        "id": "f524b50f-aa21-420a-8965-756c105a6f91"
-                    }
-                ]
-            )
+            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(emisionTypeMock)
         }));
 
         await act( async () => render(<ConfiguracionTipoEmision/>));
@@ -140,28 +96,7 @@ describe('ConfiguracionTipoEmision', () => {
     test('on text change Código tipo emisión', async () =>  {
         
         ServerAPI.mockImplementation(() => ({
-            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(
-                [
-                    {
-                        "updatedate": "2022-10-25T09:48:29-05:00",
-                        "producttypemaestrosunicos": "550",
-                        "user": "USER_POSTMAN_2",
-                        "producttypedescription": "EMISIONES MENOS DE 6 MESES",
-                        "producttype": "CDT",
-                        "creationdate": "2022-10-25T09:48:29-05:00",
-                        "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
-                    },
-                    {
-                        "updatedate": "2022-10-28T12:56:45-05:00",
-                        "producttypemaestrosunicos": "552",
-                        "user": "USER_POSTMAN",
-                        "producttypedescription": "EMITIDOS IGUAL A 12 MESES Y MENOR DE 18 MESES",
-                        "producttype": "CDT",
-                        "creationdate": "2022-10-28T12:56:45-05:00",
-                        "id": "f524b50f-aa21-420a-8965-756c105a6f91"
-                    }
-                ]
-            )
+            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(emisionTypeMock)
         }));
 
         await act( async () => render(<ConfiguracionTipoEmision/>));
@@ -174,28 +109,7 @@ describe('ConfiguracionTipoEmision', () => {
     test('on text change Tipo de producto', async () =>  {
         
         ServerAPI.mockImplementation(() => ({
-            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(
-                [
-                    {
-                        "updatedate": "2022-10-25T09:48:29-05:00",
-                        "producttypemaestrosunicos": "550",
-                        "user": "USER_POSTMAN_2",
-                        "producttypedescription": "EMISIONES MENOS DE 6 MESES",
-                        "producttype": "CDT",
-                        "creationdate": "2022-10-25T09:48:29-05:00",
-                        "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
-                    },
-                    {
-                        "updatedate": "2022-10-28T12:56:45-05:00",
-                        "producttypemaestrosunicos": "552",
-                        "user": "USER_POSTMAN",
-                        "producttypedescription": "EMITIDOS IGUAL A 12 MESES Y MENOR DE 18 MESES",
-                        "producttype": "CDT",
-                        "creationdate": "2022-10-28T12:56:45-05:00",
-                        "id": "f524b50f-aa21-420a-8965-756c105a6f91"
-                    }
-                ]
-            )
+            getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(emisionTypeMock)
         }));
 
         await act( async () => render(<ConfiguracionTipoEmision/>));
@@ -216,19 +130,7 @@ describe('ConfiguracionTipoEmision', () => {
         
         ServerAPI.mockImplementation(() => ({
             getAllAndFiltersTypeProduct: jest.fn()
-            .mockResolvedValue(
-                [
-                    {
-                        "updatedate": "2022-10-25T09:48:29-05:00",
-                        "producttypemaestrosunicos": "550",
-                        "user": "USER_POSTMAN_2",
-                        "producttypedescription": "EMISIONES MENOS DE 6 MESES",
-                        "producttype": "CDT",
-                        "creationdate": "2022-10-25T09:48:29-05:00",
-                        "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
-                    }
-                ]
-            )
+            .mockResolvedValue([emisionTypeMock[0]])
         }));
 
         await act( async () => render(<ConfiguracionTipoEmision/>));
@@ -249,19 +151,7 @@ describe('ConfiguracionTipoEmision', () => {
         
         ServerAPI.mockImplementation(() => ({
             getAllAndFiltersTypeProduct: jest.fn()
-            .mockResolvedValue(
-                [
-                    {
-                        "updatedate": "2022-10-25T09:48:29-05:00",
-                        "producttypemaestrosunicos": "550",
-                        "user": "USER_POSTMAN_2",
-                        "producttypedescription": "EMISIONES MENOS DE 6 MESES",
-                        "producttype": "CDT",
-                        "creationdate": "2022-10-25T09:48:29-05:00",
-                        "id": "17f423f8-13d6-4441-8241-b9c33e1469b7"
-                    }
-                ]
-            )
+            .mockResolvedValue(emisionTypeMock)
         }));
 
         await act( async () => render(<ConfiguracionTipoEmision/>));
