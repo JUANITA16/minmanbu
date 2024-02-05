@@ -48,14 +48,15 @@ export default function ModalTipoEmision(props) {
   }
 
   const handleChangeProductType = function (event) {
-    const productType = event.target.value;
+    const { name, value } = event.target;
+
     setValues((prevValues) => ({
       ...prevValues,
-      [event.target.name]: productType
+      [name]: value
     }));
     setValidation((prevValues) => ({
       ...prevValues,
-      [event.target.name]: productType !== ""
+      [name]: value !== ""
     }))
   }
 

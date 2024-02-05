@@ -12,7 +12,6 @@ import './styles/index.css';
 import { MsalProvider } from "@azure/msal-react";
 import { PublicClientApplication, EventType } from '@azure/msal-browser';
 import { msalConfig, protectedResources } from './config/authConfig';
-import {encryptText} from './helpers/utils'
 
 // Configuracion SSO
 export const msalInstance = new PublicClientApplication(msalConfig);
@@ -38,8 +37,6 @@ export const getToken = async () => {
     account: account,
     scopes: protectedResources.data.scopes
   })
-  //const tokenEncrypt = encryptText(response.accessToken);
-  //return `Bearer ${tokenEncrypt}`;
   return `Bearer ${response.accessToken}`;
 }
 

@@ -56,22 +56,7 @@ const setUp = async() => {
 
     app.disable('x-powered-by');
     app.disable('server');
-
-    /* MIDDLEWARE PARA MODIFICAR TOKEN  ############################################### 
-    const decryptText = require('./utils/helpers');
-    app.use((req,res,next)=>{
-        var headerValue = req.header('authorization');
-        console.log('headerValue-encriptado AES:'+ headerValue)
-        if (headerValue && headerValue.includes('Bearer')) {
-            headerValue = headerValue.replace('Bearer ','');
-            console.log('Existe el header')
-            const newHeaderValue = decryptText(headerValue);
-            console.log('headerValue-desencriptado AES:'+ newHeaderValue)
-            req.headers['authorization'] = 'Bearer '+newHeaderValue;
-            console.log('headerValue - final:'+  req.header('authorization'))
-        }
-        next();
-    })*/
+    
     /* SSO ############################################################################ */
     const passport = require('passport');
     const BearerStrategy = require('passport-azure-ad').BearerStrategy;

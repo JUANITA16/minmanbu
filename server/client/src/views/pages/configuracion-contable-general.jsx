@@ -14,6 +14,7 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import MuiSelect from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
+import ProductTypeFilter from '../components/ProductTypeFilter';
 
 export default function ConfiguracionContableGeneral() {
   
@@ -367,25 +368,10 @@ export default function ConfiguracionContableGeneral() {
                                         </FormControl>
                                     </Col>
                                     <Col s={12} m={4} l={4} xl={4}>
-                                        <FormControl variant="standard" sx={{ marginTop: 2}} fullWidth>
-                                            <InputLabel id="productTypeLabel">Tipo de producto</InputLabel>
-                                            <MuiSelect
-                                                className="valid"
-                                                labelId="productTypeLabel"
-                                                name="producttype"
-                                                value={productTypeFilter}
-                                                onChange={onProductTypeFilterChange}
-                                                sx={{fontSize: 16, border: 'red 5px none'}}
-                                                fullWidth
-                                            >
-                                                <MenuItem key='0' value='CDT'>
-                                                    CDT
-                                                </MenuItem>
-                                                <MenuItem key='1' value='BONO'>
-                                                    BONO
-                                                </MenuItem>
-                                            </MuiSelect>
-                                        </FormControl>
+                                        <ProductTypeFilter
+                                            value={productTypeFilter}
+                                            onChange={onProductTypeFilterChange}
+                                        />
                                     </Col>
                                 </Row>
                                 <Row>
