@@ -25,6 +25,7 @@ export default function InputDate(props) {
       <label className="active">{labelName}</label>
       <DatePicker
         className="form-control rounded-0"
+        wrapperClassName="date-picker"
         selected={date}
         onChange={handleDate}
         dateFormat='yyyy-MM-dd'
