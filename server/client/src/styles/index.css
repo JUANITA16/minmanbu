@@ -651,3 +651,7 @@ a {
 .loading {
    color: #1a237e;
 }
+
+.date-picker {
+  width: 100%;
+}
