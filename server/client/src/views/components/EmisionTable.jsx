@@ -79,10 +79,12 @@ function MyTable({tableData, setEdits, userName}) {
           <tr key={data.id}>
             <td>{data.producttypedescription}</td>
             <td>{data.producttypemaestrosunicos}</td>
+            <td>{data.producttype}</td>
             <td><Button value={JSON.stringify({
                 id: data.id,
                 producttypedescription: data.producttypedescription, 
-                producttypemaestrosunicos: data.producttypemaestrosunicos, 
+                producttypemaestrosunicos: data.producttypemaestrosunicos,
+                producttype: data.producttype,
                 user: userName
                 })}
               small onClick={handleEdit} className="indigo darken-4">
@@ -126,6 +128,7 @@ function MyTable({tableData, setEdits, userName}) {
           <tr>
             <th>Tipo emisión</th>
             <th>Código tipo emisión</th>
+            <th>Tipo de producto</th>
           </tr>
         </thead>
         <tbody>

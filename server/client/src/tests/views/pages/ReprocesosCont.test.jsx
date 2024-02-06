@@ -1,8 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { fireEvent, render, screen } from "@testing-library/react";
-import { GenerateSap } from "../../../views";
-import { ServerAPI } from "../../../services/server";
+import { render, screen } from "@testing-library/react";
 import ReprocesosContablesD from '../../../views/pages/ReprocesosCont';
 
 jest.mock("../../../index",()=>({

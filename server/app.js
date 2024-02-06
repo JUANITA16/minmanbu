@@ -56,7 +56,7 @@ const setUp = async() => {
 
     app.disable('x-powered-by');
     app.disable('server');
-
+    
     /* SSO ############################################################################ */
     const passport = require('passport');
     const BearerStrategy = require('passport-azure-ad').BearerStrategy;
@@ -76,9 +76,10 @@ const setUp = async() => {
         passReqToCallback: authConfig.settings.passReqToCallback,
         loggingLevel: authConfig.settings.loggingLevel,
     };
+    
     const bearerStrategy = new BearerStrategy(options, (token, done) => {
         // Send user info using the second argument
-        done(null, {}, token);
+        done(null, {},  token);
     });
 
     // Add SSO express
@@ -88,7 +89,6 @@ const setUp = async() => {
     /* SERVER SIDE ####################################################################### */
     // - To health check endpoint
     app.get( process.env.SERVER_BASE_PATH + "/healthCheck", async (req, res) => {
-        console.log("Health Check")
         res.json({ 
             api: "Minmambu front", 
             message: "Health OK!"

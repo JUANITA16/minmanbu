@@ -8,6 +8,7 @@ import ConfiguracionContable from "./configuracion-contable";
 import ModalTipoEmision from "./ModalTipoEmision";
 import ReactExport from 'react-export-excel';
 import { useMsal } from "@azure/msal-react";
+import ProductTypeFilter from '../components/ProductTypeFilter';
 
 const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
   
@@ -18,7 +19,7 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
-  const [filters, setFilters] = useState({tipoEmision: "", codigoTipoEmision: ""});
+  const [filters, setFilters] = useState({tipoEmision: "", codigoTipoEmision: "", producttype: ""});
   const [tableData, setTableData] = useState(dbData);
   const [table, setTable] = useState(<></>);
   const [open, setOpen] = useState(false);
@@ -42,12 +43,12 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
   const handleApplyFilters = function (event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
-    getdbData(filters.codigoTipoEmision,filters.tipoEmision)
+    getdbData(filters.codigoTipoEmision,filters.tipoEmision,filters.producttype)
   };
 
   const handleDeleteFilters = function (event) {
     setFilterHeader(<p>Filtros</p>);
-    setFilters({tipoEmision: "", codigoTipoEmision: ""});
+    setFilters({tipoEmision: "", codigoTipoEmision: "", producttype: ""});
     setfiltEnable(false);
     getdbData("","")
   };
@@ -67,6 +68,13 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
       ));
     }
   };
+
+  const onProductTypeChange = function (event) {
+    setFilters((prevData)=>({
+      ...prevData,
+      [event.target.name]: event.target.value
+    }))
+  }
 
   useEffect(function () {
     setTableData(dbData)
@@ -105,20 +113,28 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
           node="div"
           >
             <Row>
-              <Col s={12} m={6} l={6} xl={6}>
+              <Col s={12} m={4} l={4} xl={4}>
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
                     id="tipoEmision" value={filters.tipoEmision} pattern="[a-zA-Z0-9\s]*"/>
                   <label htmlFor="tipoEmision">Tipo emisión</label>
                 </div>
               </Col>  
-              <Col s={12} m={6} l={6} xl={6}  >
+              <Col s={12} m={4} l={4} xl={4}  >
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
                     id="codigoTipoEmision" value={filters.codigoTipoEmision} pattern="[0-9]*"/>
                   <label htmlFor="codigoTipoEmision" >Código tipo emisión</label>
                 </div>
               </Col>
+              <Col s={12} m={4} l={4} xl={4}>
+                <ProductTypeFilter
+                  value={filters.producttype}
+                  onChange={onProductTypeChange}
+                />
+              </Col>
+            </Row>
+            <Row>
               <Col s={12} m={6} l={6} xl={3}>
                 <Button node="button" small className="indigo darken-4" 
                   onClick={handleApplyFilters} disabled={filtenable} >
@@ -151,6 +167,7 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
               id: "",
               producttypedescription: "", 
               producttypemaestrosunicos: "",
+              producttype: "",
               user: name
             }}
             tipoProceso={tipoProceso}
@@ -165,8 +182,9 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
             filename="TipoEmisión">
             <ExcelSheet data={tableData} name="Resultados">
               <ExcelColumn label="Id" value="id" />
-              <ExcelColumn label="Tipo producto" value="producttypedescription" />
+              <ExcelColumn label="Tipo emisión" value="producttypedescription" />
               <ExcelColumn label="Código tipo producto" value="producttypemaestrosunicos" />
+              <ExcelColumn label="Tipo de producto" value="producttype" />
               <ExcelColumn label="Fecha creacion" value="creationdate" />
               <ExcelColumn label="Fecha actualizacion" value="updatedate" />
               <ExcelColumn label="Usuario" value="user" />
@@ -187,8 +205,8 @@ function ConfiguracionTipoEmision (params) {
   const [edits, setEdits] = useState(0);
   const service = new ServerAPI();
 
-  const getdbData = async function (producttypemaestrosunicos, producttypedescription) {
-      const resp = await service.getAllAndFiltersTypeProduct(producttypemaestrosunicos,producttypedescription);
+  const getdbData = async function (producttypemaestrosunicos, producttypedescription, producttype) {
+      const resp = await service.getAllAndFiltersTypeProduct(producttypemaestrosunicos,producttypedescription, producttype);
       setdbData(resp);
   }
 

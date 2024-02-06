@@ -7,11 +7,14 @@ import ReactPaginate from 'react-paginate';
 import ConfiguracionContable from "./configuracion-contable";
 import { toast } from 'react-toastify';
 import { ServerAPI } from "../../services/server";
-import Modal from '@mui/material/Modal';
 import Dialog from '@mui/material/Dialog';
-import Box from '@mui/material/Box';
 import ReactExport from 'react-export-excel';
 import { useMsal } from "@azure/msal-react";
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import MuiSelect from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import ProductTypeFilter from '../components/ProductTypeFilter';
 
 export default function ConfiguracionContableGeneral() {
   
@@ -26,7 +29,7 @@ export default function ConfiguracionContableGeneral() {
     const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
   
     const title = "Configuración general"
-    const description = "En esta sección podrá realizar la configuración general asociada a los movimientos de CDTs desde Dominus"
+    const description = "En esta sección podrá realizar la configuración general asociada a los movimientos de los productos administrados desde Dominus"
     
     const [isDisabledButtonFilter, setIsDisabledButtonFilter] = useState(true);
     const [tableHeader, setTableHeader] = useState();
@@ -34,14 +37,14 @@ export default function ConfiguracionContableGeneral() {
     const [paginationFooter, setPaginationFooter] = useState();
     const [cantPaginasSelect, setCantPaginasSelect] = useState('10');
     const [isGeneral, setIsGeneral] = useState(true);
-    const [emision, setEmision] = useState('0');
+    const [emisiones, setEmisiones] = useState([])
     const [loaderText] = useState('');
     const [aditional] = useState('');
-    const [selecTipoEmisiones, setSelecTipoEmisiones] = useState();
 
     const [infoModal,setInfoModal]=useState()
-    const [emisionEditComponent,setEmisionEditComponent]=useState([])
     const [productsType,setProductsType]=useState([])
+    const [productTypeFilter, setProductTypeFilter]=useState("")
+    const [emisionTypeFilter, setEmisionTypeFilter]=useState("")
 
     const [openModal, setOpenModal] = React.useState(false);
 
@@ -55,26 +58,15 @@ export default function ConfiguracionContableGeneral() {
     var itemOffset = 0;
     var totalPaginas = 0;
     var cantPaginasSelect2 = 10;
-    var emisiones = [{ value: 0, label: 'Seleccione una emisión' }]
 
-    const SelecTipoEmisiones = (props) => {
-        return(
-            <Col s={12} m={3}>
-                <form data-testid="tipoEmisionForm">
-                    <label htmlFor="tipoEmisionSelect" className="active">Tipo de emisión</label>
-                    <Select name="tipoEmisionSelect"  inputId="tipoEmisionSelect" className="basic-single" defaultValue={emisiones[0]} options={emisiones} onChange={onChangeEmision} />
-                </form>
-            </Col>
-        )
-    }
-
-    const TableHeader = (props) => {
+    const TableHeader = () => {
         return (
           <thead>
             <tr>
               <th data-field="id" style={{ textAlign: "center" }} hidden={true}>id</th>
               <th data-field="tipoEmision" style={{ textAlign: "center"}}> Tipo emision</th>
-              <th data-field="codTipoEmision" style={{ textAlign: "center" }}> Código tipo emisión  </th>
+              <th data-field="codTipoEmision" style={{ textAlign: "center" }}> Código tipo emisión</th>
+              <th data-field="tipoProducto" style={{ textAlign: "center" }}> Tipo de producto</th>
             </tr>
           </thead>
         )
@@ -99,7 +91,7 @@ export default function ConfiguracionContableGeneral() {
 
     const TableBody = (props) => {
 
-        async function goToEditarAux(event) {
+        async function goToEditarAux() {
             setTitleModal('Editar - Configuración general')
             setDescriptionModal('En esta sección podrá realizar la edición de los registros Configuración general')
             setInfoModal(props)
@@ -118,6 +110,9 @@ export default function ConfiguracionContableGeneral() {
             <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
               {props.producttypemaestrosunicos}
             </td>
+            <td style={{ minWidth: 10, maxWidth: 190, wordBreak:"break-all", textAlign: "center" }}>
+              {props.producttype}
+            </td>
             <td style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
               <Button value={props.taxaccountid} node="button" onClick={goToEditarAux} small className="indigo darken-4">
                 Editar
@@ -127,7 +122,7 @@ export default function ConfiguracionContableGeneral() {
         )
     };
 
-    const TableFooterPagination = (props) => {
+    const TableFooterPagination = () => {
         return (
           <div>
             <ReactPaginate
@@ -154,7 +149,7 @@ export default function ConfiguracionContableGeneral() {
         currentItems = contentTable.slice(itemOffset, endOffset);
 
         setTableRender(<tbody>
-            {currentItems.map((contenido, index) => {
+            {currentItems.map((contenido) => {
                 return <TableBody 
                 taxaccountid={contenido.taxaccountid}
                 credittaxaccount={contenido.credittaxaccount}
@@ -168,25 +163,30 @@ export default function ConfiguracionContableGeneral() {
     };
 
 
-    async function goToBack (event) {
+    async function goToBack () {
         setIsGeneral(false);
     };
 
 
     const onChangeEmision = (event) => {
-        setEmision(event.value);
+        setEmisionTypeFilter(event.target.value)
+    }
+
+    const onProductTypeFilterChange = (event) => {
+        setProductTypeFilter(event.target.value)
     }
 
     async function applyFilters() {
         cantPaginasSelect2 =cantPaginasSelect;
-        await reloadTableMain(cantPaginasSelect,emision);
+        await reloadTableMain(cantPaginasSelect,emisionTypeFilter, productTypeFilter);
         setIsDisabledButtonFilter(false);
     }
 
     async function deleteFilters() {
-        setEmision('0')
+        setEmisionTypeFilter('')
+        setProductTypeFilter('')
         cantPaginasSelect2 =cantPaginasSelect;
-        await reloadTableMain(cantPaginasSelect,'0');
+        await reloadTableMain(cantPaginasSelect,'', '');
         setIsDisabledButtonFilter(true);
     }
 
@@ -205,15 +205,10 @@ export default function ConfiguracionContableGeneral() {
     }
 
 
-    async function reloadTableMain(cantReg, emisionReg) {
+    async function reloadTableMain(cantReg, emisionReg, productTypeFilter) {
         setTableRender(
             <Loading text={loaderText} aditional={aditional} />
         );
-        if(emisionReg ==='0'){
-            setEmision(emisionReg)
-            setSelecTipoEmisiones(<SelecTipoEmisiones/>)
-            setIsDisabledButtonFilter(true);
-        }
         const dataTable =  await service.getAllTaxAProdT();
 
         if (dataTable.status === 200){
@@ -223,15 +218,21 @@ export default function ConfiguracionContableGeneral() {
                 contentAll.forEach(element =>{
                     if (!emisiones.filter(function(e) { return e.label === element.producttypedescription; }).length > 0) {
                         const item ={ value: element.producttypedescription, label: element.producttypedescription}
-                        emisiones.push(item)
+                        setEmisiones((prev) => [
+                            ...prev,
+                            item
+                        ])
                     }
                 } );
-                
-                if(emisionReg ==='0'){
+
+                if(emisionReg ==='' & productTypeFilter===""){
                     contentTable = contentAll;
                 }else{
                     contentTable = contentAll.filter(function (el) {
-                        return el.producttypedescription === emisionReg 
+                        const conditionEmision = emisionReg === '' || el.producttypedescription === emisionReg;
+                        const conditionProductType = productTypeFilter === '' || el.producttype === productTypeFilter;
+
+                        return conditionEmision & conditionProductType;
                     });
                 }
                 
@@ -245,7 +246,7 @@ export default function ConfiguracionContableGeneral() {
                 );
                 setContentExcel(currentItems);
                 setTableRender(<tbody>
-                    {currentItems.map((contenido, index) => {
+                    {currentItems.map((contenido) => {
                         return <TableBody 
                         taxaccountid={contenido.taxaccountid}
                         credittaxaccount={contenido.credittaxaccount}
@@ -254,6 +255,7 @@ export default function ConfiguracionContableGeneral() {
                         debittaxaccountinterest={contenido.debittaxaccountinterest} 
                         producttypedescription={contenido.producttypedescription} 
                         producttypemaestrosunicos={contenido.producttypemaestrosunicos} 
+                        producttype={contenido.producttype} 
                         
                         credittaxaccountemission={contenido.credittaxaccountemission} 
                         debittaxaccountemission={contenido.debittaxaccountemission} 
@@ -271,13 +273,6 @@ export default function ConfiguracionContableGeneral() {
                 setPaginationFooter(
                     <TableFooterPagination />
                   );
-                
-                if(emisionReg ==='0'){
-                    setSelecTipoEmisiones(<SelecTipoEmisiones/>)
-                }
-                const emisionesAux = emisiones;
-                emisionesAux.shift()
-                setEmisionEditComponent(emisionesAux)
             }else{
                 toast.error('No se encontraron registros.');
                 setTableRender(null);
@@ -293,7 +288,7 @@ export default function ConfiguracionContableGeneral() {
             var productAux =[]
             let resp = await service.getAllAndFiltersTypeProduct("", "")
             resp.forEach(element =>{
-                const item ={ value: element.producttypedescription, label: element.producttypedescription, product_number:element.producttypemaestrosunicos}
+                const item ={ value: element.producttypedescription, label: element.producttypedescription, product_number:element.producttypemaestrosunicos, product_type:element.producttype}
                 productAux.push(item)
             } );
             setProductsType(productAux)
@@ -304,7 +299,7 @@ export default function ConfiguracionContableGeneral() {
     
     useEffect(() => {
         getProducts()
-        reloadTableMain(cantPaginasSelect,emision);
+        reloadTableMain(cantPaginasSelect,emisionTypeFilter, productTypeFilter);
         document.title = title
     }, [cantPaginasSelect]);
 
@@ -350,17 +345,46 @@ export default function ConfiguracionContableGeneral() {
                             node="div"
                             >
                                 <Row>
-                                    {selecTipoEmisiones}
-                                    <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
-                                        <Button node="button" small className="indigo darken-4" onClick={applyFilters}>
-                                            Aplicar filtros
-                                        </Button>
+                                    <Col s={12} m={4} l={4} xl={4}>
+                                        <FormControl variant="standard" sx={{ marginTop: 2}} fullWidth>
+                                            <InputLabel id="tipoEmisionSelectLabel">Tipo de emisión</InputLabel>
+                                            <MuiSelect
+                                                className="valid"
+                                                labelId="tipoEmisionSelectLabel"
+                                                name="producttypedescription"
+                                                value={emisionTypeFilter}
+                                                onChange={onChangeEmision}
+                                                sx={{fontSize: 16, border: 'red 5px none'}}
+                                                fullWidth
+                                            >
+                                                {
+                                                    emisiones.map((item, index) => (
+                                                        <MenuItem key={index} value={item.value}>
+                                                            {item.value}
+                                                        </MenuItem>
+                                                    ))
+                                                }
+                                            </MuiSelect>
+                                        </FormControl>
                                     </Col>
-                                    <Col s={12} m={3} className="input-field " style={{ float: 'right' }} >
-                                        <Button node="button" disabled={isDisabledButtonFilter} small className="indigo darken-4" onClick={deleteFilters}>
-                                            Borrar filtros
-                                        </Button>
+                                    <Col s={12} m={4} l={4} xl={4}>
+                                        <ProductTypeFilter
+                                            value={productTypeFilter}
+                                            onChange={onProductTypeFilterChange}
+                                        />
                                     </Col>
+                                </Row>
+                                <Row>
+                                <Col s={12} m={3} className="input-field ">
+                                    <Button node="button" small className="indigo darken-4" onClick={applyFilters}>
+                                        Aplicar filtros
+                                    </Button>
+                                </Col>
+                                <Col s={12} m={3} className="input-field ">
+                                    <Button node="button" disabled={isDisabledButtonFilter} small className="indigo darken-4" onClick={deleteFilters}>
+                                        Borrar filtros
+                                    </Button>
+                                </Col>
                                 </Row>
                             </CollapsibleItem>
                         </Collapsible>
@@ -401,7 +425,8 @@ export default function ConfiguracionContableGeneral() {
                                 <ExcelColumn label="Cuenta débito GMF" value="debittaxaccountgmf" />
                                 <ExcelColumn label="Cuenta crédito GMF" value="credittaxaccountgmf" />
                                 <ExcelColumn label="Tipo emisión" value="producttypedescription" />
-                                <ExcelColumn label="Codigo tipo emisión" value="producttypemaestrosunicos" />
+                                <ExcelColumn label="Codigo tipo emisión" value="producttypemaestrosunicos"/>
+                                <ExcelColumn label="Tipo de producto" value="producttype"/>
                                 <ExcelColumn label="Fecha de creación" value="creationdate" />
                                 <ExcelColumn label="Fecha de actualización" value="updatedate" />
                             </ExcelSheet>

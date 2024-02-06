@@ -7,7 +7,6 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/
 import React from 'react';
 import IdleLogout from './views/components/IdleLogout';
 import ActualizacionTasas from './views/pages/ActualizacionTasas';
-import ReprocesosContablesD from './views/pages/ReprocesosCont';
 
 export default function App() {
   const base = process.env.PUBLIC_URL;
