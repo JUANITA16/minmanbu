@@ -3,6 +3,9 @@ import { Button,Row, Col, Divider } from 'react-materialize'
 import { ServerAPI } from "../../services/server";
 import { toast } from 'react-toastify';
 import { Box, Modal, Snackbar, Alert, Stack, LinearProgress, Fade } from "@mui/material";
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 export default function ModalConfiguracionHomologacion(props) {
 
@@ -17,12 +20,14 @@ export default function ModalConfiguracionHomologacion(props) {
   const [validation, setValidation] = useState({
     accountNumber: true,
     cosifNumber: true,
-    costCenter: true
+    costCenter: true,
+    productType: true
   });
   const [values, setValues] = useState({
     accounting_account: "",
     cosif: "",
-    costcenteraccounting: ""
+    costcenteraccounting: "",
+    producttype: ""
   });
 
   useEffect(() => {
@@ -43,7 +48,18 @@ export default function ModalConfiguracionHomologacion(props) {
     }
   }
 
+  const handleChangeProductType = function (event) {
+    const { name, value } = event.target;
 
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value
+    }));
+    setValidation((prevValues) => ({
+      ...prevValues,
+      [name]: value !== ""
+    }))
+  }
 
   function msjError(){
     setOpenModalNotificacion(true);
@@ -71,12 +87,19 @@ export default function ModalConfiguracionHomologacion(props) {
         costCenter: false 
       }));
       msjError();
+    }else if(values.producttype===""){
+      setValidation((prevValues)=>({
+        ...prevValues,
+        productType: false
+      }));
+      msjError();
     }else {
       setisLoading(true)
       const dataSubmit ={
         "accounting_account": values.accounting_account,
         "cosif": values.cosif,
-        "costcenteraccounting": values.costcenteraccounting
+        "costcenteraccounting": values.costcenteraccounting,
+        "producttype": values.producttype
       }
       if(props.tipoProceso==='Nuevo'){
         const responseCreate = await service.createItemConfiguracionHomologacion(dataSubmit).then(response => {
@@ -140,7 +163,7 @@ export default function ModalConfiguracionHomologacion(props) {
               </Col>
             </Row>
             <Row>
-              <Col s={12} m={6} l={4}>
+              <Col s={12} m={6} l={3}>
                 <div className="input-field-2">
                   <label className={`${validation.accountNumber? '':'txt-red'}`}>Número de Cuenta</label>
                   <input className={`${validation.accountNumber? 'valid':'invalid'}`} 
@@ -152,7 +175,7 @@ export default function ModalConfiguracionHomologacion(props) {
                   />
                 </div>
               </Col>
-              <Col s={12} m={6} l={4}>
+              <Col s={12} m={6} l={3}>
                 <div className="input-field-2">
                   <label className={`${validation.cosifNumber? '':'txt-red'}`}>Número de Cuenta Cosif</label>
                   <input className={`${validation.cosifNumber? 'valid':'invalid'}`} 
@@ -164,7 +187,7 @@ export default function ModalConfiguracionHomologacion(props) {
                   />
                 </div>
               </Col>
-              <Col s={12} m={6} l={4}>
+              <Col s={12} m={6} l={3}>
                 <div className="input-field-2">
                   <label className={`${validation.costCenter? '':'txt-red'}`}>Centro de Costos</label>
                   <input className={`${validation.costCenter? 'valid':'invalid'}`} 
@@ -174,6 +197,26 @@ export default function ModalConfiguracionHomologacion(props) {
                   value = {values.costcenteraccounting}
                   id="costcenteraccounting" />
                 </div>
+              </Col>
+              <Col s={12} m={6} l={3}>
+                <label className={`${validation.productType? '':'txt-red'}`}>Tipo de producto</label>
+                <FormControl variant="standard" sx={{ marginTop: 2}} fullWidth required>
+                  <Select
+                      name="producttype"
+                      className={`${validation.productType? '':'txt-red'}`}
+                      value={values.producttype}
+                      onChange={handleChangeProductType}
+                      disabled={props.tipoProceso==='Editar'}
+                      sx={{fontSize: 16, border: 'red 5px none'}}
+                      >
+                      <MenuItem key='0' value='CDT'>
+                        CDT
+                      </MenuItem>
+                      <MenuItem key='1' value='BONO'>
+                        BONO
+                      </MenuItem>
+                  </Select>
+                </FormControl>
               </Col>
             </Row>
             <Row>

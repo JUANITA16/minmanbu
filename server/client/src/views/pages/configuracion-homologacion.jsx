@@ -7,6 +7,7 @@ import MyTable from "../components/HoTable";
 import ConfiguracionContable from "./configuracion-contable";
 import ModalConfiguracionHomologacion from "./ModalHomologacion";
 import ReactExport from 'react-export-excel';
+import ProductTypeFilter from '../components/ProductTypeFilter';
 
 const HomoloView = function ({goBack, dbData, edits, setEdits}) {
   
@@ -15,13 +16,13 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
-  const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: ""});
+  const [filters, setFilters] = useState({numeroCuenta: "", numeroCosif: "", producttype: ""});
   const [tableData, setTableData] = useState(dbData);
   const [table, setTable] = useState(<></>);
   const [open, setOpen] = useState(false);
   const [filtenable, setfiltEnable] = useState(false)
   const modalTitle = "Nuevo - Configuración homologación"
-  const modalDescription = "En esta sección podrá realizar la creación de un nuevo registro Configuración homologación"
+  const modalDescription = "En esta sección podrá realizar la creación de un nuevo registro de configuración homologación"
   const tipoProceso = "Nuevo"
 
   function applyFilters(record, filters) {
@@ -32,6 +33,9 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
     if (filters.numeroCosif && isValid) {
       isValid = (record.cosif === filters.numeroCosif)
     };
+    if (filters.producttype && isValid) {
+      isValid = (record.producttype === filters.producttype)
+    }
 
     return isValid
   };
@@ -49,11 +53,17 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
 
   const handleDeleteFilters = function (event) {
     setFilterHeader(<p>Filtros</p>);
-    setFilters({numeroCuenta: "", numeroCosif: ""});
+    setFilters({numeroCuenta: "", numeroCosif: "", producttype: ""});
     setTableData(dbData);
     setfiltEnable(false);
   };
 
+  const onProductTypeChange = function (event) {
+    setFilters((prevData)=>({
+      ...prevData,
+      [event.target.name]: event.target.value
+    }))
+  }
 
   const createNew = function (event) {
     setOpen(true)
@@ -107,20 +117,28 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
           node="div"
           >
             <Row>
-              <Col s={12} m={6} l={6} xl={6}>
+              <Col s={12} m={6} l={4} xl={4}>
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
                     id="numeroCuenta" value={filters.numeroCuenta} pattern="[0-9]*"/>
                   <label htmlFor="numeroCuenta">Número de Cuenta</label>
                 </div>
               </Col>
-              <Col s={12} m={6} l={6} xl={6}  >
+              <Col s={12} m={6} l={4} xl={4}  >
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
                     id="numeroCosif" value={filters.numeroCosif} pattern="[0-9]*"/>
                   <label htmlFor="numeroCosif" >Número de Cuenta cosif</label>
                 </div>
               </Col>
+              <Col s={12} m={6} l={4} xl={4}>
+                <ProductTypeFilter
+                  value={filters.producttype}
+                  onChange={onProductTypeChange}
+                />
+              </Col>
+            </Row>
+            <Row>
               <Col s={12} m={6} l={6} xl={3}>
                 <Button node="button" small className="indigo darken-4" 
                   onClick={handleApplyFilters} disabled={filtenable} >
@@ -168,6 +186,7 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
               <ExcelColumn label="Número de cuenta" value="accounting_account" />
               <ExcelColumn label="Número cuenta COSIF" value="cosif" />
               <ExcelColumn label="Centro de costos" value="costcenteraccounting" />
+              <ExcelColumn label="Tipo de producto" value="producttype" />
               <ExcelColumn label="Fecha creacion" value="creationdate" />
               <ExcelColumn label="Fecha actualizacion" value="updatedate" />
             </ExcelSheet>
