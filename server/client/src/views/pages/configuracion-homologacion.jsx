@@ -107,7 +107,7 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
         </Col>
       </Row>
       <CardHeader title={"Configuración Homologaciones"} 
-        description={"En esta sección podrá realizar la configuración de de homologaciones asociadas a los productos administrados por el banco"}/>
+        description={"En esta sección podrá realizar la configuración de homologaciones asociadas a los productos administrados por el banco"}/>
       <Row>
         <Collapsible accordion={false}>
           <CollapsibleItem
