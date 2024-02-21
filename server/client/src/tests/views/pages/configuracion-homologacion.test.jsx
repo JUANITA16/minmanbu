@@ -55,7 +55,7 @@ describe('ConfiguracionHomologacion', () => {
 
 
         expect(screen.getAllByText(/Configuración Homologaciones/i)[0]).toBeInTheDocument();
-        expect(screen.getAllByText(/realizar la configuración de Homologaciones /i)[0]).toBeInTheDocument();
+        expect(screen.getAllByText(/realizar la configuración de de homologaciones /i)[0]).toBeInTheDocument();
         expect(screen.getByText(/Retroceder/i)).toBeInTheDocument();
         expect(screen.getByText(/Nuevo/i)).toBeInTheDocument();
     
