@@ -17,7 +17,8 @@ function MyTable({tableData, setEdits}) {
     accountid: "",
     accounting_account: "", 
     cosif: "", 
-    costcenteraccounting: ""
+    costcenteraccounting: "",
+    producttype: ""
   })
   const modalTitle = "Editar - Configuración homologación"
   const modalDescription = "En esta sección podrá realizar la edición de los registros Configuración homologación"
@@ -80,11 +81,13 @@ function MyTable({tableData, setEdits}) {
             <td>{data.accounting_account}</td>
             <td>{data.cosif}</td>
             <td>{data.costcenteraccounting}</td>
+            <td>{data.producttype}</td>
             <td><Button value={JSON.stringify({
                 accountid: data.accountid,
                 accounting_account: data.accounting_account, 
                 cosif: data.cosif, 
-                costcenteraccounting: data.costcenteraccounting
+                costcenteraccounting: data.costcenteraccounting,
+                producttype: data.producttype
                 })}
               small onClick={handleEdit} className="indigo darken-4">
               Editar</Button>
@@ -129,6 +132,7 @@ function MyTable({tableData, setEdits}) {
             <th>Número de Cuenta</th>
             <th>Número de Cuenta cosif</th>
             <th>Centro de Costos</th>
+            <th>Tipo de Producto</th>
           </tr>
         </thead>
         <tbody>
