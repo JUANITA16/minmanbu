@@ -1,7 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import {render, screen, fireEvent} from '@testing-library/react';
-import { ServerAPI } from "../../../services/server";
 import ModalTipoEmision from '../../../views/pages/ModalTipoEmision'
 import { act } from 'react-dom/test-utils';
 
@@ -64,7 +63,7 @@ describe('Test Modal tipo emision', () => {
         tipoProceso="Nuevo"
         />));
         
-          const button = await screen.getByText(/Guardar/i)
+          const button = screen.getByText(/Guardar/i)
           fireEvent.click(button)
           expect(screen.getByText("Todos los campos son de diligenciamiento obligatorio.")).toBeInTheDocument();
       });

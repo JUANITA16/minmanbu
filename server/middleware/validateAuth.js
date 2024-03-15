@@ -1,3 +1,4 @@
+
 const routeGuard = (accessMatrix) => {
     return (req, res, next) => {
         console.info("Inicio middleware de validación")
@@ -20,4 +21,5 @@ const routeGuard = (accessMatrix) => {
         next();
     }
 }
+
 module.exports = routeGuard;

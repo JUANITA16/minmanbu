@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Loading } from '../components/index'
 import { Row, Col, Button,Icon, Table } from 'react-materialize'
-import { toast } from 'react-toastify';
 import Select from 'react-select'
 import ReactPaginate from 'react-paginate';
 import { convertMessageError } from "../../helpers/utils";

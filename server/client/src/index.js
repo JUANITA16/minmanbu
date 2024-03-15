@@ -37,7 +37,6 @@ export const getToken = async () => {
     account: account,
     scopes: protectedResources.data.scopes
   })
-
   return `Bearer ${response.accessToken}`;
 }
 
