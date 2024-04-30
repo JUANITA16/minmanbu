@@ -67,6 +67,9 @@
         "react-select-event": "^5.5.0"
     },
     "jest": {
+        "moduleNameMapper": {
+            "^axios$": "axios/dist/node/axios.cjs"
+        },
         "collectCoverageFrom": [
             "src/**/*.{js,jsx}",
             "!src/index.js"
