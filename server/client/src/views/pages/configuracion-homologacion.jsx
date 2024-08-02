@@ -9,8 +9,8 @@ import ModalConfiguracionHomologacion from "./ModalHomologacion";
 import ReactExport from 'react-export-excel';
 import ProductTypeFilter from '../components/ProductTypeFilter';
 
-const HomoloView = function ({goBack, dbData, edits, setEdits}) {
-  
+const HomoloView = function ({goBack, dbData,  setEdits}) {
+
   const ExcelFile = ReactExport.ExcelFile;
   const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
@@ -25,7 +25,7 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
   const modalDescription = "En esta sección podrá realizar la creación de un nuevo registro de configuración homologación"
   const tipoProceso = "Nuevo"
 
-  function applyFilters(record, filters) {
+  function applyFilters(record) {
     let isValid = true
     if (filters.numeroCuenta) {
       isValid = (record.accounting_account === filters.numeroCuenta)
@@ -40,9 +40,9 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
     return isValid
   };
 
-  const handleApplyFilters = function (event) {
+  const handleApplyFilters = function (_event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
-    let filteredData = tableData.filter((value) => applyFilters(value, filters))
+    const filteredData = tableData.filter((value) => applyFilters(value, filters))
     if (filteredData.length===0) {
       setTableData(["Empty"])
     } else {
@@ -51,7 +51,7 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
     setfiltEnable(true);
   };
 
-  const handleDeleteFilters = function (event) {
+  const handleDeleteFilters = function (_event) {
     setFilterHeader(<p>Filtros</p>);
     setFilters({numeroCuenta: "", numeroCosif: "", producttype: ""});
     setTableData(dbData);
@@ -65,7 +65,7 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
     }))
   }
 
-  const createNew = function (event) {
+  const createNew = function (_event) {
     setOpen(true)
   };
 
@@ -93,7 +93,7 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
   }
 
   return (
-  <Fragment>
+    <Fragment>
       <Row>
         <Col s={12} m={2} >
           <Button node="button" small className="indigo darken-4" onClick={goBack} >
@@ -106,15 +106,15 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
           </Button>
         </Col>
       </Row>
-      <CardHeader title={"Configuración Homologaciones"} 
+      <CardHeader title={"Configuración Homologaciones"}
         description={"En esta sección podrá realizar la configuración de homologaciones asociadas a los productos administrados por el banco"}/>
       <Row>
         <Collapsible accordion={false}>
           <CollapsibleItem
-          expanded={false}
-          header={filterHeader}
-          icon={<Icon>filter_list</Icon>}
-          node="div"
+            expanded={false}
+            header={filterHeader}
+            icon={<Icon>filter_list</Icon>}
+            node="div"
           >
             <Row>
               <Col s={12} m={6} l={4} xl={4}>
@@ -140,7 +140,7 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
             </Row>
             <Row>
               <Col s={12} m={6} l={6} xl={3}>
-                <Button node="button" small className="indigo darken-4" 
+                <Button node="button" small className="indigo darken-4"
                   onClick={handleApplyFilters} disabled={filtenable} >
                   Aplicar filtros
                 </Button>
@@ -156,24 +156,24 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
         </Collapsible>
       </Row>
       <Modal
-      open={open}
-      onClose={() => setOpen(false)}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
         <Box className="modal-style" >
           <ModalConfiguracionHomologacion
-            title={modalTitle} 
-            description={modalDescription} 
+            title={modalTitle}
+            description={modalDescription}
             setEdits={setEdits}
-            setOpen={setOpen} 
+            setOpen={setOpen}
             info={{
-              accounting_account: "", 
-              cosif: "", 
+              accounting_account: "",
+              cosif: "",
               costcenteraccounting: ""
             }}
             tipoProceso={tipoProceso}
-            />
+          />
         </Box>
       </Modal>
       {renderTable()}
@@ -199,33 +199,34 @@ const HomoloView = function ({goBack, dbData, edits, setEdits}) {
 
 
 
-function ConfiguracionHomologacion (params) {
-  
+function ConfiguracionHomologacion(_params) {
+
   const [dbData, setdbData] = useState([]);
   const [view, setView] = useState(<></>);
   const [edits, setEdits] = useState(0);
   const service = new ServerAPI();
+  const HTTP_STATUS_OK = 200;
 
   const getdbData = async function () {
     let resp = [];
     try {
       resp = await service.getAllCosif();
-      if (resp.status === 200) {
-        var dataTable = await resp.data
+      if (resp.status === HTTP_STATUS_OK) {
+        const dataTable = await resp.data;
         setdbData(dataTable);
       }
       return resp
     } catch (error) {
-      console.error(error);
-      
+      logError(error);
+
       return resp;
     }
   }
 
-  const goBack = function (event) {
+  const goBack = function (_event) {
     setView(<ConfiguracionContable />);
   };
-  
+
 
 
   useEffect(() => {
@@ -233,11 +234,11 @@ function ConfiguracionHomologacion (params) {
   }, [edits]);
 
   useEffect(() => {
-    setView(<HomoloView  goBack={goBack} dbData={dbData} edits={edits} setEdits={setEdits}/> );
+    setView(<HomoloView goBack={goBack} dbData={dbData} edits={edits} setEdits={setEdits}/> );
   }, [dbData])
 
   return view
 
 }
 
-export default ConfiguracionHomologacion
+export default ConfiguracionHomologacion;

@@ -1,6 +1,6 @@
 // Imports
-const request = require('supertest');
-const setUp = require("../app");
+import request from 'supertest';
+import setUp from '../app';
 
 // Averages y Mocks globales
 beforeAll(() => {
@@ -32,5 +32,5 @@ describe('app', () => {
         // Assert
         expect(result.text).toEqual(expected);
     })
-    
+
 });

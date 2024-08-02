@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
+const HTTP_OK = 200;
 export default function ModalConfiguracionContableGeneral(props) {
 
     const service = new ServerAPI();
@@ -237,7 +238,7 @@ export default function ModalConfiguracionContableGeneral(props) {
         }else if(producttype ===""){
             msjError('Todos los campos son de diligenciamiento obligatorio.');
         }else {
-            var isReloadTable=true;
+            const isReloadTable = true;
             const dataSubmit ={
                 "producttypemaestrosunicos": producttypemaestrosunicos,
                 "credittaxaccountinterest": credittaxaccountinterest,
@@ -260,9 +261,9 @@ export default function ModalConfiguracionContableGeneral(props) {
                 const responseCreate = await service.createItemConfiguracionGeneral(dataSubmit).then(response => {
                     return response;
                     });
-                if(responseCreate.status===200 && responseCreate.data){
-                    if(responseCreate.data.message=='emision-exist'){
-                        msjError('El tipo de emisión ya se encuentra registrado.');
+                    if(responseCreate.status=== HTTP_OK && responseCreate.data){
+                        if(responseCreate.data.message==='emision-exist'){
+                            msjError('El tipo de emisión ya se encuentra registrado.');
                         isReloadTable=false;
                     }else{
                         toast.success("Configuración registrada correctamente.");
@@ -275,8 +276,8 @@ export default function ModalConfiguracionContableGeneral(props) {
                     return response;
                     }
                 );
-                if (mensajeRespuesta.status === 200 && mensajeRespuesta.data){
-                    if(mensajeRespuesta.data.message=='emision-exist'){
+                if (mensajeRespuesta.status === HTTP_OK && mensajeRespuesta.data){
+                    if(mensajeRespuesta.data.message==='emision-exist'){
                         msjError('El tipo de emisión ya se encuentra registrado.');
                         isReloadTable=false;
                     }else{
@@ -297,13 +298,13 @@ export default function ModalConfiguracionContableGeneral(props) {
         props.setOpenModal(false)
     };
 
-    const handleClose = (event, reason) => {
+    const handleClose = (_event, reason) => {
         if (reason === 'clickaway') {
           return;
         }
         setOpen(false);
-        setOpenModalNotificacion(false)
-      };
+        setOpenModalNotificacion(false);
+      };     
 
 
     useEffect(() => {
@@ -560,7 +561,7 @@ export default function ModalConfiguracionContableGeneral(props) {
             <div style={{margin:"12px"}}>
                 <Stack direction="row" spacing={0.5} >
                     <Button node="button" small className="indigo darken-4" onClick={handleSubmit}>
-                        Guardar
+                Guardar
                     </Button>
                     <br />
                     <Button node="button" small  className="indigo darken-4" onClick={goToConfiguracionGeneral} >

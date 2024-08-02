@@ -6,48 +6,49 @@ import ConfiguracionContableGeneral from '../../../views/pages/configuracion-con
 import { act } from 'react-dom/test-utils';
 import selectEvent from 'react-select-event'
 import userEvent from '@testing-library/user-event'
+import 'materialize-css/dist/css/materialize.min.css';
+import * as Materialize from 'materialize-css';
 
 jest.mock("../../../index",()=>({
     getToken: jest.fn().mockResolvedValue("test")
 }))
 jest.mock('../../../services/server');
 jest.mock("@azure/msal-react", () => ({
-    useMsal: () => ({ 
-        instance:{ 
+    useMsal: () => ({
+        instance:{
             getActiveAccount: jest.fn()
-            .mockReturnValue(
-                {
-                  idTokenClaims: {name: "test_name"}
-                }
-            )
-        } 
-      })
+                .mockReturnValue(
+                    {
+                        idTokenClaims: {name: "test_name"}
+                    }
+                )
+        }
     })
-  );
+})
+);
 jest.mock('react-export-excel', () => {
     const originalModule = jest.requireActual('react-export-excel');
-    const ExcelFile =  (props) => (<p>Test ExcelFile</p>);
-    ExcelFile.ExcelSheet = (props) => (<div>Test ExcelSheet</div>);
-    ExcelFile.ExcelColumn = (props) => (<div>Test ExcelSheet</div>);
+    const ExcelFile = (/*_props*/) => (<p>Test ExcelFile</p>);
+    ExcelFile.ExcelSheet = (/*_props*/) => (<div>Test ExcelSheet</div>);
+    ExcelFile.ExcelColumn = (/*_props*/) => (<div>Test ExcelColumn</div>);
     const ReactExport = {
-      ExcelFile
-    }
+        ExcelFile
+    };
     //Mock the default export and named export 'foo'
     return {
-      __esModule: true,
-      ...originalModule,
-      default: ReactExport
+        __esModule: true,
+        ...originalModule,
+        default: ReactExport
     };
-  });
-  
+});
+
 
 afterAll(() => {
     jest.resetAllMocks();
 });
 
 
-global.M = require('react-materialize');
-global.M = require('materialize-css');
+global.M = Materialize;
 
 
 describe('ConfiguracionContableGeneral', () => {
@@ -78,12 +79,12 @@ describe('ConfiguracionContableGeneral', () => {
             })
         }));
         await act( async () => render(<ConfiguracionContableGeneral/>));
-        
+
         expect(screen.getAllByText(/Configuración general/i)[0]).toBeInTheDocument();
         expect(screen.getAllByText(/asociada a los movimientos de los productos administrados desde Dominus/i)[0]).toBeInTheDocument();
         expect(screen.getByText(/Retroceder/i)).toBeInTheDocument();
         expect(screen.getByText(/Nuevo/i)).toBeInTheDocument();
-    
+
         expect(screen.getByText(/NO APLICA/i)).toBeInTheDocument();
     })
 
@@ -99,10 +100,10 @@ describe('ConfiguracionContableGeneral', () => {
         await act( async () => render(<ConfiguracionContableGeneral/>));
         const data = screen.queryByText(/NO APLICA/i)
         expect(data).toEqual(null);
-        
+
     })
 
-    
+
     test('render ConfiguracionContableGeneral error data', async () =>  {
 
         ServerAPI.mockImplementation(() => ({
@@ -116,7 +117,7 @@ describe('ConfiguracionContableGeneral', () => {
         expect(data).toEqual(null);
     })
 
-    
+ 
     test('open modal nuevo', async () =>  {
 
         ServerAPI.mockImplementation(() => ({
@@ -145,14 +146,14 @@ describe('ConfiguracionContableGeneral', () => {
         }));
         await act( async () => render(<ConfiguracionContableGeneral/>));
 
-        const button = await screen.getByText(/Nuevo/i)
+        const button = screen.getByText(/Nuevo/i);
         fireEvent.click(button)
         expect(screen.getByText(/Nuevo - Configuración general/i)).toBeInTheDocument();
         expect(screen.getByText(/realizar la creación de un nuevo registro/i)).toBeInTheDocument();
-        
+
     })
 
-    
+
     test('open modal editar', async () =>  {
 
         ServerAPI.mockImplementation(() => ({
@@ -181,13 +182,13 @@ describe('ConfiguracionContableGeneral', () => {
         }));
         await act( async () => render(<ConfiguracionContableGeneral/>));
 
-        const button = await screen.getByText(/Editar/i)
+        const button = screen.getByText(/Editar/i);
         fireEvent.click(button)
         expect(screen.getByText(/Editar - Configuración general/i)).toBeInTheDocument();
         expect(screen.getByText(/realizar la edición de los registros/i)).toBeInTheDocument();
-        
+
     })
-    
+
     test('click go to back', async () =>  {
 
         ServerAPI.mockImplementation(() => ({
@@ -210,12 +211,12 @@ describe('ConfiguracionContableGeneral', () => {
         }));
         await act( async () => render(<ConfiguracionContableGeneral/>));
 
-        const button = await screen.getByText(/Retroceder/i)
+        const button = screen.getByText(/Retroceder/i);
         fireEvent.click(button)
-        expect(screen.getAllByText(/Configuración contable/i)[0]).toBeInTheDocument();        
+        expect(screen.getAllByText(/Configuración contable/i)[0]).toBeInTheDocument();
     })
 
-    
+
     test('select cant pages', async () =>  {
 
         ServerAPI.mockImplementation(() => ({
@@ -245,14 +246,14 @@ describe('ConfiguracionContableGeneral', () => {
         await act( async () => render(<ConfiguracionContableGeneral/>));
 
         await selectEvent.select(screen.getByLabelText('Cantidad de registros'), '20')
-        
+
         expect(screen.getByTestId('cantRegForm')).toHaveFormValues({
             cantRegSelect: '20',
         })
     })
 
 
-    
+
     test('select emisiones', async () =>  {
 
         ServerAPI.mockImplementation(() => ({
@@ -285,7 +286,7 @@ describe('ConfiguracionContableGeneral', () => {
         const selectElement = await screen.findByLabelText(selectLabel);
 
         userEvent.click(selectElement);
-        
+
         const elements = screen.getAllByText('NO APLICA');
         await waitFor(() => {
             expect(elements.length).toBeGreaterThan(0)

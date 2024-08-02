@@ -1,5 +1,5 @@
-// Imports
-const axios = require('axios');
+import axios from 'axios';
+import { connectBack } from '../../utils/connectBack';
 
 jest.mock("axios");
 
@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-    jest.resetAllMocks();
+  jest.resetAllMocks();
 });
 
 afterEach(() => {
@@ -19,63 +19,61 @@ afterEach(() => {
 
 describe('connectBack', () => {
 
-    test('connectBack - get petition', async () => {
+  test('connectBack - get petition', async () => {
         // Average
-        url="test"
-        method="get"
-        params={}
-        headers={}
-        body={}
+    const url = "test";
+    const method = "get";
+    const params = {};
+    const headers = {};
+    const body = {};
 
-        jest.mock("../../utils/secret", () => ({
-            getSecret: jest.fn().mockResolvedValueOnce("test_token")
-        }))
+    jest.mock("../../utils/secret", () => ({
+      getSecret: jest.fn().mockResolvedValueOnce("test_token")
+    }));
 
-        const resp = { 
-            data: "test",
-            status: 200
-        };
-        axios.request.mockResolvedValue(resp);
+    const resp = { 
+      data: "test",
+      status: 200
+    };
+    axios.request.mockResolvedValue(resp);
 
-        const expected = {
-            status:200, 
-            data: "test"
-        };
-        
-        // Act
-        const { connectBack } = require('../../utils/connectBack');
-        const result = await connectBack(url,method,params,headers,body)
+    const expected = {
+      status:200, 
+      data: "test"
+    };
 
-        // Assert
-        expect(result).toEqual(expected);
-    });
+    // Act
+    const result = await connectBack(url,method,params,headers,body);
 
-    test('connectBack - get petition error', async () => {
+    // Assert
+    expect(result).toEqual(expected);
+  });
+
+  test('connectBack - get petition error', async () => {
         // Average
-        url="test"
-        method="error"
-        params={}
-        headers={}
-        body={}
+        const url = "test";
+    const method = "error";
+    const params = {};
+    const headers = {};
+    const body = {};
 
-        jest.mock("../../utils/secret", () => ({
-            getSecret: jest.fn().mockResolvedValueOnce("test_token")
-        }))
-        const resp = { 
-            response: { data: "test", status: 400 },
-        };
-        axios.request.mockRejectedValue(resp);
+    jest.mock("../../utils/secret", () => ({
+      getSecret: jest.fn().mockResolvedValueOnce("test_token")
+    }));
+    const resp = { 
+      response: { data: "test", status: 400 },
+    };
+    axios.request.mockRejectedValue(resp);
 
-        const expected = {
-            status:400, 
-            data: "test",
-        };
-        // Act
-        const { connectBack } = require('../../utils/connectBack');
-        const result = await connectBack(url,method,params,headers,body)
+    const expected = {
+      status:400, 
+      data: "test",
+    };
+    // Act
+    const result = await connectBack(url,method,params,headers,body);
 
-        // Assert
-        expect(result).toEqual(expected);
-    });
-    
+    // Assert
+    expect(result).toEqual(expected);
+  });
+
 });

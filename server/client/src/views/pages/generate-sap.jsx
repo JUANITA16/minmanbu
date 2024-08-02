@@ -10,14 +10,14 @@ import SapTable from "../components/SapTable";
 import ReactExport from 'react-export-excel';
 
 
-
+const MIN_YEAR = 2021;
 export default function GenerateSap() {
   const ExcelFile = ReactExport.ExcelFile;
   const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
   const service = new ServerAPI();
   const currDate = convertTZ(new Date());
-  let minDate = new Date(2021, 1, 1);
+  const minDate = new Date(MIN_YEAR, 1, 1);
 
   const { instance } = useMsal();
 
@@ -36,15 +36,15 @@ export default function GenerateSap() {
   const [dbData, setDbData] = useState([]);
   const [dialogOpen, setdialogOpen] = useState(false);
 
-  const handleApplyFilters = async function (event) {
+  const handleApplyFilters = async function (_event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
     setTableData([])
-    let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
+    const resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate));
     setDbData(resp)
-    
+
   };
-  const handleDeleteFilters = function (event) {
+  const handleDeleteFilters = function (_event) {
     setFilterHeader(<p>Filtros</p>);
     setInitDate(currDate);
     setFinalDate(currDate);
@@ -76,7 +76,7 @@ export default function GenerateSap() {
   useEffect(() => {
     async function fetchData() {
       document.title = title
-      let resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate))
+      const resp = await getdbData(setFormatDate(initDate), setFormatDate(finalDate));
       setDbData(resp)
     }
     fetchData()
@@ -96,60 +96,61 @@ export default function GenerateSap() {
   }, [startDate, endDate])
 
 
-  
 
-async function handleSubmit(event) {
-  event.preventDefault();
-  showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
-  setInProgress(true);
 
-  const {name} = instance.getActiveAccount().idTokenClaims
+  async function handleSubmit(event) {
+    event.preventDefault();
+    showToast('Estamos generando el archivo, por favor consulte el resultado del proceso');
+    setInProgress(true);
 
-  
- service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),name).then( (data) => {
-    if( data && data.message){
-      showToast(data.message);
+    const {name} = instance.getActiveAccount().idTokenClaims
+
+
+    service.generateSAP(setFormatDate(startDate), setFormatDate(endDate),name).then( (data) => {
+      if( data && data.message){
+        showToast(data.message);
       }
-  });
-}
-useEffect(() => {
-  // Comparamos las fechas para que no superen los 7 días(Fecha Final)
-  let deltaDate = endDate - startDate
-  // El número especifícado en el condicional equivale a la diferencia de 7 días
-  if (deltaDate > 518400931) {
-    setdialogOpen(true)
-    setEndDate(startDate)
+    });
   }
-}, [startDate])
-useEffect(() => {
-  // Comparamos las fechas para que no superen los 7 días(Fecha Inicial)
-  let deltaDate = endDate - startDate
-  // El número especifícado en el condicional equivale a la diferencia de 7 días
-  if (deltaDate > 518400931) {
-    setdialogOpen(true)
-    setStartDate(endDate)
-  }
-}, [endDate])
+  const SEVEN_DAYS_MS = 518400000;
+  useEffect(() => {
+    // Comparamos las fechas para que no superen los 7 días(Fecha Final)
+    const deltaDate = endDate - startDate;
+    // El número especifícado en el condicional equivale a la diferencia de 7 días
+    if (deltaDate > SEVEN_DAYS_MS) {
+      setdialogOpen(true)
+      setEndDate(startDate)
+    }
+  }, [startDate])
+  useEffect(() => {
+    // Comparamos las fechas para que no superen los 7 días(Fecha Inicial)
+    const deltaDate = endDate - startDate;
+    // El número especifícado en el condicional equivale a la diferencia de 7 días
+    if (deltaDate > SEVEN_DAYS_MS) {
+      setdialogOpen(true)
+      setStartDate(endDate)
+    }
+  }, [endDate])
 
 
-const renderElement = () => {
-  return (
+  const renderElement = () => {
+    return (
       <React.Fragment>
         <CardHeader title={title} description={description} aditional={aditional} />
         <form onSubmit={handleSubmit}>
           <Row>
             <Col s={12} m={6} className="input-field date text-left">
-              <InputDate labelName="Fecha inicial" maxValue={endDate} 
+              <InputDate labelName="Fecha inicial" maxValue={endDate}
                 setDate={setStartDate}  dateInput={startDate} minValue={minDate} />
             </Col>
             <Col s={12} m={6} className="input-field date text-left">
-              <InputDate labelName="Fecha final" minValue={startDate} 
+              <InputDate labelName="Fecha final" minValue={startDate}
                 setDate={setEndDate}  dateInput={endDate}  />
             </Col>
             <Col s={12} className="input-field m0">
-              <Button node="button" style={{ float: 'right' }} type="submit" 
-                      small className="indigo darken-4" disabled={inProgress}
-                      data-testid="test-submit" >
+              <Button node="button" style={{ float: 'right' }} type="submit"
+                small className="indigo darken-4" disabled={inProgress}
+                data-testid="test-submit" >
                 Generar
               </Button>
             </Col>
@@ -158,25 +159,25 @@ const renderElement = () => {
         {/* Filtros */}
         <Row>
           <Collapsible accordion={false}>
-              <CollapsibleItem
+            <CollapsibleItem
               expanded={false}
               header={filterHeader}
               icon={<Icon>filter_list</Icon>}
               node="div"
-              >
+            >
               <Row>
                 <Col s={12} m={6} l={6} xl={6}>
-                  <InputDate labelName="Fecha Inicial" maxValue={finalDate} 
+                  <InputDate labelName="Fecha Inicial" maxValue={finalDate}
                     setDate={setInitDate} dateInput={initDate}  />
                 </Col>
                 <Col s={12} m={6} l={6} xl={6}  >
                   <InputDate labelName="Fecha Final" maxValue={currDate}
                     minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />
                 </Col>
-                </Row>
+              </Row>
               <Row>
                 <Col s={12} m={6} l={6} xl={3}>
-                  <Button node="button" small className="indigo darken-4" 
+                  <Button node="button" small className="indigo darken-4"
                     onClick={handleApplyFilters} disabled={filtenable} >
                     Aplicar filtros
                   </Button>
@@ -189,52 +190,52 @@ const renderElement = () => {
                 </Col>
               </Row>
             </CollapsibleItem>
-          </Collapsible>  
+          </Collapsible>
         </Row>
         {/* Renderizado de la tabla */}
         {renderTable()}
         <Row>
-            <Col s={12} m={12} className="input-field m0">
-              <ExcelFile
-                element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
-                filename="Resultado de creación Plano SAP">
-                <ExcelSheet data={tableData} name="Resultados">
-                  <ExcelColumn label="Fecha generación" value="dateProcess" />
-                  <ExcelColumn label="Nombre del Archivo" value="filename" />
-                  <ExcelColumn label="Periodo Generación" value="from_date" />
-                  <ExcelColumn label="Estado Generación" value="file_status" />
-                  <ExcelColumn label="Usuario" value="user_name" />
-                </ExcelSheet>
-    
-              </ExcelFile>
-    
-            </Col>
+          <Col s={12} m={12} className="input-field m0">
+            <ExcelFile
+              element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+              filename="Resultado de creación Plano SAP">
+              <ExcelSheet data={tableData} name="Resultados">
+                <ExcelColumn label="Fecha generación" value="dateProcess" />
+                <ExcelColumn label="Nombre del Archivo" value="filename" />
+                <ExcelColumn label="Periodo Generación" value="from_date" />
+                <ExcelColumn label="Estado Generación" value="file_status" />
+                <ExcelColumn label="Usuario" value="user_name" />
+              </ExcelSheet>
+
+            </ExcelFile>
+
+          </Col>
         </Row>
         <Dialog
-            open={dialogOpen}
-            onClose={()=>setdialogOpen(false)}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title" color={"#001E62"}>
-              {"Fechas no válidas"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                El periodo de fechas a procesar no es válido, el máximo son 7 días.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={()=>setdialogOpen(false)} 
-                className="indigo darken-4" autoFocus>
-                Cerrar
-              </Button>
-            </DialogActions>
+          open={dialogOpen}
+          onClose={()=>setdialogOpen(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title" color={"#001E62"}>
+            {"Fechas no válidas"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              El periodo de fechas a procesar no es válido, el máximo son 7 días.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={()=>setdialogOpen(false)}
+              className="indigo darken-4" autoFocus>
+              Cerrar
+            </Button>
+          </DialogActions>
         </Dialog>
       </React.Fragment>
     )
 
-}
+  }
 
-return renderElement()
-}
+  return renderElement()
+};

@@ -1,11 +1,11 @@
-const express = require("express");
-const cors = require("cors");
-const helmet = require('helmet');
-const bodyparser = require('body-parser');
-const path = require("path");
-const csrf = require("csurf");
-const hpp = require("hpp");
-require('dotenv').config(); // Load environment variables from .env file
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import bodyparser from 'body-parser';
+import path from 'path';
+import hpp from 'hpp';
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 const setUp = async() => {
@@ -14,17 +14,17 @@ const setUp = async() => {
     app.use(hpp());
     // cors
     const corsOptions = {
-        origin: process.env.URLORIGIN, 
-        optionsSuccessStatus: 200 
+        origin: process.env.URLORIGIN,
+        optionsSuccessStatus: 200
     }
     app.use(cors(corsOptions));
     //app.use(csrf())
     app.use(bodyparser.urlencoded({ extended: false }));
     app.use(bodyparser.json({limit: '6mb'})); // Limite del body que procesa una lambda en AWS
-    
-    app.use(function (error, req, res, next) {
+
+    app.use(function (error, res) {
         if (error instanceof SyntaxError) {
-          res.status(400).send("Cuerpo de la petición incorrecto");
+            res.status(400).send("Cuerpo de la petición incorrecto");
         }
     });
 
@@ -32,7 +32,7 @@ const setUp = async() => {
     app.use(helmet.contentSecurityPolicy());
     app.use(
         helmet.hsts({
-          maxAge: 31536001,
+            maxAge: 31536001,
         })
     );
     app.use(
@@ -56,7 +56,7 @@ const setUp = async() => {
 
     app.disable('x-powered-by');
     app.disable('server');
-    
+
     /* SSO ############################################################################ */
     const passport = require('passport');
     const BearerStrategy = require('passport-azure-ad').BearerStrategy;
@@ -76,7 +76,7 @@ const setUp = async() => {
         passReqToCallback: authConfig.settings.passReqToCallback,
         loggingLevel: authConfig.settings.loggingLevel,
     };
-    
+
     const bearerStrategy = new BearerStrategy(options, (token, done) => {
         // Send user info using the second argument
         done(null, {},  token);
@@ -88,9 +88,9 @@ const setUp = async() => {
 
     /* SERVER SIDE ####################################################################### */
     // - To health check endpoint
-    app.get( process.env.SERVER_BASE_PATH + "/healthCheck", async (req, res) => {
-        res.json({ 
-            api: "Minmambu front", 
+    app.get( process.env.SERVER_BASE_PATH + "/healthCheck", async (res) => {
+        res.json({
+            api: "Minmambu front",
             message: "Health OK!"
         })
     });
@@ -114,12 +114,12 @@ const setUp = async() => {
     // - To front and pick up index
     app.get( process.env.CLIENT_BASE_PATH + "*", (req, res) => {
         res.sendFile(
-        path.join(__dirname, "./client/build/index.html")
+            path.join(__dirname, "./client/build/index.html")
         );
     });
 
     // - To route no found
-    app.use((req, res, next) => {
+    app.use((res) => {
         res.status(404).send("Sorry cant find that");
     });
 

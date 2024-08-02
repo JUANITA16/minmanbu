@@ -8,16 +8,14 @@ export default function InputDate(props) {
   const [date, setCurrentDate] = useState(convertTZ(new Date()));
   const { setDate,dateInput, labelName, maxValue, minValue,isDisabled } = props;
 
-  function handleDate(selectDate) {
-    selectDate = selectDate ? selectDate : date;
-    setCurrentDate(selectDate);
-    setDate(selectDate)
-  }
+  const handleDate = useCallback((selectDate) => {
+    const newDate = selectDate || date;
+    setCurrentDate(newDate);
+    setDate(newDate);
+  }, [date, setDate]);
 
   useEffect(() => {
-    // setDate(date);
     setCurrentDate(dateInput);
-  // }, [setDate, date])
   }, [setCurrentDate, dateInput])
 
   return (
@@ -29,7 +27,7 @@ export default function InputDate(props) {
         selected={date}
         onChange={handleDate}
         dateFormat='yyyy-MM-dd'
-        maxDate={maxValue ? maxValue : convertTZ(new Date())}
+        maxDate={maxValue || convertTZ(new Date())}
         minDate={minValue}
         disabled={isDisabled}
       />
@@ -38,8 +36,8 @@ export default function InputDate(props) {
 }
 
 InputDate.propTypes = {
-  labelName: PropTypes.any,
-  maxValue: PropTypes.any,
-  minValue: PropTypes.any,
-  disabled: PropTypes.string
-}
+  labelName: PropTypes.string.isRequired,
+  maxValue: PropTypes.instanceOf(Date),
+  minValue: PropTypes.instanceOf(Date),
+  isDisabled: PropTypes.bool
+};

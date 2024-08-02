@@ -9,39 +9,39 @@ import { emisionTypeMock } from '../../__mocks__/mocks'
 
 
 jest.mock("@azure/msal-react", () => ({
-    useMsal: () => ({ 
-        instance:{ 
+    useMsal: () => ({
+        instance:{
             getActiveAccount: jest.fn()
-            .mockReturnValue(
-                {
-                  idTokenClaims: {name: "test_name"}
-                }
-            )
-        } 
-      })
+                .mockReturnValue(
+                    {
+                        idTokenClaims: {name: "test_name"}
+                    }
+                )
+        }
     })
-  );
+})
+);
 jest.mock("../../../index",()=>({
     getToken: jest.fn().mockResolvedValue("test")
 }))
 jest.mock('../../../services/server');
 jest.mock('react-export-excel', () => {
     const originalModule = jest.requireActual('react-export-excel');
-    const ExcelFile =  (props) => (<p>Test ExcelFile</p>);
-    ExcelFile.ExcelSheet = (props) => (<div>Test ExcelSheet</div>);
-    ExcelFile.ExcelColumn = (props) => (<div>Test ExcelSheet</div>);
+    const ExcelFile = (/* _props */) => (<p>Test ExcelFile</p>);
+    ExcelFile.ExcelSheet = (/* _props */) => (<div>Test ExcelSheet</div>);
+    ExcelFile.ExcelColumn = (/* _props */) => (<div>Test ExcelColumn</div>);
     const ReactExport = {
-      ExcelFile
-    }
+        ExcelFile
+    };
     //Mock the default export and named export 'foo'
     return {
-      __esModule: true,
-      ...originalModule,
-      default: ReactExport
+        __esModule: true,
+        ...originalModule,
+        default: ReactExport
     };
-  });
-  
-  
+});
+
+
 
 afterAll(() => {
     jest.resetAllMocks();
@@ -66,9 +66,9 @@ describe('ConfiguracionTipoEmision', () => {
         expect(screen.getByText(/CDT/i)).toBeInTheDocument();
     })
 
-     
+
     test('click go to back', async () =>  {
-        
+
         ServerAPI.mockImplementation(() => ({
             getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(emisionTypeMock[0])
         }));
@@ -77,11 +77,11 @@ describe('ConfiguracionTipoEmision', () => {
 
         const button = screen.getByText(/Retroceder/i)
         fireEvent.click(button)
-        expect(screen.getAllByText(/Configuración contable/i)[0]).toBeInTheDocument();        
+        expect(screen.getAllByText(/Configuración contable/i)[0]).toBeInTheDocument();
     })
-     
+
     test('on text change tipo emisión', async () =>  {
-        
+
         ServerAPI.mockImplementation(() => ({
             getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(emisionTypeMock)
         }));
@@ -94,7 +94,7 @@ describe('ConfiguracionTipoEmision', () => {
     })
 
     test('on text change Código tipo emisión', async () =>  {
-        
+
         ServerAPI.mockImplementation(() => ({
             getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(emisionTypeMock)
         }));
@@ -105,9 +105,9 @@ describe('ConfiguracionTipoEmision', () => {
         fireEvent.change(input,{target: {value: '12345'}})
         expect(input.value).toEqual('12345')
     })
-    
+
     test('on text change Tipo de producto', async () =>  {
-        
+
         ServerAPI.mockImplementation(() => ({
             getAllAndFiltersTypeProduct: jest.fn().mockResolvedValue(emisionTypeMock)
         }));
@@ -125,12 +125,12 @@ describe('ConfiguracionTipoEmision', () => {
         expect(cdtElements.length).toBeGreaterThan(0);
     })
 
-    
+
     test('apply filters tipoEmision', async () =>  {
-        
+
         ServerAPI.mockImplementation(() => ({
             getAllAndFiltersTypeProduct: jest.fn()
-            .mockResolvedValue([emisionTypeMock[0]])
+                .mockResolvedValue([emisionTypeMock[0]])
         }));
 
         await act( async () => render(<ConfiguracionTipoEmision/>));
@@ -146,12 +146,12 @@ describe('ConfiguracionTipoEmision', () => {
         expect(screen.getByText(/550/i)).toBeInTheDocument();
 
     })
-    
+
     test('apply filters Tipo de producto', async () =>  {
-        
+
         ServerAPI.mockImplementation(() => ({
             getAllAndFiltersTypeProduct: jest.fn()
-            .mockResolvedValue(emisionTypeMock)
+                .mockResolvedValue(emisionTypeMock)
         }));
 
         await act( async () => render(<ConfiguracionTipoEmision/>));

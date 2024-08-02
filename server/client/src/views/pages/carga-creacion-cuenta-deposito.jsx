@@ -15,11 +15,13 @@ import { useMsal } from "@azure/msal-react";
 const ExcelFile = ExportExcel.ExcelFile;
 const ExcelSheet = ExportExcel.ExcelSheet;
 const ExcelColumn = ExportExcel.ExcelColumn;
+const INITIAL_DATE_OFFSET_DAYS = -7;
+const INITIAL_PAGE_SIZE = '10';
 
 export default function CreacionCuenta() {
-  
+
   const service = new ServerAPI();
-  
+
   const { instance } = useMsal();
   const { name } = instance.getActiveAccount().idTokenClaims;
   const title = 'Creacion de cuentas masiva';
@@ -37,12 +39,12 @@ export default function CreacionCuenta() {
   const [tableRender, setTableRender] = useState();
   const [paginationFooter, setPaginationFooter] = useState();
   const [tableHeader, setTableHeader] = useState();
-  const [startDate, setStartDate] = useState(convertTZ(addDays(new Date(),-7)))
+  const [startDate, setStartDate] = useState(convertTZ(addDays(new Date(), INITIAL_DATE_OFFSET_DAYS)));
   const [endDate, setEndDate] = useState(convertTZ(new Date()));
   const [consecutivoCargue, setConsecutivoCargue] = useState('');
   const [product, setProduct] = useState('CDT');
   const [idRegistro, setIdRegistro] = useState('');
-  const [cantPaginasSelect, setCantPaginasSelect] = useState('10');
+  const [cantPaginasSelect, setCantPaginasSelect] = useState(INITIAL_PAGE_SIZE);
 
   const [paginaActual, setPaginaActual] = useState(1);
 
@@ -54,24 +56,22 @@ export default function CreacionCuenta() {
   const [tableHeaderResultado, setTableHeaderResultado] = useState();
   const [tableResultadoRender, setTableResultadoRender] = useState();
   const [paginationFooterResultado, setPaginationFooterResultado] = useState();
-  const [cantPaginasSelectResultado, setCantPaginasSelectResultado] = useState('10');
-  const [paginaActualResultado, setPaginaActualResultado] = useState(1);
 
 
   //resultados
 
   const fileInputRef = useRef(null);
-  var isWeek=true;
-  var contentTable = []
-  var contentTableResultado = []
-  var currentItems = [];
-  var currentItemsResultado = [];
-  var itemOffset = 0;
-  var itemOffsetResultado = 0;
-  var totalPaginas = 0;
-  var cantPaginasSelect2 = 10;
-  var cantPaginasSelectResultado2 = 10;
-  var totalPaginasResultado = 0;
+  const isWeek = true;
+  const contentTable = [];
+  const contentTableResultado = [];
+  const currentItems = [];
+  const currentItemsResultado = [];
+  const itemOffset = 0;
+  const itemOffsetResultado = 0;
+  const totalPaginas = 0;
+  const cantPaginasSelect2 = 10;
+  const cantPaginasSelectResultado2 = 10;
+  const totalPaginasResultado = 0;
 
 
   /*
@@ -81,7 +81,7 @@ export default function CreacionCuenta() {
   * 
   * */
 
-  const TableHeader = (props) => {
+  const TableHeader = (_props) => {
     return (
       <thead>
         <tr>
@@ -93,7 +93,7 @@ export default function CreacionCuenta() {
           <th data-field="action" style={{ textAlign: "center" }}> Resultados  </th>
         </tr>
       </thead>
-    )
+    );
   };
 
   const TableBody = (props) => {
@@ -123,7 +123,7 @@ export default function CreacionCuenta() {
     )
   };
 
-  const TableFooterPagination = (props) => {
+  const TableFooterPagination = (_props) => {
     return (
       <div>
         <ReactPaginate
@@ -137,28 +137,24 @@ export default function CreacionCuenta() {
           containerClassName={"pagination"}
         />
       </div>
-    )
+    );
   };
-  
-  // function sleep(ms) {
-  //   return new Promise(resolve => setTimeout(resolve, ms));
-  // }
 
-  async function reloadTableMain(nroPage, cantReg) {
+
+  async function reloadTableMain(cantReg) {
     setTableRender(
       <Loading text={loaderText} aditional={aditional} />
     );
 
-    setExporta(null)
+    setExporta(null);
 
+    const HTTP_OK_STATUS = 200;
     const dataTable = await service.getDataTable(startDate, endDate, consecutivoCargue, isWeek);
-    // await sleep(5000)
-    if (dataTable.status === 200){
+    if (dataTable.status === HTTP_OK_STATUS) {
       contentTable = dataTable.data;
-      // contentTable.sort((a, b) => new Date(a.date_upload).getTime() - new Date(b.date_upload).getTime())
-      contentTable.sort((a, b) => a.file_id - b.file_id)
-      contentTable.reverse()
-      const endOffset = itemOffset +  parseInt(cantReg);
+      contentTable.sort((a, b) => a.file_id - b.file_id);
+      contentTable.reverse();
+      const endOffset = itemOffset +  parseInt(cantReg, 10);
       currentItems = contentTable.slice(itemOffset, endOffset);
       totalPaginas = Math.ceil(contentTable.length / cantReg);
 
@@ -169,22 +165,22 @@ export default function CreacionCuenta() {
         setTableHeader(
           <TableHeader />
         );
-  
+
         setTableRender(<tbody>
-          {currentItems.map((contenido, index) => {
-            return <TableBody consecutive={contenido.file_id}
+          {currentItems.map((contenido) => (
+            <TableBody key={contenido.file_id} consecutive={contenido.file_id}
               name_original={contenido.original_filename}
               name_modified={contenido.filename}
               fecha={contenido.date_upload.replace('T',' ').replace('Z','')}
               user={contenido.user_upload} />
-          })}
+          ))}
         </tbody>);
-    
-    
+
+
         setPaginationFooter(
           <TableFooterPagination />
         );
-    
+
         setExporta(
           <Row>
             <Col s={12} m={12} className="input-field m0">
@@ -198,12 +194,12 @@ export default function CreacionCuenta() {
                   <ExcelColumn label="Fecha" value="date_upload" />
                   <ExcelColumn label="Usuario" value="user_upload" />
                 </ExcelSheet>
-  
+
               </ExcelFile>
-  
+
             </Col>
           </Row>
-        )
+        );
       }else{
         toast.error("No se encuentra ningún registro cargado.");
         setTableRender(null);
@@ -214,8 +210,8 @@ export default function CreacionCuenta() {
     }
   }
 
-  
-  async function handleSubmission(event) {
+
+  async function handleSubmission(_event) {
 
     if (isSelected) {
       toast.info("Cargando archivo...");
@@ -226,23 +222,24 @@ export default function CreacionCuenta() {
         toast.error("Error al subir archivo.");
       } else {
 
-        var bodyUpload = {
-          "product": product,
-          "file_name": nameFileSelected,
-          "file_content": base64File,
-          "user_upload": name
-        }
+        const bodyUpload = {
+          product,
+          file_name: nameFileSelected,
+          file_content: base64File,
+          user_upload: name
+        };
 
         //Se invoca al servicio S3
-        const responseMasivoService = await service.uploadFile(bodyUpload); //masivoService.uploadFile(bodyUpload);
-       
+        const ONE_WEEK = 7;
+        const responseMasivoService = await service.uploadFile(bodyUpload);
+
         if (responseMasivoService && responseMasivoService.description === "ok") {
           toast.success("Archivo cargado correctamente, ver detalle.");
-        
+
           isWeek = true;
           setConsecutivoCargue('');
           cantPaginasSelect2 = cantPaginasSelect;
-          setStartDate(convertTZ(addDays(new Date(),-7)))
+          setStartDate(convertTZ(addDays(new Date(), -ONE_WEEK)));
           setEndDate(convertTZ(new Date()));
           setIsDisabledButtonFilter(true);
           await reloadTableMain(1, cantPaginasSelect);
@@ -250,7 +247,7 @@ export default function CreacionCuenta() {
         } else {
           toast.error(responseMasivoService.detail);
         }
-        
+
         setNameFileSelected("Ningún archivo seleccionado.");
         setSelectedFile(null);
         setIsSelected(false);
@@ -268,8 +265,9 @@ export default function CreacionCuenta() {
     setIsDisabledButtonFilter(false);
   }
 
+  const DEFAULT_DATE_OFFSET_DAYS = -7;
   async function deleteFilters() {
-    setStartDate(convertTZ(addDays(new Date(),-7)))
+    setStartDate(convertTZ(addDays(new Date(), DEFAULT_DATE_OFFSET_DAYS)));
     setEndDate(convertTZ(new Date()));
     isWeek = true;
     setConsecutivoCargue('');
@@ -279,21 +277,16 @@ export default function CreacionCuenta() {
   }
 
   const valideFileType = function (fileType, fileName) {
-    let validTypes = [
+    const validTypes = [
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "application/vnd.ms-excel",
       "text/csv"
     ];
-    let validExtensions = ["xlsx", "xls", "csv"];
-    let nameArray = fileName.split(".")
-    
-    if (validExtensions.includes(nameArray[nameArray.length -1]) & 
-        validTypes.includes(fileType) & !(fileName.startsWith("="))) {
-      return true
-    } else {
-      return false
-    }
-
+    const validExtensions = ["xlsx", "xls", "csv"];
+    const nameArray = fileName.split(".");
+    return validExtensions.includes(nameArray[nameArray.length -1]) &&
+      validTypes.includes(fileType) &&
+      !fileName.startsWith("=");
   };
 
   const changeHandler = (event) => {
@@ -316,16 +309,16 @@ export default function CreacionCuenta() {
   // Invoke when user click to request another page.
   async function handlePageClick(event){
     const newOffset = (event.selected * cantPaginasSelect2) % contentTable.length;
-    
+
     itemOffset = newOffset;
-    
-    const endOffset = parseInt(itemOffset) + parseInt(cantPaginasSelect2);
-    
+
+    const endOffset = parseInt(itemOffset, 10) + parseInt(cantPaginasSelect2, 10);
+
     currentItems = contentTable.slice(itemOffset, endOffset);
 
     setTableRender(<tbody>
-      {currentItems.map((contenido, index) => {
-        return <TableBody consecutive={contenido.file_id}
+      {currentItems.map((contenido) => {
+        return <TableBody key={contenido.file_id} consecutive={contenido.file_id}
           name_original={contenido.original_filename}
           name_modified={contenido.filename}
           fecha={contenido.date_upload.replace('T',' ').replace('Z','')}
@@ -371,11 +364,11 @@ export default function CreacionCuenta() {
 
   const onChangeCantPaginas = (event) => {
     const selectValue = event.value;
-    
+
     setCantPaginasSelect(selectValue)
     cantPaginasSelect2 = selectValue;
     setPaginaActual(1);
-    
+
     isWeek=false;
     reloadTableMain(1, selectValue);
   }
@@ -403,38 +396,40 @@ export default function CreacionCuenta() {
   const onChangeCantPaginasResultado = (event) => {
     const selectValue = event.value;
     itemOffsetResultado=0;
-    
+
     setCantPaginasSelectResultado(selectValue)
     cantPaginasSelectResultado2 = selectValue;
     setPaginaActualResultado(1);
-    
+
     reloadTableResultado(1, selectValue,idRegistro);
   }
 
-  async function reloadTableResultado(nroPage, cantReg, id) {
+  const DAYS_IN_A_WEEK = 7;
+  const HTTP_STATUS_OK = 200;
+  async function reloadTableResultado(cantReg, id) {
     setTableResultadoRender(
       <Loading text={loaderText} aditional={aditional} />
     );
-    
+
     isWeek=false;
 
-    
+
     setCantPaginasSelect('10')
-    setStartDate(convertTZ(addDays(new Date(),-7)))
+    setStartDate(convertTZ(addDays(new Date(), -DAYS_IN_A_WEEK)));
     setEndDate(convertTZ(new Date()));
     setIsDisabledButtonFilter(true);
 
     const dataResultado = await service.getDataDetails(id); //tableService.getDataTable(startDate, endDate, id, isWeek)
-    
-    if(dataResultado.status===200 ){
+
+    if(dataResultado.status=== HTTP_STATUS_OK) {
       contentTableResultado = dataResultado.data[0].results_per_row;
       if(contentTableResultado && contentTableResultado.length !==0){
         contentTableResultado.sort((a, b) => a.rowId - b.rowId)
 
-        const endOffsetResultado = itemOffsetResultado + parseInt(cantReg);
-        
+        const endOffsetResultado = itemOffsetResultado + parseInt(cantReg, 10);
+
         currentItemsResultado = contentTableResultado.slice(itemOffsetResultado, endOffsetResultado);
-        
+
         totalPaginasResultado = Math.ceil(contentTableResultado.length / cantReg);
         setTableHeaderResultado(<thead>
           <tr>
@@ -445,9 +440,9 @@ export default function CreacionCuenta() {
           </tr>
         </thead>);
         setTableResultadoRender(<tbody>
-          {currentItemsResultado.map((contenido, index) => {
-            return <TableBodyResultado rowId={contenido.rowId}
-            codeStatus={contenido.codeStatus} status={contenido.status} detail={contenido.detail}  />
+          {currentItemsResultado.map((contenido) => {
+            return <TableBodyResultado key={contenido.rowId} rowId={contenido.rowId}
+              codeStatus={contenido.codeStatus} status={contenido.status} detail={contenido.detail}  />
           })}
         </tbody>);
         setPaginationFooterResultado(
@@ -465,9 +460,9 @@ export default function CreacionCuenta() {
                   <ExcelColumn label="Estado" value="status" />
                   <ExcelColumn label="Detalle" value="detail" />
                 </ExcelSheet>
-    
+
               </ExcelFile>
-    
+
             </Col>
           </Row>
         )
@@ -485,15 +480,15 @@ export default function CreacionCuenta() {
   async function changePantallaResultado(event) {
     setIsPantallaPrincipal(false);
     itemOffsetResultado=0;
-    var id = event.target.value;
+    const id = event.target.value;
     setIdRegistro(id);
     reloadTableResultado(1,'10',id);
-    
+
 
   };
 
 
-  async function changePantallaCargar (event) {
+  async function changePantallaCargar(_event) {
     setIsPantallaPrincipal(true);
     isWeek=true;
     setConsecutivoCargue('');
@@ -520,7 +515,7 @@ export default function CreacionCuenta() {
     )
   };
 
-  const TableFooterPaginationResultado = (props) => {
+  const TableFooterPaginationResultado = (_props) => {
     return (
       <div>
         <ReactPaginate
@@ -540,17 +535,16 @@ export default function CreacionCuenta() {
 
   // Invoke when user click to request another page.
   async function handlePageClickResultado (event) {
-    const pagina = event.selected + 1;
     const newOffsetResultado = (event.selected * cantPaginasSelectResultado2) % contentTableResultado.length;
 
     itemOffsetResultado = newOffsetResultado;
-    const endOffsetResultado = parseInt(itemOffsetResultado) + parseInt(cantPaginasSelectResultado2);
+    const endOffsetResultado = parseInt(itemOffsetResultado, 10) + parseInt(cantPaginasSelectResultado2, 10);
     currentItemsResultado = contentTableResultado.slice(itemOffsetResultado, endOffsetResultado);
-    
+
     setTableResultadoRender(<tbody>
-      {currentItemsResultado.map((contenido, index) => {
-        return <TableBodyResultado rowId={contenido.rowId}
-        codeStatus={contenido.codeStatus} status={contenido.status} detail={contenido.detail}  />
+      {currentItemsResultado.map((contenido) => {
+        return <TableBodyResultado key={contenido.rowId} rowId={contenido.rowId}
+          codeStatus={contenido.codeStatus} status={contenido.status} detail={contenido.detail}  />
       })}
     </tbody>);
   };
@@ -588,7 +582,7 @@ export default function CreacionCuenta() {
             />
             <Button node="button" small className="indigo darken-4" onClick={() => fileInputRef.current.click()}>
               Seleccionar archivo
-          </Button>
+            </Button>
           </Col>
 
           <Col s={12} m={7}>
@@ -655,28 +649,28 @@ export default function CreacionCuenta() {
 
       </React.Fragment>
     ) : (
-        <React.Fragment>
-          <Row>
-            <Col s={2} m={2}>
-              <Button node="button" small className="indigo darken-4" onClick={changePantallaCargar}>
-                Retroceder
-              </Button>
-            </Col>
-            <Col s={2} m={2} style={{ float: 'right' }} >
-              <label className="active">Cantidad de registros</label>
-              <Select className="basic-single" defaultValue={cantPaginasResultado[0]}  options={cantPaginasResultado} onChange={onChangeCantPaginasResultado} />
-            </Col>
-          </Row>
-          <Row>
-            <Table>
-              {tableHeaderResultado}
-              {tableResultadoRender}
-            </Table>
-            {paginationFooterResultado}
-          </Row>
-          {exportaResultado}
-        </React.Fragment>
-      );
+      <React.Fragment>
+        <Row>
+          <Col s={2} m={2}>
+            <Button node="button" small className="indigo darken-4" onClick={changePantallaCargar}>
+              Retroceder
+            </Button>
+          </Col>
+          <Col s={2} m={2} style={{ float: 'right' }} >
+            <label className="active">Cantidad de registros</label>
+            <Select className="basic-single" defaultValue={cantPaginasResultado[0]}  options={cantPaginasResultado} onChange={onChangeCantPaginasResultado} />
+          </Col>
+        </Row>
+        <Row>
+          <Table>
+            {tableHeaderResultado}
+            {tableResultadoRender}
+          </Table>
+          {paginationFooterResultado}
+        </Row>
+        {exportaResultado}
+      </React.Fragment>
+    );
   }
 
   return renderElement()

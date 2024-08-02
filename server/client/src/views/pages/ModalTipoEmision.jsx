@@ -7,6 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
+const HTTP_STATUS_OK = 200;
 export default function ModalTipoEmision(props) {
 
   const service = new ServerAPI();
@@ -16,7 +17,7 @@ export default function ModalTipoEmision(props) {
   const [severity, setSeverity] = useState('info');
   const [openModalNotificacion, setOpenModalNotificacion] = useState(false);
   const [isLoading, setisLoading] = useState(false);
-  
+
   const [validation, setValidation] = useState({
     producttypedescription: true,
     producttypemaestrosunicos: true,
@@ -31,10 +32,10 @@ export default function ModalTipoEmision(props) {
 
   useEffect(() => {
     setValues(props.info)
-  }, [props]); 
+  }, [props]);
 
   const handleChange = function (event) {
-    var valueEvent = event.target.value;
+    const valueEvent = event.target.value;
     if(event.target.validity.valid){
       setValues((prevValues) => ({
         ...prevValues,
@@ -71,13 +72,13 @@ export default function ModalTipoEmision(props) {
     if (values.producttypedescription===""){
       setValidation((prevValues)=>({
         ...prevValues,
-        producttypedescription: false 
+        producttypedescription: false
       }));
       msjError();
     }else if(values.producttypemaestrosunicos===""){
       setValidation((prevValues)=>({
         ...prevValues,
-        producttypemaestrosunicos: false 
+        producttypemaestrosunicos: false
       }));
       msjError();
     }else if(values.producttype==="") {
@@ -97,9 +98,9 @@ export default function ModalTipoEmision(props) {
       if(props.tipoProceso==='Nuevo'){
         const responseCreate = await service.createTypeProduct(dataSubmit).then(response => {
           return response;
-          });
-        if (responseCreate.status===200) {
-          if(responseCreate.data.message == 'typeproduct-exist'){
+        });
+        if (responseCreate.status=== HTTP_STATUS_OK) {
+          if(responseCreate.data.message === 'typeproduct-exist'){
             setOpenModalNotificacion(true);
             setMensajeWarning('El tipo de emisión ya se encuentra registrado')
             setSeverity('error')
@@ -117,9 +118,9 @@ export default function ModalTipoEmision(props) {
       } else if (props.tipoProceso==='Editar') {
         const responseUpdate = await service.updateTypeProduct(dataSubmit,props.info.id, props.info.producttypedescription).then(response => {
           return response;
-          });
-        if (responseUpdate.status===200) {
-          if(responseUpdate.data.message == 'typeproduct-exist'){
+        });
+        if (responseUpdate.status=== HTTP_STATUS_OK) {
+          if(responseUpdate.data.message === 'typeproduct-exist'){
             setOpenModalNotificacion(true);
             setMensajeWarning('El tipo de emisión ya se encuentra registrado')
             setSeverity('error')
@@ -135,123 +136,125 @@ export default function ModalTipoEmision(props) {
           goToConfiguracionGeneral()
         }
       }
-        
+
     }
   }
 
   async function goToConfiguracionGeneral () {
-      props.setOpen(false)
-      setisLoading(false)
+    props.setOpen(false)
+    setisLoading(false)
   };
 
-  const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-      setOpen(false);
-      setOpenModalNotificacion(false)
-    };
+  const handleClose = (reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+    setOpenModalNotificacion(false);
+  };
 
 
-  
+
 
   const style = {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: 500,
-    };
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500,
+  };
+  const labelClass = (validation) => validation ? '' : 'txt-red';
+  const inputClass = (validation) => validation ? 'valid' : 'invalid';
 
   return (
-        <React.Fragment>
-            <Row>
-              <Col s={12}>
-                <h4 className='card-title indigo-text'>{props.title}</h4>
-                <Divider></Divider>
-                <div>
-                  <p className="grey-text text-darken-2">{props.description}</p>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col s={12} m={4} l={6}>
-                <div className="input-field-2">
-                  <label className={`${validation.producttypedescription? '':'txt-red'}`}>Tipo emisión</label>
-                  <input className={`${validation.producttypedescription? 'valid':'invalid'}`} 
-                  onChange={handleChange}
-                  type="text"
-                  value = {values.producttypedescription}
-                  id="producttypedescription"
-                  />
-                </div>
-              </Col>
-              <Col s={12} m={4} l={3}>
-                <div className="input-field-2">
-                  <label className={`${validation.producttypemaestrosunicos? '':'txt-red'}`}>Código tipo emisión</label>
-                  <input className={`${validation.producttypemaestrosunicos? 'valid':'invalid'}`} 
-                  onChange={handleChange}
-                  type="text"
-                  pattern="[0-9]*"
-                  value = {values.producttypemaestrosunicos}
-                  id="producttypemaestrosunicos"
-                  />
-                </div>
-              </Col>
-              <Col s={12} m={4} l={3}>
-                <label className={`${validation.producttype? '':'txt-red'}`}>Tipo de producto</label>
-                <FormControl variant="standard" sx={{ marginTop: 2}} fullWidth required>
-                  <Select
-                      name="producttype"
-                      className={`${validation.producttype? '':'txt-red'}`}
-                      value={values.producttype}
-                      onChange={handleChangeProductType}
-                      disabled={props.tipoProceso==='Editar'}
-                      sx={{fontSize: 16, border: 'red 5px none'}}
-                      >
-                      <MenuItem key='0' value='CDT'>
-                        CDT
-                      </MenuItem>
-                      <MenuItem key='1' value='BONO'>
-                        BONO
-                      </MenuItem>
-                  </Select>
-                </FormControl>
-              </Col>
-            </Row>
-            <Row>
-              <Col s={6} className="loading">
-                <Fade in={isLoading}>
-                  <LinearProgress color="inherit" />
-                </Fade>
-              </Col>
-            </Row>
-            <Stack direction="row" spacing={0.5} >
-                <Button node="button" small className="indigo darken-4" 
-                  onClick={handleSubmit} disabled={isLoading}>
-                    Guardar
-                </Button>
-                <br />
-                <Button node="button" small  className="indigo darken-4" onClick={goToConfiguracionGeneral} >
-                    Cancelar
-                </Button>
-                
-            </Stack>
-            
-            <Modal
-                open={openModalNotificacion}
-                onClose={() => setOpenModalNotificacion(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
-                        <Snackbar open={open} onClose={handleClose}>
-                            <Alert onClose={handleClose} variant="filled" severity={severity} sx={{ width: '100%' }}>
-                                {mensajeWarning}
-                            </Alert>
-                        </Snackbar>
-                    </Box>
-            </Modal>
-        </React.Fragment>
-    )
+    <React.Fragment>
+      <Row>
+        <Col s={12}>
+          <h4 className='card-title indigo-text'>{props.title}</h4>
+          <Divider></Divider>
+          <div>
+            <p className="grey-text text-darken-2">{props.description}</p>
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col s={12} m={4} l={6}>
+          <div className="input-field-2">
+            <label className={labelClass(validation.producttypedescription)}>Tipo emisión</label>
+            <input className={inputClass(validation.producttypedescription)}
+              onChange={handleChange}
+              type="text"
+              value = {values.producttypedescription}
+              id="producttypedescription"
+            />
+          </div>
+        </Col>
+        <Col s={12} m={4} l={3}>
+          <div className="input-field-2">
+            <label className={labelClass(validation.producttypemaestrosunicos)}>Código tipo emisión</label>
+            <input className={inputClass(validation.producttypemaestrosunicos)}
+              onChange={handleChange}
+              type="text"
+              pattern="[0-9]*"
+              value = {values.producttypemaestrosunicos}
+              id="producttypemaestrosunicos"
+            />
+          </div>
+        </Col>
+        <Col s={12} m={4} l={3}>
+          <label className={labelClass(validation.producttype)}>Tipo de producto</label>
+          <FormControl variant="standard" sx={{ marginTop: 2}} fullWidth required>
+            <Select
+              name="producttype"
+              className={labelClass(validation.producttype)}
+              value={values.producttype}
+              onChange={handleChange}
+              disabled={props.tipoProceso==='Editar'}
+              sx={{fontSize: 16, border: 'red 5px none'}}
+            >
+              <MenuItem key='0' value='CDT'>
+                CDT
+              </MenuItem>
+              <MenuItem key='1' value='BONO'>
+                BONO
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </Col>
+      </Row>
+      <Row>
+        <Col s={6} className="loading">
+          <Fade in={isLoading}>
+            <LinearProgress color="inherit" />
+          </Fade>
+        </Col>
+      </Row>
+      <Stack direction="row" spacing={0.5} >
+        <Button node="button" small className="indigo darken-4"
+          onClick={handleSubmit} disabled={isLoading}>
+          Guardar
+        </Button>
+        <br />
+        <Button node="button" small  className="indigo darken-4" onClick={goToConfiguracionGeneral} >
+          Cancelar
+        </Button>
+
+      </Stack>
+
+      <Modal
+        open={openModalNotificacion}
+        onClose={() => setOpenModalNotificacion(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Snackbar open={open} onClose={handleClose}>
+            <Alert onClose={handleClose} variant="filled" severity={severity} sx={{ width: '100%' }}>
+              {mensajeWarning}
+            </Alert>
+          </Snackbar>
+        </Box>
+      </Modal>
+    </React.Fragment>
+  )
 }

@@ -10,8 +10,8 @@ import ReactExport from 'react-export-excel';
 import { useMsal } from "@azure/msal-react";
 import ProductTypeFilter from '../components/ProductTypeFilter';
 
-const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
-  
+const TipoEmisionView = function ({goBack, dbData, setEdits,getdbData}) {
+
   const { instance } = useMsal();
   const { name } = instance.getActiveAccount().idTokenClaims;
   const ExcelFile = ReactExport.ExcelFile;
@@ -40,13 +40,13 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
     return isValid
   };
 
-  const handleApplyFilters = function (event) {
+  const handleApplyFilters = function (_event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
     getdbData(filters.codigoTipoEmision,filters.tipoEmision,filters.producttype)
   };
 
-  const handleDeleteFilters = function (event) {
+  const handleDeleteFilters = function (_event) {
     setFilterHeader(<p>Filtros</p>);
     setFilters({tipoEmision: "", codigoTipoEmision: "", producttype: ""});
     setfiltEnable(false);
@@ -54,7 +54,7 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
   };
 
 
-  const createNew = function (event) {
+  const createNew = function (_event) {
     setOpen(true)
   };
 
@@ -89,7 +89,7 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
   }
 
   return (
-  <Fragment>
+    <Fragment>
       <Row>
         <Col s={12} m={2} >
           <Button node="button" small className="indigo darken-4" onClick={goBack} >
@@ -102,15 +102,15 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
           </Button>
         </Col>
       </Row>
-      <CardHeader title={"Configuración Tipo Emisión"} 
+      <CardHeader title={"Configuración Tipo Emisión"}
         description={"En esta sección podrá realizar la configuración de los tipos de emisión asociados a los productos administrados por el banco"}/>
       <Row>
         <Collapsible accordion={false}>
           <CollapsibleItem
-          expanded={false}
-          header={filterHeader}
-          icon={<Icon>filter_list</Icon>}
-          node="div"
+            expanded={false}
+            header={filterHeader}
+            icon={<Icon>filter_list</Icon>}
+            node="div"
           >
             <Row>
               <Col s={12} m={4} l={4} xl={4}>
@@ -119,7 +119,7 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
                     id="tipoEmision" value={filters.tipoEmision} pattern="[a-zA-Z0-9\s]*"/>
                   <label htmlFor="tipoEmision">Tipo emisión</label>
                 </div>
-              </Col>  
+              </Col>
               <Col s={12} m={4} l={4} xl={4}  >
                 <div className="input-field">
                   <input type="text" className="valid" onChange={onTextChange}
@@ -136,7 +136,7 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
             </Row>
             <Row>
               <Col s={12} m={6} l={6} xl={3}>
-                <Button node="button" small className="indigo darken-4" 
+                <Button node="button" small className="indigo darken-4"
                   onClick={handleApplyFilters} disabled={filtenable} >
                   Aplicar filtros
                 </Button>
@@ -152,26 +152,26 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
         </Collapsible>
       </Row>
       <Modal
-      open={open}
-      onClose={() => setOpen(false)}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
         <Box className="modal-style" >
           <ModalTipoEmision
-            title={modalTitle} 
-            description={modalDescription} 
+            title={modalTitle}
+            description={modalDescription}
             setEdits={setEdits}
-            setOpen={setOpen} 
+            setOpen={setOpen}
             info={{
               id: "",
-              producttypedescription: "", 
+              producttypedescription: "",
               producttypemaestrosunicos: "",
               producttype: "",
               user: name
             }}
             tipoProceso={tipoProceso}
-            />
+          />
         </Box>
       </Modal>
       {renderTable()}
@@ -198,22 +198,22 @@ const TipoEmisionView = function ({goBack, dbData, edits, setEdits,getdbData}) {
 
 
 
-function ConfiguracionTipoEmision (params) {
-  
+function ConfiguracionTipoEmision(_params) {
+
   const [dbData, setdbData] = useState([]);
   const [view, setView] = useState(<></>);
   const [edits, setEdits] = useState(0);
   const service = new ServerAPI();
 
   const getdbData = async function (producttypemaestrosunicos, producttypedescription, producttype) {
-      const resp = await service.getAllAndFiltersTypeProduct(producttypemaestrosunicos,producttypedescription, producttype);
-      setdbData(resp);
+    const resp = await service.getAllAndFiltersTypeProduct(producttypemaestrosunicos,producttypedescription, producttype);
+    setdbData(resp);
   }
 
-  const goBack = function (event) {
+  const goBack = function (_event) {
     setView(<ConfiguracionContable />);
   };
-  
+
 
 
   useEffect(() => {
@@ -228,4 +228,4 @@ function ConfiguracionTipoEmision (params) {
 
 }
 
-export default ConfiguracionTipoEmision
+export default ConfiguracionTipoEmision;

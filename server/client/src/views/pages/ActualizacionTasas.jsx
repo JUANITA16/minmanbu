@@ -9,10 +9,11 @@ import ActualizacionTasasDetalle from './ActualizacionTasasDetalle'
 import { ServerAPI } from "../../services/server";
 import { useMsal } from "@azure/msal-react";
 
+const DAYS_OFFSET = 6;
 function ActualizacionTasas() {
   const currDate = convertTZ(new Date());
-  let minDate = new Date();
-  minDate.setDate(minDate.getDate()-6);
+  const minDate = new Date();
+  minDate.setDate(minDate.getDate() - DAYS_OFFSET);
   const [filterHeader, setFilterHeader] = useState(<p>Filtros</p>);
   const [selDate, setSelDate] = useState(convertTZ(new Date()));
   const [initDate, setInitDate] = useState(currDate);
@@ -37,14 +38,14 @@ function ActualizacionTasas() {
   const optionsProducts = [{value: 1, label: 'CDT'}, {value: 2, label: 'Bonos'}, {value: 3, label: 'Cuenta Corriente'}]
   const fileInputRef = useRef(null);
 
-  const handleApplyFilters = async function (event) {
+  const handleApplyFilters = async function (_event) {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
     setTableData([])
     getDataByProduct(tipoProducto,initDate, finalDate,consecutivo)
   };
 
-  const handleDeleteFilters = async function (event) {
+  const handleDeleteFilters = async function (_event) {
     setFilterHeader(<p>Filtros</p>);
     setInitDate(currDate);
     setFinalDate(currDate);
@@ -55,10 +56,10 @@ function ActualizacionTasas() {
   const onTextChange = function (event) {
     setConsecutivo(event.target.value)
   };
-  
+
   const onChangeTipoProducto = async function (event) {
     setTipoProducto(event.value)
-    if(event.value=='3'){
+    if(event.value === '3'){
       setIsDisabledEjecutar(true)
       setSelDate(convertTZ(new Date()))
     }else{
@@ -71,7 +72,7 @@ function ActualizacionTasas() {
 
   };
 
-  
+
   const getdbData = async function (from_date, to_date, consecutive) {
     let resp = [];
     try {
@@ -87,46 +88,48 @@ function ActualizacionTasas() {
     }
   }
 
-  
+  const SUCCESS_STATUS = 200;
   const getdbDataRatesUpdate = async function(process_date,file_id,from_date, to_date) {
     let respData = [];
     try {
       const responseRatesUpdate =  await service.getRatesUpdate(process_date,file_id,from_date, to_date);
       respData = await responseRatesUpdate.data;
-      if (responseRatesUpdate.status === 200 && respData.length>0){
+      if (responseRatesUpdate.status === SUCCESS_STATUS && respData.length>0){
         return respData
       }else{
         return ["Empty"]
       }
-      
+
     } catch (error) {
       alert("Error Cargando tabla")
       return respData;
     }
   }
 
-const getDataByProduct = async function (productType,initialDate,finalDateIn,consecutivo) {
-  setDbData(["Reload"])
-  if (productType==3){
-    let resp = await getdbDataRatesUpdate("","",setFormatDate(initialDate), setFormatDate(finalDateIn))
-    setDbData(resp)
-  }else{
-    let resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn), consecutivo)
-    setDbData(resp)
+  const PRODUCT_TYPE_SPECIAL = 3;
+  const getDataByProduct = async function (productType,initialDate,finalDateIn) {
+    setDbData(["Reload"]);
+    if (productType === PRODUCT_TYPE_SPECIAL) {
+      const resp = await getdbDataRatesUpdate("","",setFormatDate(initialDate), setFormatDate(finalDateIn));
+      setDbData(resp);
+    } else {
+      const resp = await getdbData(setFormatDate(initialDate), setFormatDate(finalDateIn), consecutivo);
+      setDbData(resp);
+    }
   }
-}
 
-useEffect(async () => {
-  getDataByProduct(tipoProducto,initDate, finalDate, consecutivo)
+  useEffect(async () => {
+    getDataByProduct(tipoProducto,initDate, finalDate, consecutivo)
   }, [])
 
   useEffect(() => {
     setTableData(dbData)
   }, [dbData])
 
+  const HTTP_OK = 200;
   const updateRates = async function (event) {
     event.preventDefault()
-    if(tipoProducto=='3'){
+    if(tipoProducto === '3'){
       setIsDisabledEjecutar(true)
       if (isSelected) {
         showToast('Cargando archivo...')
@@ -138,8 +141,8 @@ useEffect(async () => {
             "file_content":base64File,
             "user_upload":name
           }
-          let resp = await service.uploadFileUpdateRate(dataUpdateCC)
-          if(resp.status === 200){
+          const resp = await service.uploadFileUpdateRate(dataUpdateCC);
+          if(resp.status === HTTP_OK){
             showToast(resp.data.message)
           }else{
             showToast("Ocurrió un error al cargar archivo")
@@ -151,7 +154,7 @@ useEffect(async () => {
       setIsSelected(false);
     }else{
       showToast('Estamos generando la solicitud, por favor consulte el resultado del proceso')
-      let resp = await service.sendUpdateRate(setFormatDate(selDate),name)
+      const resp = await service.sendUpdateRate(setFormatDate(selDate),name);
       if (resp && resp.message){
         showToast(resp.message)
       } else {
@@ -160,28 +163,28 @@ useEffect(async () => {
     }
   }
 
-  
+
   const valideFileType = function (fileType, fileName) {
-    let validTypes ="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    let expresionRegularExcel = /^[-\w\s]+\.xlsx$/
-    if (validTypes!=fileType){
+    const validTypes ="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    const expresionRegularExcel = /^[-\w\s]+\.xlsx$/;
+    if (validTypes!==fileType){
       return 1;
     }else if ( !fileName.match(expresionRegularExcel)){
-     return 2; 
+      return 2;
     }else{
       return 0;
     }
   };
 
-  
+
   const changeFileSelected = (event) => {
     event.preventDefault()
     if(!nameFileSelected){
       setIsDisabledEjecutar(true)
     }
     if(event.target.files[0]){
-      let codeValidate = valideFileType(event.target.files[0].type, event.target.files[0].name)
-      if (codeValidate==0) {
+      const codeValidate = valideFileType(event.target.files[0].type, event.target.files[0].name)
+      if (codeValidate===0) {
         setIsDisabledEjecutar(false)
         setSelectedFile(event.target.files[0]);
         setNameFileSelected(event.target.files[0].name);
@@ -189,7 +192,7 @@ useEffect(async () => {
       } else {
         setSelectedFile("");
         setIsSelected(false);
-        if (codeValidate==1){
+        if (codeValidate===1){
           setNameFileSelected("Tipo de archivo no válido. Por favor subir un archivo .xlsx");
         }else{
           setNameFileSelected("Nombre de archivo no válido. Por favor subir uno correcto");
@@ -201,12 +204,12 @@ useEffect(async () => {
   function renderTable() {
     return table
   }
-  useEffect( 
+  useEffect(
     function () {
-    setDefaultValueProd(optionsProducts[tipoProducto-1])
-    setTable(<ActTable tableData={tableData} setdetails={setdetails}
-                setIsPantallaPrincipal={setIsPantallaPrincipal} isCuentaCorriente={tipoProducto=='3'} getdbDataRatesUpdate={getdbDataRatesUpdate}/>)
-  } ,[isPantallaPrincipal, tableData, tipoProducto])
+      setDefaultValueProd(optionsProducts[tipoProducto-1])
+      setTable(<ActTable tableData={tableData} setdetails={setdetails}
+        setIsPantallaPrincipal={setIsPantallaPrincipal} isCuentaCorriente={tipoProducto==='3'} getdbDataRatesUpdate={getdbDataRatesUpdate}/>)
+    } ,[isPantallaPrincipal, tableData, tipoProducto])
 
   return isPantallaPrincipal ? (
     <Fragment>
@@ -220,12 +223,12 @@ useEffect(async () => {
             onChange={onChangeTipoProducto}/>
         </Col>
         <Col s={"6"} m={"9"}>
-          <InputDate labelName="Fecha" maxValue={currDate} 
+          <InputDate labelName="Fecha" maxValue={currDate}
             minValue={minDate} setDate={setSelDate} dateInput={selDate} isDisabled ={tipoProducto=='3'} />
         </Col>
       </Row>
       <Row>
-        {tipoProducto=='3'?
+        {tipoProducto==='3'?
           <div>
             <Col s={12} m={3} >
               <input
@@ -250,7 +253,7 @@ useEffect(async () => {
           :null
         }
         <Col s={12} m={12}>
-          <Button node="button" style={{ float: 'right' }} 
+          <Button node="button" style={{ float: 'right' }}
             className="indigo darken-4" onClick={updateRates}  disabled={isDisabledEjecutar}>
             Ejecutar
           </Button>
@@ -258,20 +261,20 @@ useEffect(async () => {
       </Row>
       <Row>
         <Collapsible accordion={false}>
-            <CollapsibleItem
+          <CollapsibleItem
             expanded={false}
             header={filterHeader}
             icon={<Icon>filter_list</Icon>}
             node="div"
-            >
+          >
             <Row>
               <Col s={12} m={6} l={6} xl={6}>
-                <InputDate labelName="Fecha Inicial" maxValue={finalDate} 
-                   setDate={setInitDate} dateInput={initDate}  />
+                <InputDate labelName="Fecha Inicial" maxValue={finalDate}
+                  setDate={setInitDate} dateInput={initDate}  />
               </Col>
               <Col s={12} m={6} l={6} xl={6}  >
                 <InputDate labelName="Fecha Final" maxValue={currDate}
-                 minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />
+                  minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />
               </Col>
               <Col s={12} m={6} l={6} xl={6}  >
                 <div className="input-field">
@@ -280,10 +283,10 @@ useEffect(async () => {
                   <label htmlFor="numConsecutivo" >Consecutivo de Ejecución</label>
                 </div>
               </Col>
-              </Row>
+            </Row>
             <Row>
               <Col s={12} m={6} l={6} xl={3}>
-                <Button node="button" small className="indigo darken-4" 
+                <Button node="button" small className="indigo darken-4"
                   onClick={handleApplyFilters} disabled={filtenable} >
                   Aplicar filtros
                 </Button>
@@ -296,12 +299,12 @@ useEffect(async () => {
               </Col>
             </Row>
           </CollapsibleItem>
-        </Collapsible>  
+        </Collapsible>
       </Row>
       {renderTable()}
     </Fragment>
   ): (<ActualizacionTasasDetalle setIsPantallaPrincipal={setIsPantallaPrincipal}
-        details={details} setdetails={setdetails}  isCuentaCorriente={tipoProducto=='3'}/>)
-  }
+    details={details} setdetails={setdetails}  isCuentaCorriente={tipoProducto==='3'}/>)
+}
 
 export default ActualizacionTasas;

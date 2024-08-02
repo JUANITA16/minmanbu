@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import App from './App';
 import 'react-toastify/dist/ReactToastify.css';
-import 'materialize-css/dist/css/materialize.min.css'
+import 'materialize-css/dist/css/materialize.min.css';
 import 'material-icons/iconfont/filled.css';
 import 'material-icons/iconfont/outlined.css';
 import './styles/index.css';
@@ -18,7 +18,7 @@ export const msalInstance = new PublicClientApplication(msalConfig);
 
 const accounts = msalInstance.getAllAccounts();
 
-if(accounts.length > 0) msalInstance.setActiveAccount(accounts[0]);
+if(accounts.length > 0){ msalInstance.setActiveAccount(accounts[0]);}
 
 msalInstance.addEventCallback( event => {
   if(event.eventType === EventType.LOGIN_SUCCESS && event.payload.account){
@@ -31,14 +31,14 @@ msalInstance.addEventCallback( event => {
 export const getToken = async () => {
   const account = msalInstance.getActiveAccount();
 
-  if(!account) throw Error("No active account");
+  if(!account){ throw Error("No active account");}
 
   const response = await msalInstance.acquireTokenSilent({
     account: account,
     scopes: protectedResources.data.scopes
-  })
+  });
   return `Bearer ${response.accessToken}`;
-}
+};
 
 ReactDOM.render(
   <React.StrictMode>

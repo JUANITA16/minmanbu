@@ -1,9 +1,9 @@
 import React from "react";
 
 
-const ExcelFile = (props) => {return (<div>test ExcelFile</div>)};
-const ExcelSheet= (props) => {return (<div>test ExcelSheet</div>)};
-const ExcelColumn= (props) => {return (<div>test ExcelColumn</div>)}
+const ExcelFile = (_props) => {return (<div>test ExcelFile</div>)};
+const ExcelSheet= (_props) => {return (<div>test ExcelSheet</div>)};
+const ExcelColumn= (_props) => {return (<div>test ExcelColumn</div>)}
 
 const ExportExcel = {
     ExcelFile, ExcelSheet, ExcelColumn

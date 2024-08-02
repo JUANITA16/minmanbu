@@ -5,8 +5,9 @@ import ReactPaginate from "react-paginate";
 import Select from 'react-select'
 import { showToast } from "../../helpers/utils";
 
+const DEFAULT_MAX_RESULTS = 10;
 function ReprTable({ tableData }) {
-  const [maxResults, setmaxResults] = useState(10);
+  const [maxResults, setmaxResults] = useState(DEFAULT_MAX_RESULTS);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
   const [isloading, setIsloading] = useState(true);
@@ -21,16 +22,16 @@ function ReprTable({ tableData }) {
 
   const handlePageClick = function (event) {
     // Handles the page changes sets the data
-    let page = event.selected;
+    const page = event.selected;
     setVisibleData(tableData.slice(page*maxResults, maxResults*(page + 1)))
   };
-  
 
-  const renderLoading = function (isloading){
+
+  const renderLoading = () => {
     if (isloading) {
-      return <div className="center-div"><CircularProgress /></div>
+      return <div className="center-div"><CircularProgress /></div>;
     } else {
-      return <p></p>
+      return <p></p>;
     }
   };
 
@@ -55,7 +56,7 @@ function ReprTable({ tableData }) {
     } catch (error) {
       showToast("Error cargando la tabla.")
     }
-    
+
   }, [maxResults, tableData]);
 
   useEffect(function () {
@@ -75,40 +76,40 @@ function ReprTable({ tableData }) {
             <td>{data.status_code}</td>
             <td>{data.status}</td>
 
-        </tr>)}));
+          </tr>)}));
     }
   }, [visibleData]);
 
 
   return (
-  <Fragment>
-     <Row>
-       <Col m={3} s={8}>
-        <label className="active">Cantidad de registros</label>
-        <Select 
-          className="basic-single"  options={totalResults} 
-          defaultValue={totalResults[1]} onChange={(event)=>{setmaxResults(event.value)}} />
-       </Col>
-     </Row>
-    {/* Table generation */}
-    <div>
-  
-      <Table>
-        <thead>
-          <tr>
-            <th>Consecutivo </th>
-            <th>Fecha ejecución</th>
-            <th>Usuario</th>
-            <th>Tipo proceso</th>
-            <th>Cod. Estado</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tableBody}     
-        </tbody>
-      </Table> 
-    </div>
+    <Fragment>
+      <Row>
+        <Col m={3} s={8}>
+          <label className="active">Cantidad de registros</label>
+          <Select
+            className="basic-single"  options={totalResults}
+            defaultValue={totalResults[1]} onChange={(event)=>{setmaxResults(event.value)}} />
+        </Col>
+      </Row>
+      {/* Table generation */}
+      <div>
+
+        <Table>
+          <thead>
+            <tr>
+              <th>Consecutivo </th>
+              <th>Fecha ejecución</th>
+              <th>Usuario</th>
+              <th>Tipo proceso</th>
+              <th>Cod. Estado</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tableBody}
+          </tbody>
+        </Table>
+      </div>
       {renderLoading(isloading)}
       <div style={{display: "flex", alignItems: "center", alignContent: "center", justifyContent: "center"}}>
         <ReactPaginate
@@ -122,10 +123,10 @@ function ReprTable({ tableData }) {
           containerClassName={"pagination"}
         />
       </div>
-  </Fragment>
-  
+    </Fragment>
+
   )
 
 }
 
-export default ReprTable
+export default ReprTable;

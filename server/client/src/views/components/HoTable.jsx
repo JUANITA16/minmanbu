@@ -5,9 +5,10 @@ import ReactPaginate from "react-paginate";
 import Select from 'react-select'
 import ModalConfiguracionHomologacion from "../pages/ModalHomologacion";
 
+const DEFAULT_MAX_RESULTS = 10;
 function MyTable({tableData, setEdits}) {
-  
-  const [maxResults, setmaxResults] = useState(10);
+
+  const [maxResults, setmaxResults] = useState(DEFAULT_MAX_RESULTS);
   const [visibleData, setVisibleData] = useState([]);
   const [totalPages, settotalPages] = useState(1);
   const [isloading, setIsloading] = useState(true);
@@ -15,8 +16,8 @@ function MyTable({tableData, setEdits}) {
   const [open, setOpen] = useState(false);
   const [infoModal, setInfoModal] = useState({
     accountid: "",
-    accounting_account: "", 
-    cosif: "", 
+    accounting_account: "",
+    cosif: "",
     costcenteraccounting: "",
     producttype: ""
   })
@@ -33,16 +34,16 @@ function MyTable({tableData, setEdits}) {
 
   const handlePageClick = function (event) {
     // Handles the page changes sets the data
-    let page = event.selected;
+    const page = event.selected;
     setVisibleData(tableData.slice(page*maxResults, maxResults*(page + 1)))
   };
-  
+
   const handleEdit = function (event){
     setInfoModal(JSON.parse(event.target.value))
     setOpen(true);
   };
 
-  const renderLoading = function (isloading){
+  const renderLoading = function (){
     if (isloading) {
       return <div className="center-div"><CircularProgress /></div>
     } else {
@@ -83,63 +84,63 @@ function MyTable({tableData, setEdits}) {
             <td>{data.costcenteraccounting}</td>
             <td>{data.producttype}</td>
             <td><Button value={JSON.stringify({
-                accountid: data.accountid,
-                accounting_account: data.accounting_account, 
-                cosif: data.cosif, 
-                costcenteraccounting: data.costcenteraccounting,
-                producttype: data.producttype
-                })}
+              accountid: data.accountid,
+              accounting_account: data.accounting_account,
+              cosif: data.cosif,
+              costcenteraccounting: data.costcenteraccounting,
+              producttype: data.producttype
+            })}
               small onClick={handleEdit} className="indigo darken-4">
               Editar</Button>
             </td>
-        </tr>)}));
+          </tr>)}));
     }
   }, [visibleData]);
 
 
   return (
-  <Fragment>
-     <Row>
-       <Col m={3} s={8}>
-        <label className="active">Cantidad de registros</label>
-        <Select 
-          className="basic-single"  options={totalResults} 
-          defaultValue={totalResults[1]} onChange={(event)=>{setmaxResults(event.value)}} />
-       </Col>
-     </Row>
-    {/* Table generation */}
-    <div>
-    <Modal
-      open={open}
-      onClose={() => setOpen(false)}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-      >
-        <Box className="modal-style" >
-          <ModalConfiguracionHomologacion
-            title={modalTitle} 
-            description={modalDescription} 
-            setEdits={setEdits}
-            setOpen={setOpen} 
-            info={infoModal}
-            tipoProceso={tipoProceso}
+    <Fragment>
+      <Row>
+        <Col m={3} s={8}>
+          <label className="active">Cantidad de registros</label>
+          <Select
+            className="basic-single"  options={totalResults}
+            defaultValue={totalResults[1]} onChange={(event)=>{setmaxResults(event.value)}} />
+        </Col>
+      </Row>
+      {/* Table generation */}
+      <div>
+        <Modal
+          open={open}
+          onClose={() => setOpen(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="modal-style" >
+            <ModalConfiguracionHomologacion
+              title={modalTitle}
+              description={modalDescription}
+              setEdits={setEdits}
+              setOpen={setOpen}
+              info={infoModal}
+              tipoProceso={tipoProceso}
             />
-        </Box>
-      </Modal>
-      <Table>
-        <thead>
-          <tr>
-            <th>Número de Cuenta</th>
-            <th>Número de Cuenta cosif</th>
-            <th>Centro de Costos</th>
-            <th>Tipo de Producto</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tableBody}     
-        </tbody>
-      </Table> 
-    </div>
+          </Box>
+        </Modal>
+        <Table>
+          <thead>
+            <tr>
+              <th>Número de Cuenta</th>
+              <th>Número de Cuenta cosif</th>
+              <th>Centro de Costos</th>
+              <th>Tipo de Producto</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tableBody}
+          </tbody>
+        </Table>
+      </div>
       {renderLoading(isloading)}
       <div style={{display: "flex", alignItems: "center", alignContent: "center", justifyContent: "center"}}>
         <ReactPaginate
@@ -153,10 +154,10 @@ function MyTable({tableData, setEdits}) {
           containerClassName={"pagination"}
         />
       </div>
-  </Fragment>
-  
+    </Fragment>
+
   )
 
 }
 
-export default MyTable
+export default MyTable;

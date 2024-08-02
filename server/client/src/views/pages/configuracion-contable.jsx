@@ -6,29 +6,29 @@ import ConfiguracionHomologacion from "./configuracion-homologacion";
 import ConfiguracionTipoEmision from "./configuracion-tipo-emision";
 
 export default function ConfiguracionContable() {
-  
+
     const title = "Configuración contable"
     const description = "En esta sección podrá realizar la configuración contable asociada al archivo plano SAP."
 
     const [pantallaVisible, setPantallaVisible] = useState();
-    async function goToConfiguracionGeneral (event) {
+    async function goToConfiguracionGeneral(_event) {
         setPantallaVisible(
             <ConfiguracionContableGeneral/>
         );
     };
 
-    async function goToHomologacion (event) {
+    async function goToHomologacion(_event) {
         setPantallaVisible(
             <ConfiguracionHomologacion />
         );
     };
-    
-    async function goToTipoEmision (event) {
+
+    async function goToTipoEmision(_event) {
         setPantallaVisible(
             <ConfiguracionTipoEmision />
         );
     };
-    
+
     useEffect(() => {
         setPantallaVisible(
             <div>
@@ -49,7 +49,7 @@ export default function ConfiguracionContable() {
                     </Button>
                 </Col>
             </div>
-            
+
         );
     }, []);
 

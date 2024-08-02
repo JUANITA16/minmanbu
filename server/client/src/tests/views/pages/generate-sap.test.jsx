@@ -10,26 +10,26 @@ jest.mock("../../../index",()=>({
 
 jest.mock('../../../services/server');
 jest.mock("@azure/msal-react", () => ({
-  useMsal: () => ({ 
-      instance:{ 
-          getActiveAccount: jest.fn()
-          .mockReturnValue(
-              {
-                idTokenClaims: {name: "test_name"}
-              }
-          )
-      } 
-    })
+  useMsal: () => ({
+    instance:{
+      getActiveAccount: jest.fn()
+        .mockReturnValue(
+          {
+            idTokenClaims: {name: "test_name"}
+          }
+        )
+    }
   })
+})
 );
 jest.mock('react-export-excel', () => {
   const originalModule = jest.requireActual('react-export-excel');
-  const ExcelFile =  (props) => (<p>Test ExcelFile</p>);
-  ExcelFile.ExcelSheet = (props) => (<div>Test ExcelSheet</div>);
-  ExcelFile.ExcelColumn = (props) => (<div>Test ExcelSheet</div>);
+  const ExcelFile = (/* _props */) => (<p>Test ExcelFile</p>);
+  ExcelFile.ExcelSheet = (/* _props */) => (<div>Test ExcelSheet</div>);
+  ExcelFile.ExcelColumn = (/* _props */) => (<div>Test ExcelColumn</div>);
   const ReactExport = {
     ExcelFile
-  }
+  };
   //Mock the default export and named export 'foo'
   return {
     __esModule: true,
@@ -42,8 +42,8 @@ jest.mock('react-export-excel', () => {
 beforeEach(() => {
   process.env.PUBLIC_URL = "url_test";
   process.env.REACT_APP_SERVER_BASE_PATH = "test";
-    }
-    );
+}
+);
 afterEach(() => {
   jest.resetAllMocks();
 });
@@ -55,11 +55,11 @@ describe('Test view Generate SAP', () => {
   test('sap button submit - ok', () => {
     ServerAPI.mockImplementation(() => ({
       generateSAP: jest.fn().mockResolvedValue({message: "test message"})
-    }))
-    
+    }));
+
     render(<GenerateSap />);
-    let SubmitButton = screen.getByTestId("test-submit");
+    const SubmitButton = screen.getByTestId("test-submit");
     fireEvent.click(SubmitButton);
     expect(SubmitButton.disabled).toBe(true);
   });
-})
+});

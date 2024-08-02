@@ -14,9 +14,9 @@ export default function Logout() {
   };
 
   useEffect(() => {
-    document.title = title
+    document.title = title;
     onSSO();
-  });
+  }, [title, instance]);
 
   return (
     <React.Fragment>
@@ -29,5 +29,5 @@ export default function Logout() {
         </Col>
       </Row>
     </React.Fragment>
-  )
+  );
 }

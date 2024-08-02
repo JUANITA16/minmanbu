@@ -1,6 +1,6 @@
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, 
-        FormLabel, Dialog, DialogActions, DialogContent, 
-        DialogContentText, DialogTitle, Grid, List, ListItem, ListItemText, LinearProgress } from "@mui/material";
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText,
+  FormLabel, Dialog, DialogActions, DialogContent,
+  DialogContentText, DialogTitle, Grid, List, ListItem, ListItemText, LinearProgress } from "@mui/material";
 import React, { useState, useEffect, Fragment } from "react";
 import { CardHeader, InputDate } from "../components";
 import { Button, Row, Col, CollapsibleItem, Icon, Collapsible } from "react-materialize";
@@ -43,9 +43,8 @@ function ReprocesosContablesD() {
     title: "",
     content: ""
   })
-  const [dialogExtContent, setdialogExtContent] = useState(<></>)
   const [filtenable, setfiltEnable] = useState(false);
-   
+
   const getdbData = async function (from_date, to_date) {
     let resp = [];
     try {
@@ -77,23 +76,23 @@ function ReprocesosContablesD() {
     setproCont(event.target.checked)
   }
 
-  const handleApplyFilters = async function (event) {
+  const handleApplyFilters = async function () {
     setFilterHeader(<p><strong><u>Filtros</u></strong></p>);
     setfiltEnable(true);
-    let resp = await getdbData(setFormatDate(startDate), setFormatDate(endDate))
+    const resp = await getdbData(setFormatDate(startDate), setFormatDate(endDate))
     setTableData(resp)
   };
 
-  const handleDeleteFilters = async function (event) {
+  const handleDeleteFilters = async function () {
     setFilterHeader(<p>Filtros</p>);
     setStartDate(currDate);
     setEndDate(currDate);
     setfiltEnable(false);
-    let resp = await getdbData(setFormatDate(currDate), setFormatDate(currDate))
+    const resp = await getdbData(setFormatDate(currDate), setFormatDate(currDate))
     setTableData(resp)
   };
 
-  const handleChangeAll = function (event) {
+  const handleChangeAll = function () {
     // Cambia el valor de todos los campos.
     if (eventLen === 0) {
       seteventType({
@@ -112,25 +111,25 @@ function ReprocesosContablesD() {
     }
   }
 
-  const handleClosePrompt = function (event){
+  const handleClosePrompt = function (){
     setisPromptOpen(false)
     setIsloading(false)
     setReproResponses([])
   }
-  
+
   // Definimos las variables y recorremos la lista para ver cuantas han sido seleccionadas
   const {constitucion, interes, rendimientos, vencimientos} = eventType
   const eventLen = [constitucion, interes, rendimientos, vencimientos].filter((v) => v).length
   // Si ningún evento está seleccionado genera error
-  let error =  eventLen === 0;
+  const error =  eventLen === 0;
 
-  const handleReprResponse = function (eventType, response) {
+  const handleReprResponse = function (response) {
     // verificamos que la respuesta contenga mensaje, si no contiene la ejecución fue errónea.
-    let message = response.data.message ? response.data.message : response.detail
+    const message = response.data.message ? response.data.message : response.detail;
     setReproResponses( reproResponses => [...reproResponses, eventType + message])
   }
 
-  const handleGenerate =  async function (event){
+  const handleGenerate =  async function (){
     if (error) {
       setdialogContent({
         title: "No se pudo generar la solicitud.",
@@ -140,7 +139,7 @@ function ReprocesosContablesD() {
     } else {
       // Acá se ingresa la función para generar.
       showToast("Estamos procesando su solicitud, por favor consulte el resultado del proceso.")
-      let endDate = setFormatDate(initDate)
+      const endDate = setFormatDate(initDate);
       setdialogContent({
         title: "Estado de cada reproceso contable",
         content: "A continuación verá el estado de cada reproceso contable."
@@ -151,7 +150,7 @@ function ReprocesosContablesD() {
 
       if (proCont) {
         endDate = setFormatDate(finalDate)
-      } 
+      }
       const requestBody = {
         "date" : setFormatDate(initDate),
         "user": name,
@@ -160,27 +159,27 @@ function ReprocesosContablesD() {
 
       // Procedemos a verificar qué opciones fueron seleccionadas para ejecutar
       // la respectiva api. También se añade a la lista de mensajes el mensaje correspondiente.
-      if(interes) {
+      if (interes) {
         requestBody["event_type"] = "interes"
-        let respInteres = await service.requestReprocess(requestBody)
+        const respInteres = await service.requestReprocess(requestBody);
         handleReprResponse("Interés diario: ", respInteres)
       }
       if (constitucion) {
         requestBody["event_type"] = "constitucion"
-        let respConstitucion = await service.requestReprocess(requestBody)
+        const respConstitucion = await service.requestReprocess(requestBody)
         handleReprResponse("Constitución: ", respConstitucion)
       }
       if (vencimientos) {
         requestBody["event_type"] = "vencimientos_capital"
-        let respVenCapital = await service.requestReprocess(requestBody)
+        const respVenCapital = await service.requestReprocess(requestBody)
         handleReprResponse("Vencimientos Capital: ", respVenCapital)
         requestBody["event_type"] = "vencimientos_gmf"
-        let respVenGMF = await service.requestReprocess(requestBody)
+        const respVenGMF = await service.requestReprocess(requestBody)
         handleReprResponse("Vencimientos GMF: ", respVenGMF)
       }
       if (rendimientos){
         requestBody["event_type"] = "pago_rendimientos"
-        let respRendimientos = await service.requestReprocess(requestBody)
+        const respRendimientos = await service.requestReprocess(requestBody)
         handleReprResponse("Pago de rendimientos: ", respRendimientos)
       }
       // Fin animación de carga y apertura de ventana de resultados
@@ -188,10 +187,10 @@ function ReprocesosContablesD() {
       setisPromptOpen(true)
     }
   }
-  
+
   useEffect(() => {
     // Comparamos las fechas para que no superen los 5 días(Fecha Final)
-    let deltaDate = finalDate - initDate
+    const deltaDate = finalDate - initDate
     // El número especifícado en el condicional equivale a la diferencia de 5 días
     if (deltaDate > 345601000 && proCont) {
       setdialogContent({
@@ -204,7 +203,7 @@ function ReprocesosContablesD() {
   }, [initDate, proCont])
   useEffect(() => {
     // Comparamos las fechas para que no superen los 5 días(Fecha Inicial)
-    let deltaDate = finalDate - initDate
+    const deltaDate = finalDate - initDate
     // El número especifícado en el condicional equivale a la diferencia de 5 días
     if (deltaDate > 345601000) {
       setdialogContent({
@@ -215,9 +214,9 @@ function ReprocesosContablesD() {
       setInitDate(finalDate)
     }
   }, [finalDate])
-  
+
   useEffect(async () => {
-    let resp = await getdbData(setFormatDate(startDate), setFormatDate(endDate))
+    const resp = await getdbData(setFormatDate(startDate), setFormatDate(endDate))
     setTableData(resp)
   }, [])
 
@@ -225,216 +224,216 @@ function ReprocesosContablesD() {
   useEffect(() => {
     setTable(<ReprTable tableData={tableData} />)
   }, [tableData])
-  
+
 
   function renderTable() {
     return table
   }
 
   return (<Fragment>
-      <CardHeader 
-          title={"Generación Contabilidad Dominus"}
-          description={"En esta sección podrá generar la contabilidad asociada a los eventos transaccionales de Dominus."}
-          />
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container
-          direction="row"
+    <CardHeader
+      title={"Generación Contabilidad Dominus"}
+      description={"En esta sección podrá generar la contabilidad asociada a los eventos transaccionales de Dominus."}
+    />
+    <Box sx={{ flexGrow: 1 }}>
+      <Grid container
+        direction="row"
+        justifyContent="center"
+        alignItems="center" >
+        <Grid item md={4} sm={12}
           justifyContent="center"
-          alignItems="center" >
-          <Grid item md={4} sm={12}
-                justifyContent="center"
-                alignItems="center">
-            <FormControl
-              required
-              error={error}
-              component="fieldset"
-              variant="standard"
-            >
-              <FormLabel component="legend">Tipo de evento</FormLabel>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                  <Checkbox checked={eventLen===4} 
-                    indeterminate={eventLen!==4 && eventLen!==0}
-                    onChange={handleChangeAll} 
-                    name="todos" />
-                  }
-                  label="Todos"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  control={
-                  <Checkbox checked={constitucion} onChange={handleChange} name="constitucion" />
-                  }
-                  label="Constitución"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  control={
-                  <Checkbox checked={interes} onChange={handleChange} name="interes" />
-                  }
-                  label="Interés diario"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  control={
-                  <Checkbox checked={rendimientos} onChange={handleChange} name="rendimientos" />
-                  }
-                  label="Pago de rendimientos"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  control={
-                  <Checkbox checked={vencimientos} onChange={handleChange} name="vencimientos" />
-                  }
-                  label="Pago de vencimientos"
-                  labelPlacement="start"
-                />
-              </FormGroup>
-              {error ? 
-                (<FormHelperText>Debes seleccionar al menos una opción.</FormHelperText>) :
-                (<></>)
-              }
-              
-            </FormControl>
-
-          </Grid>
-          <Grid item md={4} sm={12}
-                justifyContent="center"
-                alignItems="center" >
-            <Grid
-              container
-              direction="column"
-              justifyContent="center"
-              alignItems="center" >
-              <Grid item>
-                <InputDate labelName="Fecha Inicial" maxValue={finalDate} 
-                  setDate={setInitDate} dateInput={initDate}  />
-              </Grid>
-              <Grid item >
-                {proCont ? (
-                  <InputDate labelName="Fecha Final" maxValue={currDate}
-                    minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />) :
-                    <></>
-                  }
-              
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid item md={4} sm={12}
-                justifyContent="flex-end"
-                alignItems="center" >
-            <FormControlLabel
+          alignItems="center">
+          <FormControl
+            required
+            error={error}
+            component="fieldset"
+            variant="standard"
+          >
+            <FormLabel component="legend">Tipo de evento</FormLabel>
+            <FormGroup>
+              <FormControlLabel
                 control={
-                <Checkbox checked={proCont} 
-                  onChange={handleChangeProc} 
-                  name="procesamiento" />
+                  <Checkbox checked={eventLen===4}
+                    indeterminate={eventLen!==4 && eventLen!==0}
+                    onChange={handleChangeAll}
+                    name="todos" />
                 }
-                label="Procesamiento continuo"
+                label="Todos"
                 labelPlacement="start"
               />
-          </Grid>
+              <FormControlLabel
+                control={
+                  <Checkbox checked={constitucion} onChange={handleChange} name="constitucion" />
+                }
+                label="Constitución"
+                labelPlacement="start"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={interes} onChange={handleChange} name="interes" />
+                }
+                label="Interés diario"
+                labelPlacement="start"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={rendimientos} onChange={handleChange} name="rendimientos" />
+                }
+                label="Pago de rendimientos"
+                labelPlacement="start"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox checked={vencimientos} onChange={handleChange} name="vencimientos" />
+                }
+                label="Pago de vencimientos"
+                labelPlacement="start"
+              />
+            </FormGroup>
+            {error ?
+              (<FormHelperText>Debes seleccionar al menos una opción.</FormHelperText>) :
+              (<></>)
+            }
 
-          <Grid item md={12}  justifyContent="flex-end"
-              alignItems="flex-start">
-            <Button onClick={handleGenerate} 
-              className="indigo darken-4" style={{ float: 'right', marginRight: '10%' }} >
-              Generar
-            </Button>
+          </FormControl>
+
+        </Grid>
+        <Grid item md={4} sm={12}
+          justifyContent="center"
+          alignItems="center" >
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center" >
+            <Grid item>
+              <InputDate labelName="Fecha Inicial" maxValue={finalDate}
+                setDate={setInitDate} dateInput={initDate}  />
+            </Grid>
+            <Grid item >
+              {proCont ? (
+                <InputDate labelName="Fecha Final" maxValue={currDate}
+                  minValue={initDate} setDate={setFinalDate} dateInput={finalDate}  />) :
+                <></>
+              }
+
+            </Grid>
           </Grid>
         </Grid>
-        {isloading ? <Grid paddingTop={4} item xs={12}><LinearProgress /></Grid> : <></>}  
-      </Box>
 
-      <Row>
-          <Collapsible accordion={false}>
-              <CollapsibleItem
-              expanded={false}
-              header={filterHeader}
-              icon={<Icon>filter_list</Icon>}
-              node="div"
-              >
-              <Row>
-                <Col s={12} m={6} l={6} xl={6}>
-                  <InputDate labelName="Fecha Inicial" maxValue={endDate} 
-                    setDate={setStartDate} dateInput={startDate}  />
-                </Col>
-                <Col s={12} m={6} l={6} xl={6}  >
-                  <InputDate labelName="Fecha Final" maxValue={currDate}
-                    minValue={startDate} setDate={setEndDate} dateInput={endDate}  />
-                </Col>
-                </Row>
-              <Row>
-                <Col s={12} m={6} l={6} xl={3}>
-                  <Button node="button" small className="indigo darken-4" 
-                    onClick={handleApplyFilters} disabled={filtenable} >
-                    Aplicar filtros
-                  </Button>
-                </Col>
-                <Col s={12} m={6} l={6} xl={3}>
-                  <Button node="button"  small className="indigo darken-4"
-                    onClick={handleDeleteFilters} disabled={!filtenable}>
-                    Borrar filtros
-                  </Button>
-                </Col>
-              </Row>
-            </CollapsibleItem>
-          </Collapsible>  
-      </Row>
-      {/* Renderizado de la tabla */}
-      {renderTable()}
-      <Row>
-        <Col s={12} m={12} className="input-field m0">
-          <ExcelFile
-            element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
-            filename="Resultado-ProcesoContable">
-            <ExcelSheet data={tableData} name="Resultados">
-              <ExcelColumn label="Consecutivo" value="id" />
-              <ExcelColumn label="Fecha ejecución" value="date_process" />
-              <ExcelColumn label="Usuario" value="user" />
-              <ExcelColumn label="Fecha del registro" value="date_event" />
-              <ExcelColumn label="Detalle" value="detailed" />
-              <ExcelColumn label="Valor" value="value" />
-              <ExcelColumn label="Tipo proceso" value="type_process" />
-              <ExcelColumn label="Cod. estado" value="status_code" />
-              <ExcelColumn label="Estado" value="status" />
-              <ExcelColumn label="Grupo datos Dominus" value="data_group" />
-            </ExcelSheet>
-          </ExcelFile>
-        </Col>
-      </Row>
-      <Dialog
-        open={isPromptOpen}
-        onClose={handleClosePrompt}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        >
-        <DialogTitle id="alert-dialog-title">
-          {dialogContent.title}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {dialogContent.content}
-          </DialogContentText>
-          <List>
-            {reproResponses.map((reproceso) => (
-              <ListItem>
-                <ListItemText  
-                  primary={reproceso}
-                />
-              </ListItem>
-            ))}
-          </List>
-          
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClosePrompt} className="indigo darken-4">
-            Aceptar
+        <Grid item md={4} sm={12}
+          justifyContent="flex-end"
+          alignItems="center" >
+          <FormControlLabel
+            control={
+              <Checkbox checked={proCont}
+                onChange={handleChangeProc}
+                name="procesamiento" />
+            }
+            label="Procesamiento continuo"
+            labelPlacement="start"
+          />
+        </Grid>
+
+        <Grid item md={12}  justifyContent="flex-end"
+          alignItems="flex-start">
+          <Button onClick={handleGenerate}
+            className="indigo darken-4" style={{ float: 'right', marginRight: '10%' }} >
+            Generar
           </Button>
-        </DialogActions>
-      </Dialog>
-      
+        </Grid>
+      </Grid>
+      {isloading ? <Grid paddingTop={4} item xs={12}><LinearProgress /></Grid> : <></>}
+    </Box>
+
+    <Row>
+      <Collapsible accordion={false}>
+        <CollapsibleItem
+          expanded={false}
+          header={filterHeader}
+          icon={<Icon>filter_list</Icon>}
+          node="div"
+        >
+          <Row>
+            <Col s={12} m={6} l={6} xl={6}>
+              <InputDate labelName="Fecha Inicial" maxValue={endDate}
+                setDate={setStartDate} dateInput={startDate}  />
+            </Col>
+            <Col s={12} m={6} l={6} xl={6}  >
+              <InputDate labelName="Fecha Final" maxValue={currDate}
+                minValue={startDate} setDate={setEndDate} dateInput={endDate}  />
+            </Col>
+          </Row>
+          <Row>
+            <Col s={12} m={6} l={6} xl={3}>
+              <Button node="button" small className="indigo darken-4"
+                onClick={handleApplyFilters} disabled={filtenable} >
+                Aplicar filtros
+              </Button>
+            </Col>
+            <Col s={12} m={6} l={6} xl={3}>
+              <Button node="button"  small className="indigo darken-4"
+                onClick={handleDeleteFilters} disabled={!filtenable}>
+                Borrar filtros
+              </Button>
+            </Col>
+          </Row>
+        </CollapsibleItem>
+      </Collapsible>
+    </Row>
+    {/* Renderizado de la tabla */}
+    {renderTable()}
+    <Row>
+      <Col s={12} m={12} className="input-field m0">
+        <ExcelFile
+          element={<Button node="button" style={{ float: 'right' }} small className="indigo darken-4">Exportar en Excel</Button>}
+          filename="Resultado-ProcesoContable">
+          <ExcelSheet data={tableData} name="Resultados">
+            <ExcelColumn label="Consecutivo" value="id" />
+            <ExcelColumn label="Fecha ejecución" value="date_process" />
+            <ExcelColumn label="Usuario" value="user" />
+            <ExcelColumn label="Fecha del registro" value="date_event" />
+            <ExcelColumn label="Detalle" value="detailed" />
+            <ExcelColumn label="Valor" value="value" />
+            <ExcelColumn label="Tipo proceso" value="type_process" />
+            <ExcelColumn label="Cod. estado" value="status_code" />
+            <ExcelColumn label="Estado" value="status" />
+            <ExcelColumn label="Grupo datos Dominus" value="data_group" />
+          </ExcelSheet>
+        </ExcelFile>
+      </Col>
+    </Row>
+    <Dialog
+      open={isPromptOpen}
+      onClose={handleClosePrompt}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">
+        {dialogContent.title}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {dialogContent.content}
+        </DialogContentText>
+        <List>
+          {reproResponses.map((reproceso, index) => (
+            <ListItem key={index}>
+              <ListItemText 
+              primary={reproceso}
+              />
+            </ListItem>
+          ))}
+        </List>
+
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClosePrompt} className="indigo darken-4">
+          Aceptar
+        </Button>
+      </DialogActions>
+    </Dialog>
+
 
   </Fragment>
   )

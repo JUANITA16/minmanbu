@@ -3,107 +3,97 @@ import axios from 'axios';
 import { getToken } from '../index';
 
 class ServerAPI {
-    base_url = process.env.REACT_APP_SERVER_BASE_PATH
+    base_url = process.env.REACT_APP_SERVER_BASE_PATH;
 
     generateSAP = async (from, to,user_name) => {
         try{
-            const url = this.base_url + "/sap/file/generate"
+            const url = `${this.base_url}/sap/file/generate`;
             const config = {
                 headers: { Authorization: await getToken() },
                 params: { from, to,user_name}
-            }
+            };
 
             const res = await axios.get(url, config);
-            const data = await res.data;
-            return data;
+            return res.data;
         }
         catch(err){
             console.info("ERROR sap:");
             return setError("Error generando el archivo.", err.response);
         }
-    }
+    };
 
 
     uploadFile = async (bodyUpload) => {
         try{
-            const url = this.base_url + "/massive-acount/upload";
+            const url = `${this.base_url}/massive-acount/upload`;
             const config = {
-                headers: { Authorization: await getToken() },
-            }
-            const body = bodyUpload;
-
-            const res = await axios.post(url, body, config);
-            const data = await res.data;
-            return data;
+                headers: { Authorization: await getToken() }
+            };
+            const res = await axios.post(url, bodyUpload, config);
+            return res.data;
         }
         catch(err){
             console.info("Error massive");
             return setError("Error cargando el archivo.", err.response);
         }
-    }
+    };
 
     getSapFiles = async (from_date, to_date) => {
-        // const url = this.base_url + "/files";
-        const url = this.base_url + "/files/"
+        const url = `${this.base_url}/files/`;
         const config = {
             headers: { Authorization: await getToken()},
             params: { from_date, to_date }
-        }
+        };
         const res = await axios.get(url, config);
-        const data = await res.data;
-        return data
-    }
+        return res.data;
+    };
 
     getSapURL = async (filename) => {
-        // const url = this.base_url + "/files";
-        const url = this.base_url + "/files/download/" + filename
+        const url = `${this.base_url}/files/download/${filename}`;
         const config = {
             headers: { Authorization: await getToken()}
-        }
+        };
         const res = await axios.get(url, config);
-        const data = await res.data;
-        return data
-    }
+        return res.data;
+    };
 
 
     sendUpdateRate = async (update_date,user) => {
-        const url = this.base_url + "/rates?update_date=" + update_date+ "&user="+user
+        const url = `${this.base_url}/rates?update_date=${update_date}&user=${user}`;
         const config = {
-            headers: { Authorization: await getToken()}
-        }
+            headers: { Authorization: await getToken() }
+        };
         const res = await axios.post(url,{},config);
-        const data = await res.data;
-        return data
-    }
+        return res.data;
+    };
 
     uploadFileUpdateRate = async (dataUpdateCC) => {
-        const url = this.base_url + "/upload-cc"
+        const url = `${this.base_url}/upload-cc`;
         const config = {
-            headers: { Authorization: await getToken()}
-        }
+            headers: { Authorization: await getToken() }
+        };
         const res = await axios.post(url,dataUpdateCC,config);
-        return res
-    }
+        return res;
+    };
 
     getRatesData = async (initial_date, final_date, consecutive) => {
-        const url = this.base_url + "/rates"
+        const url = `${this.base_url}/rates`;
         const config = {
             headers: { Authorization: await getToken()},
-            params: {initial_date, final_date, consecutive}
-        }
+            params: { initial_date, final_date, consecutive}
+        };
         const res = await axios.get(url, config);
-        const data = await res.data;
-        return data
-    }
+        return res.data;
+    };
 
 
     getDataDetails = async (consecutive) => {
 
         try{
-            const url = this.base_url + "/mambu/massiveAccounts/results/" + consecutive;
+            const url = `${this.base_url}/mambu/massiveAccounts/results/${consecutive}`;
             const config = {
                 headers: { Authorization: await getToken() }
-            }
+            };
 
             const res = await axios.get(url, config);
             const data = await res.data;
@@ -113,29 +103,33 @@ class ServerAPI {
             };
         }
         catch(err){
-            console.info("ERROR Table: ", err.response)
+            console.info("ERROR Table: ", err.response);
             return setError("Error obteniendo la tabla.", err.response);
         }
-    }
-    
-    getDataTable = async (startDate, endDate, consecutive,isWeek) => {
+    };
+
+    getDataTable = async (startDate, endDate, isWeek) => {
+        const DAYS_OFFSET = -7;
+        const formatDate = (date) => {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T00:00:00`;
+        };
         if(isWeek){
-            startDate = convertTZ(addDays(new Date(),-7))
-            endDate = convertTZ(new Date())
+            startDate = convertTZ(addDays(new Date(), DAYS_OFFSET));
+            endDate = convertTZ(new Date());
         }
 
-        const start_date = startDate.getFullYear() +'-'+ ("0"+(startDate.getMonth()+1)).slice(-2) + "-"+ ("0" + startDate.getDate()).slice(-2)+"T00:00:00"
-        const end_date = endDate.getFullYear() +'-'+("0"+(endDate.getMonth()+1)).slice(-2) + "-"+ ("0" + endDate.getDate()).slice(-2)+"T24:00:00"
-        
+        const start_date = formatDate(startDate);
+        const end_date = formatDate(endDate).replace('00:00:00', '24:00:00');
+
         try{
-            const url = this.base_url + "/mambu/massiveAccounts/results";
+            const url = `${this.base_url}/mambu/massiveAccounts/results`;
             const config = {
                 headers: { Authorization: await getToken() },
                 params: {
                     start_date,
                     end_date
                 }
-            }
+            };
 
             const res = await axios.get(url, config);
             const data = await res.data;
@@ -145,168 +139,166 @@ class ServerAPI {
             };
         }
         catch(err){
-            console.info("ERROR Table: ", err.response)
+            console.info("ERROR Table: ", err.response);
             return setError("Error obteniendo la tabla.", err.response);
         }
-    }
+    };
 
 
     getAllTaxAProdT = async () => {
-        
-        const url = this.base_url + "/taxaprodt"
+
+        const url = `${this.base_url}/taxaprodt`;
         const config = {
-            headers: { Authorization: await getToken() },
-        }
-        const res = await axios.get(url,config)
-        
+            headers: { Authorization: await getToken() }
+        };
+        const res = await axios.get(url,config);
+
         return res;
     };
 
 
-    
-    
+
+
     updateItemConfiguracionGeneral = async (dataToUpdate,idRow,producttypedescriptionEdit) => {
-        const url = this.base_url + "/taxaprodt/" + idRow+"/"+producttypedescriptionEdit
-        
+        const url = `${this.base_url}/taxaprodt/${idRow}/${producttypedescriptionEdit}`;
+
         const config = {
             headers: { Authorization: await getToken() }
-        }
-        const res = await axios.put(url,dataToUpdate,config)
-        
+        };
+        const res = await axios.put(url,dataToUpdate,config);
+
         return res;
-    }
-    
-    
+    };
+
+
     createItemConfiguracionGeneral = async (dataCreate) => {
-        const url = this.base_url + "/taxaprodt"
-        
+        const url = `${this.base_url}/taxaprodt`;
+
         const config = {
             headers: { Authorization: await getToken() }
-        }
-        const res = await axios.post(url,dataCreate,config)
-      
+        };
+        const res = await axios.post(url,dataCreate,config);
+
         return res;
-    }
+    };
 
     getAllCosif = async () => {
-        
-        const url = this.base_url + "/tblCosifAccounting"
+
+        const url = `${this.base_url}/tblCosifAccounting`;
         const config = {
             headers: { Authorization: await getToken() }
-        }
-        const res = await axios.get(url,config)
-        
+        };
+        const res = await axios.get(url,config);
+
         return res;
     };
-    
+
     updateItemConfiguracionHomologacion = async (dataToUpdate,idRow) => {
-        const url = this.base_url + "/tblCosifAccounting/" + idRow
+        const url = `${this.base_url}/tblCosifAccounting/${idRow}`;
 
         const config = {
             headers: { Authorization: await getToken() }
-        }
-        const res = await axios.put(url,dataToUpdate,config)
-      
+        };
+        const res = await axios.put(url,dataToUpdate,config);
+
         return res;
-    }
+    };
 
 
     createItemConfiguracionHomologacion = async (dataCreate) => {
-        const url = this.base_url + "/tblCosifAccounting"
+        const url = `${this.base_url}/tblCosifAccounting`;
 
         const config = {
             headers: { Authorization: await getToken() }
-        }
-        const res = await axios.post(url,dataCreate,config)
-      
+        };
+        const res = await axios.post(url,dataCreate,config);
+
         return res;
-    }
+    };
 
     requestReprocess = async (reqBody) => {
 
         try {
-            const url = this.base_url + "/reprocess"
+            const url = `${this.base_url}/reprocess`;
             const config = {
                 headers: { Authorization: await getToken() }
-            }
-            const res = await axios.post(url, reqBody, config)
+            };
+            const res = await axios.post(url, reqBody, config);
             return res;
-       } catch (error) {
-            console.info("ERROR Table: ", error.response)
+        } catch (error) {
+            console.info("ERROR Table: ", error.response);
             return setError("Error obteniendo la tabla.", error.response);
-       }
-        
-    }
+        }
+
+    };
 
     getReprocessResult = async (initial_date, final_date) => {
-        const url = this.base_url + "/reprocess"
+        const url = `${this.base_url}/reprocess`;
         const config = {
             headers: { Authorization: await getToken()},
-             params: {initial_date, final_date}
-        }
+            params: {initial_date, final_date}
+        };
         const res = await axios.get(url, config);
-        const data = await res.data;
-        return data
-    }
+        return res.data;
+    };
 
     getAllAndFiltersTypeProduct = async (producttypemaestrosunicos, producttypedescription, producttype) => {
-        const url = this.base_url + "/typeproduct"
+        const url = `${this.base_url}/typeproduct`;
 
-        const filters = {}
+        const filters = {};
         if(producttypedescription !== "") {
-            filters["producttypedescription"] = producttypedescription
+            filters["producttypedescription"] = producttypedescription;
         }
         if(producttypemaestrosunicos !== "") {
-            filters["producttypemaestrosunicos"] = producttypemaestrosunicos
+            filters["producttypemaestrosunicos"] = producttypemaestrosunicos;
         }
         if(producttype !== "") {
-            filters["producttype"] = producttype
+            filters["producttype"] = producttype;
         }
 
         const config = {
             headers: { Authorization: await getToken() },
             params: filters
-        }
+        };
 
         const res = await axios.get(url, config);
-        const data = await res.data;
-        return data
+        return res.data;
     };
 
-    
+
     createTypeProduct = async (dataCreate) => {
-        const url = this.base_url + "/typeproduct"
+        const url = `${this.base_url}/typeproduct`;
 
         const config = {
             headers: { Authorization: await getToken() }
-        }
-        const res = await axios.post(url,dataCreate,config)
-      
-        return res;
-    }
+        };
+        const res = await axios.post(url,dataCreate,config);
 
-    updateTypeProduct = async (dataUpdate,id,producttypedescription) => {
-        const url = this.base_url + "/typeproduct/"+id+"/"+producttypedescription
+        return res;
+    };
+
+    updateTypeProduct = async (dataUpdate,id,_producttypedescription) => {
+        const url = `${this.base_url}/typeproduct/${id}/${_producttypedescription}`;
 
         const config = {
             headers: { Authorization: await getToken() }
-        }
-        const res = await axios.put(url,dataUpdate,config)
-      
+        };
+        const res = await axios.put(url,dataUpdate,config);
+
         return res;
-    }
+    };
 
     getRatesUpdate = async (process_date,file_id, initial_date, final_date) => {
-        const url = this.base_url + "/rates-update"
+        const url = `${this.base_url}/rates-update`;
         const config = {
             headers: { Authorization: await getToken()},
-             params: {process_date,file_id,initial_date, final_date}
-        }
+            params: {process_date,file_id,initial_date, final_date}
+        };
         const res = await axios.get(url, config);
-        return res
-    }
+        return res;
+    };
 
 
 }
 
-export {ServerAPI} ;
+export {ServerAPI};
